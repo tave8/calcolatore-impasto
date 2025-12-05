@@ -64,6 +64,7 @@ function calcolaProporzioniIngredientiDaTotale(ingredienti) {
     //      arrotonda la proporzione a n cifre significative
     const proporzioneArrotondata = arrotonda(proporzione);
     nuovoIngrediente["proporzione"] = proporzioneArrotondata;
+    nuovoIngrediente["percentuale"] = proporzioneArrotondata * 100;
     ret.push(nuovoIngrediente);
   }
 
@@ -134,18 +135,22 @@ function calcolaProporzioniDaIngrediente({ ingrediente: ingredienteNoto, quantit
  */
 function calcolaIngredientiDaTot(quantitaTot, proporzioni) {
   const ret = [];
+  // console.log(quantitaTot, proporzioni)
   for (ingrediente of proporzioni) {
     const nuovoIngrediente = Object.assign({}, ingrediente);
     // la quantità dell'ingrediente si ottiene moltiplicando
     // la quantità totale (che è nota) con la proporzione
     // del singolo elemento
     const quantita = quantitaTot * ingrediente.proporzione;
+    // console.log(quantita)
     const quantitaArrotondata = arrotonda(quantita);
     nuovoIngrediente["quantita"] = quantitaArrotondata;
     ret.push(nuovoIngrediente);
   }
   return ret;
 }
+
+
 
 /**
  * Dato una lista di ingredienti con ognuno la sua proporzione,
@@ -175,22 +180,9 @@ function arrotonda(x, nDigits = 8) {
 // ad esempio, su 300 g di farina, quanti grammi degli ingredienti
 // dovrò avere, in base alle proporzioni personalizzate già ricavate?
 
-const proporzioni = calcolaProporzioniIngredientiDaTotale([
-  { ingrediente: "lievito madre", quantita: 160 },
-  { ingrediente: "farina", quantita: 1000 },
-  { ingrediente: "acqua", quantita: 750 },
-  { ingrediente: "sale", quantita: 20 },
-  { ingrediente: "malto", quantita: 10 },
-]);
 
-const proporzioniDaIngrediente = calcolaProporzioniDaIngrediente({
-  ingrediente: "malto",
-  quantita: 10,
-  proporzioni: proporzioni,
-});
 
-const quantitaDaTotaleImpasto = calcolaIngredientiDaTot(1940, proporzioni);
 
-console.log(proporzioni);
-console.log(proporzioniDaIngrediente);
-console.log(quantitaDaTotaleImpasto);
+function calcolaQuantitaTotDaUnita(nUnita, quantitaUnita) {
+  return nUnita * quantitaUnita
+} 
