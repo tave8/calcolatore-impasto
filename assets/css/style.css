@@ -6,6 +6,37 @@ p {
   margin: 0;
 }
 
+table.table-default {
+  table-layout: fixed;
+  border-collapse: collapse;
+  border: 1px solid rgb(150, 150, 150);
+}
+
+table.table-default td, 
+table.table-default th {
+    padding: 0.4rem;
+}
+
+table.table-default tbody tr:nth-child(even) {
+    background-color: rgb(244, 244, 244);
+}
+
+table.table-default thead th:not(:nth-last-child(1)),
+table.table-default tbody td:not(:nth-last-child(1)) {
+  border-right: 1px solid lightgray;
+}
+
+
+table.table-default thead tr th {
+  border-bottom: 2px solid rgb(144, 144, 144);
+  background-color: rgb(211, 231, 249);
+}
+
+table.table-default thead tr th:nth-last-child(1),
+table.table-default tbody tr td:nth-last-child(1) {
+  text-align: right;
+}
+
 header {
 }
 
@@ -22,7 +53,7 @@ main {
 
 main > .row {
   padding: 0.2rem;
-  border: 1px solid black;
+  border: 2px solid black;
   max-height: 500px;
   flex: 1;
   display: flex;
@@ -66,6 +97,7 @@ main > .row > .body {
 }
 
 main > .row-ricetta {
+
 }
 
 main > .row-ho-ingrediente {
@@ -74,7 +106,7 @@ main > .row-ho-ingrediente {
 main > .row-ho-ingrediente > .body {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.5rem;
   padding: 0.2rem;
 }
 
@@ -101,11 +133,22 @@ main > .row-ho-ingrediente > .body > .row-output > .title {
 
 main > .row-ho-ingrediente > .body > .row-input > .content {
   flex: 1;
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 main > .row-ho-ingrediente > .body > .row-output {
   flex: 1;
+}
+
+main > .row-ho-ingrediente > .body > .row-output > .content > .table-container {
+  width: 50%;
+  margin: auto;
+  margin-top: 1rem;
+}
+
+main > .row-ho-ingrediente > .body > .row-output > .content > .table-container > table {
+  width: 100%;
+  min-width: 300px;
 }
 
 main > .row-ho-tot {
