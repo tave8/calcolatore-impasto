@@ -12,6 +12,19 @@ table.table-default {
   border: 1px solid rgb(150, 150, 150);
 }
 
+table.table-con-totali tfoot {
+    background-color: rgb(241, 241, 241);
+}
+
+table.table-con-totali tfoot tr td {
+    border-top: 1px solid black;
+    font-weight: bold;
+}
+
+table.table-con-totali tfoot tr td:nth-child(1) {
+    text-align: right;
+}
+
 table.table-default td,
 table.table-default th {
   padding: 0.4rem;
@@ -94,6 +107,12 @@ main > .row > .head > .description {
 main > .row > .body {
   flex: 1;
   /* border: 1px solid black; */
+}
+
+main > .row > .body > .row-arrow {
+    text-align: center;
+    border: 0;
+    font-size: 2rem;
 }
 
 main > .row-ricetta {
