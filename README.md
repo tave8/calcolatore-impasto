@@ -2,29 +2,36 @@
 
 Il Calcolatore d'Impasto permette di fari diversi calcoli con ricette, ingredienti e quantità.
 
-Si parte inserendo una ricetta:
-
-farina 100
-
-
-
 
 
 ## Casi d'uso
 
+
+### Ho il totale dell'impasto. Calcola la quantità di ogni ingrediente
+
+Voglio fare 10 pizze. Ho la ricetta della pizza.
+Per fare 10 pizze ci vogliono X kg d'impasto.
+Quanto di ogni ingrediente devo avere?
+
+
 ### Ho un ingrediente e la sua quantità. Calcola la quantità degli altri ingredienti
 
+Voglio fare il pane, ma ho 400g di farina. Ho la ricetta.
+Quanto degli ingredienti devo avere?
  
 
+### Ho una ricetta. Calcola le percentuali di ogni ingrediente
 
-         <div class="title">Da ingrediente a totale ricetta</div>
-          <div class="content">Conosco la quantità di un ingrediente e voglio calcolare le quantità degli altri ingredienti</div>
-        </div>
-        <div class="box">
-          <div class="title">Ho il totale dell'impasto</div>
-          <div class="content">Ho il totale dell'impasto e voglio calcolare la quantità di ogni ingrediente</div>
-        </div>
+Ho una ricetta. Quali sono le percentuali dei suoi ingredienti, da 0 a 100?
 
+
+## Come usare l'app
+
+1. Ho già salvato la ricetta nell'app? Se sì, vai avanti. Se no, aggiungi la ricetta
+
+2. Scegli il caso d'uso
+
+3. Scegli la ricetta su cui applicare
 
 
 
@@ -116,5 +123,6 @@ Visto che le proporzioni in una ricetta (o meglio, in una specifica versione di 
 Diverse quantità, stesse proporzioni.
 
 
-
 ### Arrotondamento
+
+Bisogna essere consapoli di piccoli margini di errori nei numeri delle quantità, dovuti ad arrotondamenti.
