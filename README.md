@@ -103,10 +103,14 @@ bensì come:
 - 0.198 di acqua
 - 0.008 di lievito
 
+Il totale farà quindi sempre 1, visto che la base è 1.
+
 che significa anche, per comodità:
 - 79,4% di farina
 - 19,8% di acqua
 - 0,8% di lievito
+
+Il totale farà quindi sempre 100, visto che la base è 100 (percentuale).
 
 Visto che le proporzioni in una ricetta (o meglio, in una specifica versione di una ricetta) rimangono le stesse, questo vuol dire che questa ricetta:
 
@@ -120,7 +124,7 @@ Visto che le proporzioni in una ricetta (o meglio, in una specifica versione di 
 - 125g di acqua
 - 5g di lievito
 
-Diverse quantità, stesse proporzioni.
+Diverse quantità, stesse proporzioni. 
 
 
 ### Arrotondamento
