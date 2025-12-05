@@ -130,3 +130,4 @@ Diverse quantità, stesse proporzioni.
 ### Arrotondamento
 
 Bisogna essere consapoli di piccoli margini di errori nei numeri delle quantità, dovuti ad arrotondamenti.
+

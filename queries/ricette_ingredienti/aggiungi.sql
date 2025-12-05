@@ -1,17 +1,14 @@
--- insert dummy data
+-- aggiungi ricette ingredienti
 
--- ACCOUNT
-
-
-
-
-
--- RICETTE
+/*
+INPUT:
 
 
 
+*/
 
--- RICETTE INGREDIENTI
+
+
 
 INSERT INTO
 	ricette_ingredienti
@@ -46,6 +43,3 @@ VALUES
     'sale',
     0.01
 );
-
- 
-
