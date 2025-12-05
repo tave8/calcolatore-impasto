@@ -103,10 +103,10 @@ function calcolaProporzioniDaIngrediente({ ingrediente: ingredienteNoto, quantit
   // alla fine, dalla quantita nota di un ingrediente, e dalle proporzioni della ricetta,
   // si ricava la quantità totale di quell'impasto
   const quantitaTot = quantitaNota + quantitaRimanente;
-
   for (ingrediente of proporzioni) {
     const nuovoIngrediente = Object.assign({}, ingrediente);
-    // la quantità di ogni ingrediente
+    // moltiplicando la quantità totale con la proporzione del singolo ingrediente,
+    // ricavo finalmente la quantità di ogni altro ingrediente, oltre all'ingrediente dato
     const quantita = quantitaTot * ingrediente.proporzione;
     const quantitaArrotondata = arrotonda(quantita);
     nuovoIngrediente["quantita"] = quantitaArrotondata;
@@ -116,14 +116,33 @@ function calcolaProporzioniDaIngrediente({ ingrediente: ingredienteNoto, quantit
   return ret;
 }
 
-function calcolaIngredientiDaTotImpasto(totImpasto, proporzioni) {
-  const ret = {};
-  for (ingrediente in proporzioni) {
-    ret[ingrediente] = proporzioni[ingrediente];
-    const proporzione = proporzioni[ingrediente].proporzione1;
-    const quantitaCalcolata = totImpasto * proporzione;
-    const quantitaCalcolataArrotondata = parseFloat(quantitaCalcolata.toFixed(2));
-    ret[ingrediente]["quantitaCalcolata"] = quantitaCalcolataArrotondata;
+/**
+ * Dato il totale dell'impasto e le proporzioni della ricetta,
+ * ottieni la quantità di ogni ingrediente.
+ *
+ * INPUT
+ *  quantitaTot: float
+ *  proporzioni: [
+ *      {ingrediente: str, proporzione: float}
+ *  ]
+ *
+ * OUTPUT
+ * [
+ *    {ingrediente: str, quantita: float, proporzione: float},
+ *    ...
+ * ]
+ */
+function calcolaIngredientiDaTot(quantitaTot, proporzioni) {
+  const ret = [];
+  for (ingrediente of proporzioni) {
+    const nuovoIngrediente = Object.assign({}, ingrediente);
+    // la quantità dell'ingrediente si ottiene moltiplicando
+    // la quantità totale (che è nota) con la proporzione
+    // del singolo elemento
+    const quantita = quantitaTot * ingrediente.proporzione;
+    const quantitaArrotondata = arrotonda(quantita);
+    nuovoIngrediente["quantita"] = quantitaArrotondata;
+    ret.push(nuovoIngrediente);
   }
   return ret;
 }
@@ -133,17 +152,17 @@ function calcolaIngredientiDaTotImpasto(totImpasto, proporzioni) {
  * trova la proporzione dell'ingrediente dato.
  */
 function trovaProporzioneDiIngrediente(ingredienteNoto, proporzioni) {
-  let ret = null
-  for(ingrediente of proporzioni) {
+  let ret = null;
+  for (ingrediente of proporzioni) {
     // se trovo l'ingrediente che mi interessa
     if (ingrediente.ingrediente === ingredienteNoto) {
-      return ingrediente.proporzione
+      return ingrediente.proporzione;
     }
   }
   if (ret === null) {
-    throw Error("Non è stato trovato nessuna proporzione per l'ingrediente dato.")
+    throw Error("Non è stato trovato nessuna proporzione per l'ingrediente dato.");
   }
-  return ret
+  return ret;
 }
 
 function arrotonda(x, nDigits = 8) {
@@ -166,13 +185,12 @@ const proporzioni = calcolaProporzioniIngredientiDaTotale([
 
 const proporzioniDaIngrediente = calcolaProporzioniDaIngrediente({
   ingrediente: "malto",
-  quantita: 6,
+  quantita: 10,
   proporzioni: proporzioni,
 });
 
-// const quantitaDaTotaleImpasto = calcolaIngredientiDaTotImpasto(1164, proporzioni);
+const quantitaDaTotaleImpasto = calcolaIngredientiDaTot(1940, proporzioni);
 
-// console.log(quantitaDaTotaleImpasto);
-
-// console.log(proporzioni);
-console.log(proporzioniDaIngrediente)
+console.log(proporzioni);
+console.log(proporzioniDaIngrediente);
+console.log(quantitaDaTotaleImpasto);
