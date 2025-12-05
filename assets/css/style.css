@@ -13,16 +13,16 @@ table.table-default {
 }
 
 table.table-con-totali tfoot {
-    background-color: rgb(241, 241, 241);
+  background-color: rgb(241, 241, 241);
 }
 
 table.table-con-totali tfoot tr td {
-    border-top: 1px solid black;
-    font-weight: bold;
+  border-top: 1px solid black;
+  font-weight: bold;
 }
 
 table.table-con-totali tfoot tr td:nth-child(1) {
-    text-align: right;
+  text-align: right;
 }
 
 table.table-default td,
@@ -71,7 +71,7 @@ main > .row {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  border-radius: .3rem;
+  border-radius: 0.3rem;
 }
 
 main > .row:not(:last-child) {
@@ -110,12 +110,50 @@ main > .row > .body {
 }
 
 main > .row > .body > .row-arrow {
-    text-align: center;
-    border: 0;
-    font-size: 2rem;
+  text-align: center;
+  border: 0;
+  font-size: 2rem;
 }
 
 main > .row-ricetta {
+}
+
+main > .row-ricetta > .body {
+  display: flex;
+  flex-direction: column;
+}
+
+main > .row-ricetta > .body > .ricetta {
+  flex: 1;
+  padding: 0.2rem;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* main > .row-ricetta > .body > .ricetta > * {
+
+} */
+
+main > .row-ricetta > .body > .ricetta > .nome {
+}
+
+main > .row-ricetta > .body > .ricetta > .campi {
+}
+
+main > .row-ricetta > .body > .ricetta > .campi > table {
+  width: 70%;
+  margin: auto;
+}
+
+main > .row-ricetta > .body > .ricetta > .aggiungi-campo {
+  text-align: center;
+  font-size: 2rem;
+}
+
+main > .row-ricetta > .body > .ricetta > .aggiungi-campo > * {
+  cursor: pointer;
 }
 
 /* ROW: HO INGREDIENTE */
@@ -169,7 +207,7 @@ main > .row-ho-tot > .body > .row-output {
 
 main > .row-ho-ingrediente > .body > .row-output > .content,
 main > .row-ho-tot > .body > .row-output > .content {
-  padding-bottom: .5rem;
+  padding-bottom: 0.5rem;
 }
 
 main > .row-ho-ingrediente > .body > .row-output > .content > .table-container,
