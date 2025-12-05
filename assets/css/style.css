@@ -1,48 +1,51 @@
-.container,
-.container > .row,
-.container > .row > .box {
-    padding: .3rem;
-    border: 1px solid black;
-    display: flex;
+header {
 }
 
-.container {
-    width: 90%;
-    margin: 2rem auto;
-    flex-direction: column;
-    align-items: center;
-    /* flex: 1; */
+main {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  min-width: 300px;
+  max-width: 70%;
+  padding: 0.2rem;
+  border: 1px solid black;
+  margin: 2rem auto;
 }
 
-.container > .row {
-    width: 90%;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+main > .row {
+  padding: 0.2rem;
+  border: 1px solid black;
+  max-height: 500px;
+  flex: 1;
+  display: flex;
 }
 
-.container > .row > .box {
-    min-height: 200px;
-    min-width: 200px;
-    flex-direction: column;
-    flex: 1;
+main > .row:not(:last-child) {
+  margin-bottom: 1rem;
 }
 
-.container > .row > .box:hover {
-    cursor: pointer;
-    background-color: rgb(230, 230, 230);
+main > .row > .head {
+  display: flex;
+  flex-direction: column;
+  padding: 0.2rem;
+  flex: 1;
+  gap: 0.2rem;
 }
 
-.container > .row > .box > * {
-    border: 1px solid lightgray;
+main > .row > .head > * {
+  border: 1px solid black;
 }
 
-.container > .row > .box > .title {
-    flex: .1;
-    font-weight: bold;
-    font-size: 1.5rem;
+main > .row > .head > .title {
+  flex: 0.2;
 }
 
-.container > .row > .box > .content {
-    flex: 1;
+main > .row > .head > .description {
+  flex: 1;
+}
+
+main > .row > .body {
+}
+
+footer {
 }

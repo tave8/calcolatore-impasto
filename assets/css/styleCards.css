@@ -1,0 +1,48 @@
+.container,
+.container > .row,
+.container > .row > .box {
+    padding: .3rem;
+    border: 1px solid black;
+    display: flex;
+}
+
+.container {
+    width: 90%;
+    margin: 2rem auto;
+    flex-direction: column;
+    align-items: center;
+    /* flex: 1; */
+}
+
+.container > .row {
+    width: 90%;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.container > .row > .box {
+    min-height: 200px;
+    min-width: 200px;
+    flex-direction: column;
+    flex: 1;
+}
+
+.container > .row > .box:hover {
+    cursor: pointer;
+    background-color: rgb(230, 230, 230);
+}
+
+.container > .row > .box > * {
+    border: 1px solid lightgray;
+}
+
+.container > .row > .box > .title {
+    flex: .1;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.container > .row > .box > .content {
+    flex: 1;
+}

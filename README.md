@@ -6,18 +6,17 @@ Il Calcolatore d'Impasto permette di fari diversi calcoli con ricette, ingredien
 
 ## Casi d'uso
 
+### Ho un ingrediente e la sua quantità. Calcola la quantità degli altri ingredienti
+
+Voglio fare il pane, ma ho 400g di farina. Ho la ricetta.
+Quanto degli ingredienti devo avere?
+
 
 ### Ho il totale dell'impasto. Calcola la quantità di ogni ingrediente
 
 Voglio fare 10 pizze. Ho la ricetta della pizza.
 Per fare 10 pizze ci vogliono X kg d'impasto.
 Quanto di ogni ingrediente devo avere?
-
-
-### Ho un ingrediente e la sua quantità. Calcola la quantità degli altri ingredienti
-
-Voglio fare il pane, ma ho 400g di farina. Ho la ricetta.
-Quanto degli ingredienti devo avere?
  
 
 ### Ho una ricetta. Calcola le percentuali di ogni ingrediente
