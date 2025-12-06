@@ -12,7 +12,7 @@ function startTypewriteInteraction() {
 }
 
 window.addEventListener("load", () => {
-  startTypewriteInteraction();
+//   startTypewriteInteraction();
 
 });
 

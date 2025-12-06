@@ -42,10 +42,12 @@ function calcolaProporzioni(ingredienti, ricetta="[non specificato]") {
     const nuovoIngrediente = Object.assign({}, ingrediente);
     // rimuovi la quantita inizialmente fornita dall'utente
     delete nuovoIngrediente.quantita;
-    //      arrotonda la proporzione a n cifre significative
-    const proporzioneArrotondata = arrotonda(proporzione);
-    nuovoIngrediente["proporzione"] = proporzioneArrotondata;
-    nuovoIngrediente["percentuale"] = proporzioneArrotondata * 100;
+    // arrotondamenti e non
+    const proporzioneArrotondata = arrotondaProporzione(proporzione)
+    nuovoIngrediente["proporzione"] = proporzione;
+    nuovoIngrediente["proporzioneArrotondata"] = proporzioneArrotondata;
+    nuovoIngrediente["percentuale"] = proporzione * 100;
+    nuovoIngrediente["percentualeArrotondata"] = arrotondaPercentuale(proporzione * 100);
     ret.items.push(nuovoIngrediente);
   }
 
@@ -107,8 +109,10 @@ function calcolaDaIngrediente({ ingrediente: ingredienteNoto, quantita: quantita
     // moltiplicando la quantità totale con la proporzione del singolo ingrediente,
     // ricavo finalmente la quantità di ogni altro ingrediente, oltre all'ingrediente dato
     const quantita = quantitaTot * ingrediente.proporzione;
-    const quantitaArrotondata = arrotonda(quantita);
-    nuovoIngrediente["quantita"] = quantitaArrotondata;
+    // arrotondamenti e non
+    const quantitaArrotondata = arrotondaQuantita(quantita);
+    nuovoIngrediente["quantita"] = quantita;
+    nuovoIngrediente["quantitaArrotondata"] = quantitaArrotondata;
     ret.items.push(nuovoIngrediente);
   }
 
@@ -153,8 +157,10 @@ function calcolaDaTot(quantitaTot, proporzioni) {
     // del singolo elemento
     const quantita = quantitaTot * ingrediente.proporzione;
     // console.log(quantita)
+    // arrotondamenti e non
     const quantitaArrotondata = arrotonda(quantita);
-    nuovoIngrediente["quantita"] = quantitaArrotondata;
+    nuovoIngrediente["quantita"] = quantita;
+    nuovoIngrediente["quantitaArrotondata"] = quantitaArrotondata;
     ret.items.push(nuovoIngrediente);
   }
   return ret;
@@ -332,9 +338,22 @@ function trovaProporzioneDiIngrediente(ingredienteNoto, proporzioni) {
   return ret;
 }
 
-function arrotonda(x, nDigits = 8) {
+function arrotonda(x, nDigits) {
   return parseFloat(x.toFixed(nDigits));
 }
+
+function arrotondaPercentuale(x, nDigits=2) {
+  return arrotonda(x, nDigits)
+}
+
+function arrotondaQuantita(x, nDigits=2) {
+  return arrotonda(x, nDigits)
+}
+
+function arrotondaProporzione(x, nDigits=4) {
+  return arrotonda(x, nDigits)
+}
+
 
 /**
  * ## Ho il numero di unità e quanto un unità pesa, voglio il totale
