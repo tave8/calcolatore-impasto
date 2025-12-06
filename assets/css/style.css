@@ -149,12 +149,22 @@ main > .row-esempio > .body {
 }
 
 main > .row-esempio > .body > .bottoni {
-  
+  text-align: center;
+  padding: 0.4rem;
+  border-bottom: 1px solid lightgray;
 }
 
 
 main > .row-esempio > .body > .bottoni > button.avvia-esempio  {
-  
+  cursor: pointer;
+  font-size: 2rem;
+  background-color: rgb(202, 230, 194);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  border-radius: .5rem;
+}
+
+main > .row-esempio > .body > .bottoni > button.avvia-esempio:hover  {
+  background-color: rgb(251, 220, 180);
 }
 
 

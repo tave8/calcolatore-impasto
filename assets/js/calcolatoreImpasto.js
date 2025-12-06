@@ -248,7 +248,7 @@ function generaStoriaDaIngrediente(proporzioni) {
   let ret = ""
   for(proporzione of proporzioni.items) {
     ret += `
-    ${proporzione.quantita}g di ${proporzione.ingrediente}
+    ${proporzione.quantitaArrotondata}g di ${proporzione.ingrediente}
     `
   }
   return ret
@@ -261,7 +261,7 @@ function generaStoriaDaTot(proporzioni) {
   let ret = ""
   for(proporzione of proporzioni.items) {
     ret += `
-    ${proporzione.quantita}g di ${proporzione.ingrediente}
+    ${proporzione.quantitaArrotondata}g di ${proporzione.ingrediente}
     `
   }
   return ret
@@ -275,7 +275,7 @@ function generaStoriaPercentuali(proporzioni) {
   let ret = ""
   for(proporzione of proporzioni.items) {
     ret += `
-    ${proporzione.percentuale}% di ${proporzione.ingrediente}
+    ${proporzione.percentualeArrotondata}% di ${proporzione.ingrediente}
     `
   }
   return ret
