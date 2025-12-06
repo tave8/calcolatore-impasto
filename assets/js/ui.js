@@ -8,38 +8,23 @@
  *    ingredienti: [
  *       {
  *          id: str
- *          nome: str
+ *          ingrediente: str
  *          quantita: float
- *          _ui: {
-                nome: htmlEl
-                quantita: htmlEl
- *          }
  *       },
  *       ...
  *    ]  
  * }
  * 
- * Nella proprietà _ui_input ci sono i campi UI da dove
- * i valori di quelle stesse proprietà verranno estratti.
  */
 const ricettaUtente = {
   nome: null,
   ingredienti: [],
 };
 
-// const ricettaUI = {
-//   tableRicetta: null,
-//   tableRicettaRows: null,
-// };
-
-// i diversi counter che possono anche fungere da id per l'UI
-const counter = {};
-
 // appena la pagina è caricata, aggiungi una riga
 window.addEventListener("load", () => {
   aggiungiIngrediente();
 });
-
 
 function quandoCambiaIngredienteNome(id) {
   const nomeIngrediente = ottieniIngredienteNomeDaUI(id);
@@ -49,13 +34,16 @@ function quandoCambiaIngredienteNome(id) {
 function quandoCambiaIngredienteQuantita(id) {
   const quantita = ottieniIngredienteQuantitaDaUI(id);
   aggiornaIngredienteQuantitaInDato(id, quantita);
+  //   funzione (probabilmente presente nell'altro script) solo per fare i calcoli
+  const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
+  
+  console.log(proporzioni);
 }
-
 
 function aggiornaIngredienteNomeInDato(id, nomeIngrediente) {
   const ingrediente = trovaIngredienteComeDato(id);
   //   aggiorna il nome ingrediente sull'oggetto reale/dato reale
-  ingrediente.nome = nomeIngrediente;
+  ingrediente.ingrediente = nomeIngrediente;
 }
 
 function aggiornaIngredienteQuantitaInDato(id, quantita) {
@@ -63,8 +51,6 @@ function aggiornaIngredienteQuantitaInDato(id, quantita) {
   //   aggiorna il nome ingrediente sull'oggetto reale/dato reale
   ingrediente.quantita = quantita;
 }
-
-
 
 function generaRigaIngredienteUI(idIngrediente) {
   return `
@@ -111,7 +97,7 @@ function aggiungiIngredienteInDato(idIngrediente) {
 function generaIngredienteComeDato(idIngrediente) {
   return {
     id: `${idIngrediente.id}`,
-    nome: "[ingrediente senza nome]",
+    ingrediente: "[ingrediente senza nome]",
     quantita: 1,
   };
 }
@@ -176,7 +162,7 @@ function ottieniTabellaHtml() {
 }
 
 function ottieniIngredienteNomeDaUI(id) {
-  return ottieniInputHtmlIngredienteNome(id).value
+  return ottieniInputHtmlIngredienteNome(id).value;
 }
 
 /**
@@ -184,9 +170,8 @@ function ottieniIngredienteNomeDaUI(id) {
  * rivedi questa assunzione TODO
  */
 function ottieniIngredienteQuantitaDaUI(id) {
-  return parseFloat(ottieniInputHtmlIngredienteQuantita(id).value)
+  return parseFloat(ottieniInputHtmlIngredienteQuantita(id).value);
 }
-
 
 function ottieniInputHtmlIngredienteNome(id) {
   return document.getElementById(ottieniIdIngredienteNome(id));
