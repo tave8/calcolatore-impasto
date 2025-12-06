@@ -22,22 +22,6 @@
       </div>
     </header>
     <main>
-      <!-- row ESEMPIO -->
-      <div class="row row-esempio">
-        <div class="head">
-          <div class="title"><p>ESEMPIO</p></div>
-          <div class="description">Ecco un esempio che ti dimostra quanto è veloce fare i calcoli della tua ricetta.</div>
-        </div>
-        <div class="body">
-          <div class="bottoni">
-            <button class="avvia-esempio" id="avvia-esempio" onclick="avviaEsempioUI()">Avvia esempio</button>
-          </div>
-          <div class="esempio">
-            <p id="esempio-testo"></p>
-          </div>
-        </div>
-      </div>
-
       <!-- row RICETTA -->
       <div class="row row-ricetta">
         <div class="head">
@@ -54,7 +38,7 @@
                 <thead>
                   <tr>
                     <th>Ingrediente</th>
-                    <th>Quantità</th>
+                    <th>Quantità (g)</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -104,7 +88,7 @@
                     <tr>
                       <th>Ingrediente</th>
                       <th>Quantità (g)</th>
-                      <th>%</th>
+                      <th>% su impasto</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -148,7 +132,7 @@
             <div class="title"><p>INPUT</p></div>
             <div class="content">
               <div class="input">
-                <p>Totale impasto <input type="number" /></p>
+                <p>Totale impasto (g) <input type="number" /></p>
               </div>
             </div>
           </div>
@@ -164,7 +148,7 @@
                     <tr>
                       <th>Ingrediente</th>
                       <th>Quantità (g)</th>
-                      <th>%</th>
+                      <th>% su impasto</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -196,6 +180,22 @@
           </div>
         </div>
       </div>
+
+      <!-- row ESEMPIO -->
+      <div class="row row-esempio">
+        <div class="head">
+          <div class="title"><p>ESEMPIO</p></div>
+          <div class="description">Ecco un esempio che ti dimostra quanto è veloce fare i calcoli della tua ricetta.</div>
+        </div>
+        <div class="body">
+          <div class="bottoni">
+            <button class="avvia-esempio" id="avvia-esempio" onclick="avviaEsempioUI()">Avvia esempio</button>
+          </div>
+          <div class="esempio">
+            <p id="esempio-testo"></p>
+          </div>
+        </div>
+      </div>
     </main>
     <footer></footer>
 
@@ -204,6 +204,6 @@
     <script src="./assets/js/test.js"></script>
 
     <!-- typewriter, my library -->
-     <script src="./assets/js/typewriter.js"></script>
+    <script src="./assets/js/typewriter.js"></script>
   </body>
 </html>

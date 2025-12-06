@@ -191,11 +191,11 @@ main > .row-ricetta > .body {
 
 main > .row-ricetta > .body > .ricetta {
   flex: 1;
-  padding: 0.2rem;
+  padding: 1rem;
   border: 1px solid black;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 1rem;
 }
 
 /* main > .row-ricetta > .body > .ricetta > * {
@@ -203,6 +203,7 @@ main > .row-ricetta > .body > .ricetta {
 } */
 
 main > .row-ricetta > .body > .ricetta > .nome {
+  text-align: center;
 }
 
 main > .row-ricetta > .body > .ricetta > .campi {
@@ -228,11 +229,12 @@ main > .row-ho-ingrediente {
 }
 
 main > .row-ho-ingrediente > .body,
-main > .row-ho-tot > .body {
+main > .row-ho-tot > .body
+ {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  gap: 1rem;
+  padding: 2rem;
 }
 
 main > .row-ho-ingrediente > .body > *,
