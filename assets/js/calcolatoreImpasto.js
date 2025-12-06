@@ -203,8 +203,12 @@ function generaStoriaEsempio() {
   // *** GENERA PEZZI DI STORIA
   const storiaIngredienti = generaStoriaIngredienti(ricetta)
   // console.log(storiaIngredienti)
-
+  
   const storiaDaIngrediente = generaStoriaDaIngrediente(proporzioniDaIngrediente)
+  const storiaDaTot = generaStoriaDaTot(quantitaDaTotaleImpasto)
+  const storiaPercentuali = generaStoriaPercentuali(proporzioni)
+
+  // console.log(storiaDaTot)
 
   // *** STORIA/NARRAZIONE
   // ora si scrive la storia
@@ -216,8 +220,12 @@ function generaStoriaEsempio() {
     
     Se ho ${quantitaIngredienteNoto}g di ${ingredienteNoto}, allora mi serviranno: ${storiaDaIngrediente}
 
+    Se ho ${quantitaTot}g di impasto, allora mi serviranno: ${storiaDaTot}.
+
+    Ecco le percentuali degli ingredienti in ${nomeRicetta}: ${storiaPercentuali}.
   `
-    // Se ho ${quantitaTot} di impasto, allora mi serviranno: ${storia}
+
+  console.log(storia)
 
 
   // console.log(proporzioni);
@@ -226,14 +234,39 @@ function generaStoriaEsempio() {
 }
 
 
+/**
+ * ## Voglio la storia di quello che mi serve a partire da un ingrediente e la sua quantità.
+ */
 function generaStoriaDaIngrediente(proporzioni) {
   let ret = ""
   for(proporzione of proporzioni.items) {
-    // ret += 
+    ret += `${proporzione.quantita}g di ${proporzione.ingrediente}; `
   }
   return ret
 }
 
+/**
+ * ## Voglio la storia di quello che mi serve a partire da un totale impasto.
+ */
+function generaStoriaDaTot(proporzioni) {
+  let ret = ""
+  for(proporzione of proporzioni.items) {
+    ret += `${proporzione.quantita}g di ${proporzione.ingrediente}; `
+  }
+  return ret
+}
+
+
+/**
+ * ## Voglio la storia delle percentuali degli ingredienti.
+ */
+function generaStoriaPercentuali(proporzioni) {
+  let ret = ""
+  for(proporzione of proporzioni.items) {
+    ret += `${proporzione.percentuale}% di ${proporzione.ingrediente}; `
+  }
+  return ret
+}
 
 /**
  * ## Voglio la storia degli ingredienti.
@@ -246,6 +279,9 @@ function generaStoriaIngredienti(ricetta) {
   }
   return ret
 }
+
+
+
 
 // HELPER
 
