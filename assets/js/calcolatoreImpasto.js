@@ -22,7 +22,7 @@
  * }
  *
  */
-function calcolaProporzioni(ingredienti, ricetta="") {
+function calcolaProporzioni(ingredienti, ricetta="[non specificato]") {
   const ret = {
     ricetta: ricetta,
     request: "Ho la ricetta, voglio le proporzioni degli ingredienti",
@@ -167,7 +167,12 @@ function calcolaDaTot(quantitaTot, proporzioni) {
  * come funziona il sistema.
  */
 
-function generaEsempio() {
+function generaStoriaEsempio() {
+  // *** INPUT 
+  // questi sono gli input
+
+  const nomeRicetta = "Pizza di Fatima"
+
   const ricetta = [
     { ingrediente: "farina v300", quantita: 430 },
     { ingrediente: "farina semola", quantita: 20 },
@@ -180,21 +185,66 @@ function generaEsempio() {
   ];
 
   // l'oggetto proporzioni
-  const proporzioni = calcolaProporzioni(ricetta);
+  const proporzioni = calcolaProporzioni(ricetta, nomeRicetta);
 
+  // da ingrediente
+  const ingredienteNoto = "farina v300"
+  const quantitaIngredienteNoto = 660
   const proporzioniDaIngrediente = calcolaDaIngrediente({
-    ingrediente: "farina v300",
-    quantita: 660,
+    ingrediente: ingredienteNoto,
+    quantita: quantitaIngredienteNoto,
     proporzioni: proporzioni,
   });
 
-  const quantitaTot = calcolaTotDaUnita(8, 350);
-
+  // da totale
+  const quantitaTot = 1000 //calcolaTotDaUnita(8, 350);
   const quantitaDaTotaleImpasto = calcolaDaTot(quantitaTot, proporzioni);
+
+  // *** GENERA PEZZI DI STORIA
+  const storiaIngredienti = generaStoriaIngredienti(ricetta)
+  // console.log(storiaIngredienti)
+
+  const storiaDaIngrediente = generaStoriaDaIngrediente(proporzioniDaIngrediente)
+
+  // *** STORIA/NARRAZIONE
+  // ora si scrive la storia
+
+  let storia = `
+    Ciao e benvenut@ nel Calcolatore di Impasto!
+
+    La ricetta ${nomeRicetta} è così fatta: ${storiaIngredienti}.
+    
+    Se ho ${quantitaIngredienteNoto}g di ${ingredienteNoto}, allora mi serviranno: ${storiaDaIngrediente}
+
+  `
+    // Se ho ${quantitaTot} di impasto, allora mi serviranno: ${storia}
+
 
   // console.log(proporzioni);
   // console.log(proporzioniDaIngrediente);
   // console.log(quantitaDaTotaleImpasto);
+}
+
+
+function generaStoriaDaIngrediente(proporzioni) {
+  let ret = ""
+  for(proporzione of proporzioni.items) {
+    // ret += 
+  }
+  return ret
+}
+
+
+/**
+ * ## Voglio la storia degli ingredienti.
+ *
+ */
+function generaStoriaIngredienti(ricetta) {
+  let ret = ""
+  for(ingrediente of ricetta) {
+    ret += `${ingrediente.quantita}g di ${ingrediente.ingrediente}; `
+  }
+  return ret
 }
 
 // HELPER
