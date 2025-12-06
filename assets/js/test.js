@@ -41,7 +41,7 @@ function testPizza() {
       { ingrediente: "malto", quantita: 6 },
       { ingrediente: "zucchero", quantita: 6 },
       { ingrediente: "lievito birra", quantita: 1 },
-    ]);
+    ], "pizza di fatima");
     
     const proporzioniDaIngrediente = calcolaDaIngrediente({
       ingrediente: "farina v300",
