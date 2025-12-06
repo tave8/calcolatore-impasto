@@ -46,17 +46,23 @@ function aggiornaIngredienteNome(id) {
   const nomeIngrediente = htmlInput.value;
   //   aggiorna il nome ingrediente sull'oggetto reale/dato reale
   ingrediente.nome = nomeIngrediente;
+}
 
-  //   console.log(nomeIngrediente)
-
-  // ingrediente.nome =
+function aggiornaIngredienteQuantita(id) {
+  const ingrediente = trovaIngredienteComeDato(id);
+  const htmlInput = ottieniInputHtmlIngredienteQuantita(id);
+  const quantitaVal = htmlInput.value;
+  //   fai attenzione al parsing dell'input, deve essere un numero
+  const quantita = parseFloat(quantitaVal);
+  //   aggiorna il nome ingrediente sull'oggetto reale/dato reale
+  ingrediente.quantita = quantita;
 }
 
 function generaRigaIngredienteUI(idIngrediente) {
   return `
     <tr id="${idIngrediente.idRigaUI}">
         <td><input type="text" onkeyup="aggiornaIngredienteNome('${idIngrediente.id}')" id="${idIngrediente.idNome}" /></td>
-        <td><input type="number" onkeyup="" value="1" min="1" id="${idIngrediente.idQuantita}" /></td>
+        <td><input type="number" onchange="aggiornaIngredienteQuantita('${idIngrediente.id}')"  onkeyup="aggiornaIngredienteQuantita('${idIngrediente.id}')" value="1" min="1" id="${idIngrediente.idQuantita}" /></td>
         <td><button onclick="rimuoviIngrediente('${idIngrediente.id}')">Rimuovi</button></td>
     </tr>
   `;
@@ -68,9 +74,6 @@ function aggiungiIngrediente() {
   const idIngrediente = generaIdIngrediente();
   aggiungiIngredienteInUI(idIngrediente);
   aggiungiIngredienteInDato(idIngrediente);
-
-  //   console.log(htmlTable)
-  //   console.log(htmlBody)
 }
 
 function aggiungiIngredienteInUI(idIngrediente) {
@@ -152,6 +155,10 @@ function ottieniTabellaHtml() {
 
 function ottieniInputHtmlIngredienteNome(id) {
   return document.getElementById(ottieniIdIngredienteNome(id));
+}
+
+function ottieniInputHtmlIngredienteQuantita(id) {
+  return document.getElementById(ottieniIdIngredienteQuantita(id));
 }
 
 function generaNumeroRandom(limit = 10000000) {
