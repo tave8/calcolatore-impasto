@@ -43,7 +43,7 @@ window.addEventListener("load", () => {
 
 function aggiornaIngredienti(ingredienti, ricetta) {}
 
-function ottieniRigaIngredienteUI(idIngrediente) {
+function generaRigaIngredienteUI(idIngrediente) {
   //   const htmlTable = document.getElementById("table-ricetta");
   //   const htmlBody = htmlTable.querySelectorAll("tbody")[0];
   //   console.log(htmlTable)
@@ -62,35 +62,46 @@ function ottieniRigaIngredienteUI(idIngrediente) {
 function aggiungiIngrediente() {
   const idIngrediente = generaIdIngrediente();
   aggiungiIngredienteInUI(idIngrediente);
-  //   aggiungiIngredienteInDato();
+  aggiungiIngredienteInDato(idIngrediente);
 
   //   console.log(htmlTable)
   //   console.log(htmlBody)
 }
 
 function aggiungiIngredienteInUI(idIngrediente) {
-  const rigaIngrediente = ottieniRigaIngredienteUI(idIngrediente);
+  const rigaIngrediente = generaRigaIngredienteUI(idIngrediente);
   ottieniTabellaHtml().body.innerHTML += rigaIngrediente;
 }
 
-function aggiungiIngredienteInDato() {}
+function aggiungiIngredienteInDato(idIngrediente) {
+  const ingrediente = generaIngredienteComeDato(idIngrediente);
+  ricettaUtente.ingredienti.push(ingrediente);
+}
+
+function generaIngredienteComeDato(idIngrediente) {
+  return {
+    id: `${idIngrediente.id}`,
+    nome: "[ingrediente senza nome]",
+    quantita: 1,
+  };
+}
 
 // RIMUOVI INGREDIENTE
 
-function rimuoviIngrediente(idIngrediente) {
-  rimuoviIngredienteInUI(idIngrediente);
-  rimuoviIngredienteInDato(idIngrediente);
+function rimuoviIngrediente(id) {
+  rimuoviIngredienteInUI(id);
+  rimuoviIngredienteInDato(id);
 }
 
-function rimuoviIngredienteInUI(idIngrediente) {
-  const rigaIngrediente = ottieniIdRigaUIIngrediente(idIngrediente);
+function rimuoviIngredienteInUI(id) {
+  const rigaIngrediente = ottieniIdRigaUIIngrediente(id);
   document.getElementById(rigaIngrediente).remove();
 }
 
-function rimuoviIngredienteInDato(idIngrediente) {
+function rimuoviIngredienteInDato(id) {
   for (let i = 0; i < ricettaUtente.ingredienti.length; i++) {
     const ingrediente = ricettaUtente.ingredienti[i];
-    if (ingrediente.id == idIngrediente.id) {
+    if (ingrediente.id == id) {
       ricettaUtente.ingredienti.splice(i, 1);
     }
   }
