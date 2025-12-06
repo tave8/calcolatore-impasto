@@ -29,27 +29,73 @@
           <div class="description">Ho una ricetta e voglio estrarre le proporzioni degli ingredienti</div>
         </div>
         <div class="body">
-          <div class="ricetta">
-            <div class="nome">
-              <p>Nome della ricetta <input type="text" /></p>
+          <div class="row row-input">
+            <div class="title"><p>INPUT</p></div>
+            <div class="content">
+              <div class="ricetta">
+                <div class="nome">
+                  <p>Nome della ricetta <input type="text" /></p>
+                </div>
+                <div class="campi">
+                  <table class="table-default" id="table-ricetta">
+                    <thead>
+                      <tr>
+                        <th>Ingrediente</th>
+                        <th>Quantità (g)</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+                <div class="aggiungi-campo">
+                  <button onclick="aggiungiIngrediente()">Aggiungi ingrediente</button>
+                </div>
+              </div>
             </div>
-            <div class="campi">
-              <table class="table-default" id="table-ricetta">
-                <thead>
-                  <tr>
-                    <th>Ingrediente</th>
-                    <th>Quantità (g)</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
-            </div>
-            <div class="aggiungi-campo">
-              <button onclick="aggiungiIngrediente()">
-                Aggiungi ingrediente
-              </button>
+          </div>
+
+          <div class="row row-arrow">
+            <i class="fas fa-arrow-down"></i>
+          </div>
+
+          <div class="row row-output">
+            <div class="title"><p>OUTPUT</p></div>
+            <div class="content">
+              <div class="table-container">
+                <table class="table-default table-con-totali">
+                  <thead>
+                    <tr>
+                      <th>Ingrediente</th>
+                      <th>Quantità (g)</th>
+                      <th>% su impasto</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>farina</td>
+                      <td>100</td>
+                      <td>54</td>
+                    </tr>
+                    <tr>
+                      <td>farina</td>
+                      <td>100</td>
+                      <td>54</td>
+                    </tr>
+                    <tr>
+                      <td>farina</td>
+                      <td>100</td>
+                      <td>54</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td>Totale:</td>
+                      <td colspan="2">3453</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
             </div>
           </div>
         </div>
