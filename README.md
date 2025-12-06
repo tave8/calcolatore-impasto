@@ -160,3 +160,11 @@ ogni ingrediente?
 // bisogna fare:
 // 1. calcolare la somma degli ingredienti in grammi
 // 2. per quel ingrediente, fare l'operazione: (quantita in grammi ingrediente)/(somma ingredienti in grammi)
+
+
+// problema: data le proporzioni personalizzate precedentemente definite,
+// dammi la quantità degli altri ingredienti, data la quantità di un
+// ingrediente noto
+// ad esempio, su 300 g di farina, quanti grammi degli ingredienti
+// dovrò avere, in base alle proporzioni personalizzate già ricavate?
+

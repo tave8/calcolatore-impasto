@@ -1,6 +1,7 @@
 function main() {
     // testPane()
     testPizza()
+    // testMioPane()
 }
 
 main()
@@ -48,7 +49,31 @@ function testPizza() {
       proporzioni: proporzioni,
     });
     
-    const quantitaTot = calcolaQuantitaTotDaUnita(8, 350)
+    const quantitaTot = calcolaTotDaUnita(8, 350)
+
+    const quantitaDaTotaleImpasto = calcolaDaTot(quantitaTot, proporzioni);
+    
+    console.log(proporzioni);
+    console.log(proporzioniDaIngrediente);
+    console.log(quantitaDaTotaleImpasto);
+}
+
+
+function testMioPane() {
+    const proporzioni = calcolaProporzioni([
+      { ingrediente: "farina XY", quantita: 100 },
+      { ingrediente: "H2O", quantita: 20 },
+      { ingrediente: "acqua", quantita: 3 },
+      { ingrediente: "olio", quantita: 30 },
+    ]);
+    
+    const proporzioniDaIngrediente = calcolaDaIngrediente({
+      ingrediente: "farina XY",
+      quantita: 600,
+      proporzioni: proporzioni,
+    });
+    
+    const quantitaTot = 1000 //calcolaTotDaUnita(8, 350)
 
     const quantitaDaTotaleImpasto = calcolaDaTot(quantitaTot, proporzioni);
     

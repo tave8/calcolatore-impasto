@@ -2,7 +2,7 @@
 
 /**
  * ## Ho la ricetta, voglio le proporzioni degli ingredienti
- * 
+ *
  * Data una ricetta dove conosci ogni ingrediente con le sue quantità,
  * ottieni le proporzioni di ogni ingrediente nella ricetta,
  * rappresentate in una scala da 0 a 1.
@@ -14,18 +14,22 @@
  * ]
  *
  * OUTPUT:
- * [
- *    {ingrediente: str, proporzione: float}
- * ]
+ * {
+ *    request: str
+ *    items: [
+ *      {ingrediente: str, proporzione: float}
+ *   ]
+ * }
  *
  */
 function calcolaProporzioni(ingredienti) {
-  const ret = [];
-  let quantitaTot = 0;
-  //    calcola la somma delle quantità degli ingredienti
-  for (ingrediente of ingredienti) {
-    quantitaTot += ingrediente.quantita;
-  }
+  const ret = {
+    request: "Ho la ricetta, voglio le proporzioni degli ingredienti",
+    items: []
+  };
+
+  let quantitaTot = calcolaTotIngredienti(ingredienti);
+
   // salva la proporzione che quell'ingrediente rappresenta nel totale delle quantità
   // degli ingredienti, in una scala da 0 a 1
 
@@ -41,7 +45,7 @@ function calcolaProporzioni(ingredienti) {
     const proporzioneArrotondata = arrotonda(proporzione);
     nuovoIngrediente["proporzione"] = proporzioneArrotondata;
     nuovoIngrediente["percentuale"] = proporzioneArrotondata * 100;
-    ret.push(nuovoIngrediente);
+    ret.items.push(nuovoIngrediente);
   }
 
   return ret;
@@ -49,7 +53,7 @@ function calcolaProporzioni(ingredienti) {
 
 /**
  * ## Ho la quantità di un ingrediente, voglio le quantità degli altri ingredienti
- * 
+ *
  * Noto un ingrediente con la sua quantità, e note le proporzioni
  * degli ingredienti di una ricetta, ottieni le proporzioni degli altri ingredienti.
  *
@@ -63,33 +67,43 @@ function calcolaProporzioni(ingredienti) {
  * }
  *
  * OUTPUT
- * [
- *    {ingrediente: str, quantita: float, proporzione: float},
- *    ...
- * ]
+ * {
+ *    request: str
+ *    items: [
+ *      {ingrediente: str, quantita: float, proporzione: float},
+ *    ]
+ * }
  *
  *
  */
 function calcolaDaIngrediente({ ingrediente: ingredienteNoto, quantita: quantitaNota, proporzioni }) {
-  const ret = [];
+  const ret = {
+    request: "Ho la quantità di un ingrediente, voglio le quantità degli altri ingredienti",
+    items: []
+  };
   //   trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
-  const proporzioneNota = trovaProporzioneDiIngrediente(ingredienteNoto, proporzioni);
+  const proporzioneNota = trovaProporzioneDiIngrediente(ingredienteNoto, proporzioni.items);
   // visto che il totale delle proporzioni sarà sempre 1, allora
   // la proporzione rimanente si ottiene sottraendo  1 - proporzioneNota
   const proporzioneNotaRimanente = 1 - proporzioneNota;
   // la quantita rimanente del totale
+  // si basa sulla seguente proporzione
+  // quantitaNota : quantitaRimanente = proporzioneNota : proporzioneNotaRimanente 
+  // esempio:
+  // 10 g di sale stanno alla quantità di impasto che rimane, come la proporzione del sale (nel totale impasto)
+  // sta al totale delle proporzioni degli altri ingredienti
   const quantitaRimanente = (quantitaNota * proporzioneNotaRimanente) / proporzioneNota;
   // alla fine, dalla quantita nota di un ingrediente, e dalle proporzioni della ricetta,
   // si ricava la quantità totale di quell'impasto
   const quantitaTot = quantitaNota + quantitaRimanente;
-  for (ingrediente of proporzioni) {
+  for (ingrediente of proporzioni.items) {
     const nuovoIngrediente = Object.assign({}, ingrediente);
     // moltiplicando la quantità totale con la proporzione del singolo ingrediente,
     // ricavo finalmente la quantità di ogni altro ingrediente, oltre all'ingrediente dato
     const quantita = quantitaTot * ingrediente.proporzione;
     const quantitaArrotondata = arrotonda(quantita);
     nuovoIngrediente["quantita"] = quantitaArrotondata;
-    ret.push(nuovoIngrediente);
+    ret.items.push(nuovoIngrediente);
   }
 
   return ret;
@@ -97,7 +111,7 @@ function calcolaDaIngrediente({ ingrediente: ingredienteNoto, quantita: quantita
 
 /**
  * ## Ho il totale dell'impasto, voglio le quantità di ogni ingrediente
- * 
+ *
  * Dato il totale dell'impasto e le proporzioni della ricetta,
  * ottieni la quantità di ogni ingrediente.
  *
@@ -108,15 +122,21 @@ function calcolaDaIngrediente({ ingrediente: ingredienteNoto, quantita: quantita
  *  ]
  *
  * OUTPUT
- * [
- *    {ingrediente: str, quantita: float, proporzione: float},
- *    ...
- * ]
+ * 
+ * {
+ *    request: str
+ *    items: [
+ *      {ingrediente: str, quantita: float, proporzione: float},
+ *    ]
+ * }
  */
 function calcolaDaTot(quantitaTot, proporzioni) {
-  const ret = [];
+  const ret = {
+    request: "Ho il totale dell'impasto, voglio le quantità di ogni ingrediente",
+    items: []
+  };
   // console.log(quantitaTot, proporzioni)
-  for (ingrediente of proporzioni) {
+  for (ingrediente of proporzioni.items) {
     const nuovoIngrediente = Object.assign({}, ingrediente);
     // la quantità dell'ingrediente si ottiene moltiplicando
     // la quantità totale (che è nota) con la proporzione
@@ -125,14 +145,32 @@ function calcolaDaTot(quantitaTot, proporzioni) {
     // console.log(quantita)
     const quantitaArrotondata = arrotonda(quantita);
     nuovoIngrediente["quantita"] = quantitaArrotondata;
-    ret.push(nuovoIngrediente);
+    ret.items.push(nuovoIngrediente);
   }
   return ret;
 }
 
-
 // HELPER
 
+/**
+ * ## Ho gli ingredienti, voglio il loro totale
+ * 
+ * INPUT
+ * ingredienti:
+ * [
+ *   {ingrediente: str, quantita: float}
+ * ]
+ * 
+ * OUTPUT
+ * 
+ */
+function calcolaTotIngredienti(ingredienti) {
+  let ret = 0
+  for (ingrediente of ingredienti) {
+    ret += ingrediente.quantita;
+  }
+  return ret
+}
 
 /**
  * Dato una lista di ingredienti con ognuno la sua proporzione,
@@ -156,15 +194,15 @@ function arrotonda(x, nDigits = 8) {
   return parseFloat(x.toFixed(nDigits));
 }
 
-// problema: data le proporzioni personalizzate precedentemente definite,
-// dammi la quantità degli altri ingredienti, data la quantità di un
-// ingrediente noto
-// ad esempio, su 300 g di farina, quanti grammi degli ingredienti
-// dovrò avere, in base alle proporzioni personalizzate già ricavate?
 
-
-
-
-function calcolaQuantitaTotDaUnita(nUnita, quantitaUnita) {
-  return nUnita * quantitaUnita
-} 
+/**
+ * ## Ho il numero di unità e quanto un unità pesa, voglio il totale 
+ * 
+ * Semplicemente fa la moltiplicazione tra il numero di unità
+ * e la quantità di ciascuna unità. Ad esempio quando voglio calcolare
+ * il totale di un impasto partendo dal numero di pizze che voglio fare.
+ * numero pizze * impasto per panetto (g) = tot
+ */
+function calcolaTotDaUnita(nUnita, quantitaUnita) {
+  return nUnita * quantitaUnita;
+}
