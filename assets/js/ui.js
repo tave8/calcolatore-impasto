@@ -35,22 +35,27 @@ const ricettaUtente = {
 // i diversi counter che possono anche fungere da id per l'UI
 const counter = {};
 
+// appena la pagina è caricata, aggiungi una riga
 window.addEventListener("load", () => {
   aggiungiIngrediente();
 });
 
-// appena la pagina è caricata, aggiungi una riga
+function aggiornaIngredienteNome(id) {
+  const ingrediente = trovaIngredienteComeDato(id);
+  const htmlInput = ottieniInputHtmlIngredienteNome(id);
+  const nomeIngrediente = htmlInput.value;
+  //   aggiorna il nome ingrediente sull'oggetto reale/dato reale
+  ingrediente.nome = nomeIngrediente;
 
-function aggiornaIngredienti(ingredienti, ricetta) {}
+  //   console.log(nomeIngrediente)
+
+  // ingrediente.nome =
+}
 
 function generaRigaIngredienteUI(idIngrediente) {
-  //   const htmlTable = document.getElementById("table-ricetta");
-  //   const htmlBody = htmlTable.querySelectorAll("tbody")[0];
-  //   console.log(htmlTable)
-  //   console.log(htmlBody)
   return `
     <tr id="${idIngrediente.idRigaUI}">
-        <td><input type="text" onkeyup="" id="${idIngrediente.idNome}" /></td>
+        <td><input type="text" onkeyup="aggiornaIngredienteNome('${idIngrediente.id}')" id="${idIngrediente.idNome}" /></td>
         <td><input type="number" onkeyup="" value="1" min="1" id="${idIngrediente.idQuantita}" /></td>
         <td><button onclick="rimuoviIngrediente('${idIngrediente.id}')">Rimuovi</button></td>
     </tr>
@@ -109,7 +114,18 @@ function rimuoviIngredienteInDato(id) {
 
 // TROVA INGREDIENTE
 
-function trovaIngrediente() {}
+/**
+ * Itera per ogni ingrediente, e ritorna il riferimeento all'oggetto rappresentato
+ * dall'ingrediente.
+ */
+function trovaIngredienteComeDato(id) {
+  for (ingrediente of ricettaUtente.ingredienti) {
+    if (ingrediente.id == id) {
+      return ingrediente;
+    }
+  }
+  throw Error(`Non è stato trovato nessun ingrediente con id '${id}'`);
+}
 
 /**
  * Avvia l'esempio/la narrazione della ricetta nell'UI.
@@ -132,6 +148,10 @@ function ottieniTabellaHtml() {
     table: htmlTable,
     body: htmlTableBody,
   };
+}
+
+function ottieniInputHtmlIngredienteNome(id) {
+  return document.getElementById(ottieniIdIngredienteNome(id));
 }
 
 function generaNumeroRandom(limit = 10000000) {
