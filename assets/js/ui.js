@@ -26,9 +26,15 @@ window.addEventListener("load", () => {
   aggiungiIngrediente();
 });
 
+
 function quandoCambiaIngredienteNome(id) {
   const nomeIngrediente = ottieniIngredienteNomeDaUI(id);
   aggiornaIngredienteNomeInDato(id, nomeIngrediente);
+    //   funzione (probabilmente presente nell'altro script) solo per fare i calcoli
+  const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
+  //   una volta calcolate le proporzioni, aggiorna finalmente la
+  // tabella UI delle proporzioni degli ingredienti, così l'utente può vederle
+  aggiornaTabellaProporzioniInUI(proporzioni);
 }
 
 function quandoCambiaIngredienteQuantita(id) {
@@ -36,8 +42,20 @@ function quandoCambiaIngredienteQuantita(id) {
   aggiornaIngredienteQuantitaInDato(id, quantita);
   //   funzione (probabilmente presente nell'altro script) solo per fare i calcoli
   const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
-  
-  console.log(proporzioni);
+  //   una volta calcolate le proporzioni, aggiorna finalmente la
+  // tabella UI delle proporzioni degli ingredienti, così l'utente può vederle
+  aggiornaTabellaProporzioniInUI(proporzioni);
+
+}
+
+function aggiornaTabellaProporzioniInUI(proporzioni) {
+  const tableBody = ottieniTabellaProporzioniInUI().body;
+  //   svuota la tabella prima di ripopolarla
+  tableBody.innerHTML = "";
+  for (proporzione of proporzioni.items) {
+    const rigaProporzione = generaRigaProporzioneUI(proporzione)
+    tableBody.insertAdjacentHTML("beforeend", rigaProporzione);
+  }
 }
 
 function aggiornaIngredienteNomeInDato(id, nomeIngrediente) {
@@ -76,17 +94,46 @@ function generaRigaIngredienteUI(idIngrediente) {
   `;
 }
 
+
+function generaRigaProporzioneUI(proporzione) {
+    console.log(proporzione)
+  return `
+    <tr>
+        <!-- nome ingrediente -->
+        <td>
+            ${proporzione.ingrediente}
+        </td>
+
+        <!-- quantità ingrediente -->
+        <td>
+            ${proporzione.quantita}
+        </td>
+
+        <!-- percentuale su impasto -->
+        <td>
+            ${proporzione.percentualeArrotondata}%
+        </td>
+    </tr>
+  `;
+}
+
 // AGGIUNGI INGREDIENTE
 
 function aggiungiIngrediente() {
   const idIngrediente = generaIdIngrediente();
   aggiungiIngredienteInUI(idIngrediente);
   aggiungiIngredienteInDato(idIngrediente);
+
+  //   funzione (probabilmente presente nell'altro script) solo per fare i calcoli
+//   const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
+//   //   una volta calcolate le proporzioni, aggiorna finalmente la
+//   // tabella UI delle proporzioni degli ingredienti, così l'utente può vederle
+//   aggiornaTabellaProporzioniInUI(proporzioni);
 }
 
 function aggiungiIngredienteInUI(idIngrediente) {
   const rigaIngrediente = generaRigaIngredienteUI(idIngrediente);
-  ottieniTabellaHtml().body.insertAdjacentHTML("beforeend", rigaIngrediente);
+  ottieniTabellaRicettaInUI().body.insertAdjacentHTML("beforeend", rigaIngrediente);
 }
 
 function aggiungiIngredienteInDato(idIngrediente) {
@@ -107,6 +154,12 @@ function generaIngredienteComeDato(idIngrediente) {
 function rimuoviIngrediente(id) {
   rimuoviIngredienteInUI(id);
   rimuoviIngredienteInDato(id);
+
+    //   funzione (probabilmente presente nell'altro script) solo per fare i calcoli
+  const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
+  //   una volta calcolate le proporzioni, aggiorna finalmente la
+  // tabella UI delle proporzioni degli ingredienti, così l'utente può vederle
+  aggiornaTabellaProporzioniInUI(proporzioni);
 }
 
 function rimuoviIngredienteInUI(id) {
@@ -152,8 +205,17 @@ function avviaEsempioUI() {
 
 // HELPER
 
-function ottieniTabellaHtml() {
+function ottieniTabellaRicettaInUI() {
   const htmlTable = document.getElementById("table-ricetta");
+  const htmlTableBody = htmlTable.querySelectorAll("tbody")[0];
+  return {
+    table: htmlTable,
+    body: htmlTableBody,
+  };
+}
+
+function ottieniTabellaProporzioniInUI() {
+  const htmlTable = document.getElementById("table-proporzioni");
   const htmlTableBody = htmlTable.querySelectorAll("tbody")[0];
   return {
     table: htmlTable,

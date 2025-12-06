@@ -41,7 +41,7 @@ function calcolaProporzioni(ingredienti, ricetta="[non specificato]") {
     // copia l'ingrediente
     const nuovoIngrediente = Object.assign({}, ingrediente);
     // rimuovi la quantita inizialmente fornita dall'utente
-    delete nuovoIngrediente.quantita;
+    // delete nuovoIngrediente.quantita;
     // arrotondamenti e non
     const proporzioneArrotondata = arrotondaProporzione(proporzione)
     nuovoIngrediente["proporzione"] = proporzione;
