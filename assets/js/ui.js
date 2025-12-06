@@ -40,30 +40,52 @@ window.addEventListener("load", () => {
   aggiungiIngrediente();
 });
 
-function aggiornaIngredienteNome(id) {
+
+function quandoCambiaIngredienteNome(id) {
+  const nomeIngrediente = ottieniIngredienteNomeDaUI(id);
+  aggiornaIngredienteNomeInDato(id, nomeIngrediente);
+}
+
+function quandoCambiaIngredienteQuantita(id) {
+  const quantita = ottieniIngredienteQuantitaDaUI(id);
+  aggiornaIngredienteQuantitaInDato(id, quantita);
+}
+
+
+function aggiornaIngredienteNomeInDato(id, nomeIngrediente) {
   const ingrediente = trovaIngredienteComeDato(id);
-  const htmlInput = ottieniInputHtmlIngredienteNome(id);
-  const nomeIngrediente = htmlInput.value;
   //   aggiorna il nome ingrediente sull'oggetto reale/dato reale
   ingrediente.nome = nomeIngrediente;
 }
 
-function aggiornaIngredienteQuantita(id) {
+function aggiornaIngredienteQuantitaInDato(id, quantita) {
   const ingrediente = trovaIngredienteComeDato(id);
-  const htmlInput = ottieniInputHtmlIngredienteQuantita(id);
-  const quantitaVal = htmlInput.value;
-  //   fai attenzione al parsing dell'input, deve essere un numero
-  const quantita = parseFloat(quantitaVal);
   //   aggiorna il nome ingrediente sull'oggetto reale/dato reale
   ingrediente.quantita = quantita;
 }
 
+
+
 function generaRigaIngredienteUI(idIngrediente) {
   return `
     <tr id="${idIngrediente.idRigaUI}">
-        <td><input type="text" onkeyup="aggiornaIngredienteNome('${idIngrediente.id}')" id="${idIngrediente.idNome}" /></td>
-        <td><input type="number" onchange="aggiornaIngredienteQuantita('${idIngrediente.id}')"  onkeyup="aggiornaIngredienteQuantita('${idIngrediente.id}')" value="1" min="1" id="${idIngrediente.idQuantita}" /></td>
-        <td><button onclick="rimuoviIngrediente('${idIngrediente.id}')">Rimuovi</button></td>
+        <!-- nome ingrediente -->
+        <td>
+            <input type="text" onkeyup="quandoCambiaIngredienteNome('${idIngrediente.id}')" id="${idIngrediente.idNome}" />
+        </td>
+
+        <!-- quantità ingrediente -->
+        <td>
+            <input type="number" 
+            onchange="quandoCambiaIngredienteQuantita('${idIngrediente.id}')"  
+            onkeyup="quandoCambiaIngredienteQuantita('${idIngrediente.id}')" 
+            value="1" min="1" 
+            id="${idIngrediente.idQuantita}" />
+        </td>
+        <!-- azioni sull'ingrediente -->
+        <td>
+            <button onclick="rimuoviIngrediente('${idIngrediente.id}')">Rimuovi</button>
+        </td>
     </tr>
   `;
 }
@@ -152,6 +174,19 @@ function ottieniTabellaHtml() {
     body: htmlTableBody,
   };
 }
+
+function ottieniIngredienteNomeDaUI(id) {
+  return ottieniInputHtmlIngredienteNome(id).value
+}
+
+/**
+ * NOTA: viene assunto che il valore sia convertibile in float, quindi
+ * rivedi questa assunzione TODO
+ */
+function ottieniIngredienteQuantitaDaUI(id) {
+  return parseFloat(ottieniInputHtmlIngredienteQuantita(id).value)
+}
+
 
 function ottieniInputHtmlIngredienteNome(id) {
   return document.getElementById(ottieniIdIngredienteNome(id));
