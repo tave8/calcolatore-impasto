@@ -130,3 +130,33 @@ Diverse quantità, stesse proporzioni.
 
 Bisogna essere consapoli di piccoli margini di errori nei numeri delle quantità, dovuti ad arrotondamenti.
 
+
+
+## Osservazioni/Note
+
+
+/**
+In una normale proporzione, le seguenti specifiche vengono adottare, 
+con l'unità di misura in grammi:
+
+farina   1000
+l.madre  160
+acqua    750
+sale     20
+malto    10
+
+Su una scala da 0 a 1, in quale percentuale sono costituiti
+ogni ingrediente?
+
+*/
+
+// somma ingredienti: 1940
+// farina su scala 0-1 = 1000/1940
+
+// la somma degli ingredienti mi dà il valore 1
+// (somma ingredienti):1 = ingrediente specifico: quantità in grammi
+
+// per rappresentare ogni ingredienti in una scala da 0 a 1,
+// bisogna fare:
+// 1. calcolare la somma degli ingredienti in grammi
+// 2. per quel ingrediente, fare l'operazione: (quantita in grammi ingrediente)/(somma ingredienti in grammi)

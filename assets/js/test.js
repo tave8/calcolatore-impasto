@@ -7,7 +7,7 @@ main()
 
 
 function testPane() {
-    const proporzioni = calcolaProporzioniIngredientiDaTotale([
+    const proporzioni = calcolaProporzioni([
       { ingrediente: "lievito madre", quantita: 160 },
       { ingrediente: "farina", quantita: 1000 },
       { ingrediente: "acqua", quantita: 750 },
@@ -15,13 +15,13 @@ function testPane() {
       { ingrediente: "malto", quantita: 10 },
     ]);
     
-    const proporzioniDaIngrediente = calcolaProporzioniDaIngrediente({
+    const proporzioniDaIngrediente = calcolaDaIngrediente({
       ingrediente: "malto",
       quantita: 10,
       proporzioni: proporzioni,
     });
     
-    const quantitaDaTotaleImpasto = calcolaIngredientiDaTot(1940, proporzioni);
+    const quantitaDaTotaleImpasto = calcolaDaTot(1940, proporzioni);
     
     console.log(proporzioni);
     console.log(proporzioniDaIngrediente);
@@ -31,7 +31,7 @@ function testPane() {
 
 // pizza
 function testPizza() {
-    const proporzioni = calcolaProporzioniIngredientiDaTotale([
+    const proporzioni = calcolaProporzioni([
       { ingrediente: "farina v300", quantita: 430 },
       { ingrediente: "farina semola", quantita: 20 },
       { ingrediente: "acqua", quantita: 315 },
@@ -42,7 +42,7 @@ function testPizza() {
       { ingrediente: "lievito birra", quantita: 1 },
     ]);
     
-    const proporzioniDaIngrediente = calcolaProporzioniDaIngrediente({
+    const proporzioniDaIngrediente = calcolaDaIngrediente({
       ingrediente: "farina v300",
       quantita: 660,
       proporzioni: proporzioni,
@@ -50,7 +50,7 @@ function testPizza() {
     
     const quantitaTot = calcolaQuantitaTotDaUnita(8, 350)
 
-    const quantitaDaTotaleImpasto = calcolaIngredientiDaTot(quantitaTot, proporzioni);
+    const quantitaDaTotaleImpasto = calcolaDaTot(quantitaTot, proporzioni);
     
     console.log(proporzioni);
     console.log(proporzioniDaIngrediente);

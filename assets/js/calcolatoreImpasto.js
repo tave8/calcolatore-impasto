@@ -1,32 +1,8 @@
 // Algoritmo per calcolare proporzioni impasto/lievito e ingredienti
 
 /**
-In una normale proporzione, le seguenti specifiche vengono adottare, 
-con l'unità di misura in grammi:
-
-farina   1000
-l.madre  160
-acqua    750
-sale     20
-malto    10
-
-Su una scala da 0 a 1, in quale percentuale sono costituiti
-ogni ingrediente?
-
-*/
-
-// somma ingredienti: 1940
-// farina su scala 0-1 = 1000/1940
-
-// la somma degli ingredienti mi dà il valore 1
-// (somma ingredienti):1 = ingrediente specifico: quantità in grammi
-
-// per rappresentare ogni ingredienti in una scala da 0 a 1,
-// bisogna fare:
-// 1. calcolare la somma degli ingredienti in grammi
-// 2. per quel ingrediente, fare l'operazione: (quantita in grammi ingrediente)/(somma ingredienti in grammi)
-
-/**
+ * ## Ho la ricetta, voglio le proporzioni degli ingredienti
+ * 
  * Data una ricetta dove conosci ogni ingrediente con le sue quantità,
  * ottieni le proporzioni di ogni ingrediente nella ricetta,
  * rappresentate in una scala da 0 a 1.
@@ -43,7 +19,7 @@ ogni ingrediente?
  * ]
  *
  */
-function calcolaProporzioniIngredientiDaTotale(ingredienti) {
+function calcolaProporzioni(ingredienti) {
   const ret = [];
   let quantitaTot = 0;
   //    calcola la somma delle quantità degli ingredienti
@@ -72,6 +48,8 @@ function calcolaProporzioniIngredientiDaTotale(ingredienti) {
 }
 
 /**
+ * ## Ho la quantità di un ingrediente, voglio le quantità degli altri ingredienti
+ * 
  * Noto un ingrediente con la sua quantità, e note le proporzioni
  * degli ingredienti di una ricetta, ottieni le proporzioni degli altri ingredienti.
  *
@@ -92,7 +70,7 @@ function calcolaProporzioniIngredientiDaTotale(ingredienti) {
  *
  *
  */
-function calcolaProporzioniDaIngrediente({ ingrediente: ingredienteNoto, quantita: quantitaNota, proporzioni }) {
+function calcolaDaIngrediente({ ingrediente: ingredienteNoto, quantita: quantitaNota, proporzioni }) {
   const ret = [];
   //   trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
   const proporzioneNota = trovaProporzioneDiIngrediente(ingredienteNoto, proporzioni);
@@ -118,6 +96,8 @@ function calcolaProporzioniDaIngrediente({ ingrediente: ingredienteNoto, quantit
 }
 
 /**
+ * ## Ho il totale dell'impasto, voglio le quantità di ogni ingrediente
+ * 
  * Dato il totale dell'impasto e le proporzioni della ricetta,
  * ottieni la quantità di ogni ingrediente.
  *
@@ -133,7 +113,7 @@ function calcolaProporzioniDaIngrediente({ ingrediente: ingredienteNoto, quantit
  *    ...
  * ]
  */
-function calcolaIngredientiDaTot(quantitaTot, proporzioni) {
+function calcolaDaTot(quantitaTot, proporzioni) {
   const ret = [];
   // console.log(quantitaTot, proporzioni)
   for (ingrediente of proporzioni) {
@@ -150,6 +130,8 @@ function calcolaIngredientiDaTot(quantitaTot, proporzioni) {
   return ret;
 }
 
+
+// HELPER
 
 
 /**
