@@ -216,21 +216,22 @@ function generaStoriaEsempio() {
   let storia = `
     Ciao e benvenut@ nel Calcolatore di Impasto!
 
-    La ricetta ${nomeRicetta} è così fatta: ${storiaIngredienti}.
+    La ricetta ${nomeRicetta} è così fatta: ${storiaIngredienti}
     
     Se ho ${quantitaIngredienteNoto}g di ${ingredienteNoto}, allora mi serviranno: ${storiaDaIngrediente}
 
-    Se ho ${quantitaTot}g di impasto, allora mi serviranno: ${storiaDaTot}.
+    Se ho ${quantitaTot}g di impasto, allora mi serviranno: ${storiaDaTot}
 
-    Ecco le percentuali degli ingredienti in ${nomeRicetta}: ${storiaPercentuali}.
+    Ecco le percentuali degli ingredienti in ${nomeRicetta}: ${storiaPercentuali}
   `
 
-  console.log(storia)
+  // console.log(storia)
 
 
   // console.log(proporzioni);
   // console.log(proporzioniDaIngrediente);
   // console.log(quantitaDaTotaleImpasto);
+  return storia
 }
 
 
@@ -240,7 +241,9 @@ function generaStoriaEsempio() {
 function generaStoriaDaIngrediente(proporzioni) {
   let ret = ""
   for(proporzione of proporzioni.items) {
-    ret += `${proporzione.quantita}g di ${proporzione.ingrediente}; `
+    ret += `
+    ${proporzione.quantita}g di ${proporzione.ingrediente}
+    `
   }
   return ret
 }
@@ -251,7 +254,9 @@ function generaStoriaDaIngrediente(proporzioni) {
 function generaStoriaDaTot(proporzioni) {
   let ret = ""
   for(proporzione of proporzioni.items) {
-    ret += `${proporzione.quantita}g di ${proporzione.ingrediente}; `
+    ret += `
+    ${proporzione.quantita}g di ${proporzione.ingrediente}
+    `
   }
   return ret
 }
@@ -263,7 +268,9 @@ function generaStoriaDaTot(proporzioni) {
 function generaStoriaPercentuali(proporzioni) {
   let ret = ""
   for(proporzione of proporzioni.items) {
-    ret += `${proporzione.percentuale}% di ${proporzione.ingrediente}; `
+    ret += `
+    ${proporzione.percentuale}% di ${proporzione.ingrediente}
+    `
   }
   return ret
 }
@@ -275,7 +282,9 @@ function generaStoriaPercentuali(proporzioni) {
 function generaStoriaIngredienti(ricetta) {
   let ret = ""
   for(ingrediente of ricetta) {
-    ret += `${ingrediente.quantita}g di ${ingrediente.ingrediente}; `
+    ret += `
+    ${ingrediente.quantita}g di ${ingrediente.ingrediente}
+    `
   }
   return ret
 }

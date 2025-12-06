@@ -138,6 +138,39 @@ main > .row > .body > .row-arrow {
   font-size: 2rem;
 }
 
+
+main > .row-esempio {
+
+}
+
+main > .row-esempio > .body {
+  overflow-y: auto;
+  
+}
+
+main > .row-esempio > .body > .bottoni {
+  
+}
+
+
+main > .row-esempio > .body > .bottoni > button.avvia-esempio  {
+  
+}
+
+
+
+main > .row-esempio > .body > .esempio {
+}
+
+
+
+
+main > .row-esempio > .body > .esempio > p {
+  white-space: pre;
+  width: 100%;
+}
+
+
 main > .row-ricetta {
 }
 
