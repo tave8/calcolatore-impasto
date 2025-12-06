@@ -79,7 +79,11 @@ function calcolaProporzioni(ingredienti) {
 function calcolaDaIngrediente({ ingrediente: ingredienteNoto, quantita: quantitaNota, proporzioni }) {
   const ret = {
     request: "Ho la quantità di un ingrediente, voglio le quantità degli altri ingredienti",
-    items: []
+    items: [],
+    input: {
+      ingrediente: ingredienteNoto,
+      quantita: quantitaNota
+    }
   };
   //   trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
   const proporzioneNota = trovaProporzioneDiIngrediente(ingredienteNoto, proporzioni.items);
@@ -133,7 +137,10 @@ function calcolaDaIngrediente({ ingrediente: ingredienteNoto, quantita: quantita
 function calcolaDaTot(quantitaTot, proporzioni) {
   const ret = {
     request: "Ho il totale dell'impasto, voglio le quantità di ogni ingrediente",
-    items: []
+    items: [],
+    input: {
+      quantita: quantitaTot
+    }
   };
   // console.log(quantitaTot, proporzioni)
   for (ingrediente of proporzioni.items) {
