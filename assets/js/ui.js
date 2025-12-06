@@ -75,7 +75,7 @@ function aggiungiIngrediente() {
 
 function aggiungiIngredienteInUI(idIngrediente) {
   const rigaIngrediente = generaRigaIngredienteUI(idIngrediente);
-  ottieniTabellaHtml().body.innerHTML += rigaIngrediente;
+  ottieniTabellaHtml().body.insertAdjacentHTML("beforeend", rigaIngrediente);
 }
 
 function aggiungiIngredienteInDato(idIngrediente) {
