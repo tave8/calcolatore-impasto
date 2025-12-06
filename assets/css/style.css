@@ -8,6 +8,11 @@ p {
   margin: 0;
 }
 
+input {
+  height: 1.5rem;
+  min-width: 5rem;
+}
+
 table.table-default {
   table-layout: fixed;
   border-collapse: collapse;
