@@ -70,47 +70,23 @@ function aggiornaTabellaDaIngredienteInUI(proporzioni) {
 
 // IN "DA INGREDIENTE"
 
-function quandoCambiaIngredienteNomeDaIngrediente(ingredienteNoto) {
+/**
+ * param cosaCambia: str: "ingrediente" | "quantita"
+ */
+function quandoCambiaIngredienteDaIngrediente(cosaCambia) {
+  const nomeIngrediente = ottieniIngredienteNomeDaIngredienteDaUI();
+  const quantitaNota = ottieniIngredienteQuantitaDaIngredienteDaUI();
   // prima di fare calcoli, verifica che il nome ingrediente esista
   // realmente tra gli ingredienti forniti dall'utente
-  const esisteIngrediente = esisteNomeIngredienteInRicettaUtente(ingredienteNoto);
-  //   se l'ingrediente non esiste, non fare niente
-  if (!esisteIngrediente) {
+  const possoFareCalcoli = esisteNomeIngredienteInRicettaEQuantitaEValida(nomeIngrediente, quantitaNota)
+  //   se l'ingrediente non esiste o la quantitaà non è valida, non fare niente
+  if (!possoFareCalcoli) {
     return;
   }
 
   const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
   //  ottieni la quantità di questo ingrediente che l'utente fornisce
-  const quantitaNota = parseFloat(document.getElementById("input-da-ingrediente-quantita").value);
-  const tableBody = ottieniTabellaDaIngredienteInUI().body;
-
-  // funzione dall'altro script che fa i calcoli
-  const datiNoti = {
-    ingrediente: ingredienteNoto,
-    quantita: quantitaNota,
-    proporzioni: proporzioni,
-  };
-
-  const proporzioniDaIngrediente = calcolaDaIngrediente(datiNoti);
-  //   console.log(proporzioniDaIngrediente)
-  aggiornaTabellaDaIngredienteInUI(proporzioniDaIngrediente);
-}
-
-function quandoCambiaIngredienteQuantitaDaIngrediente(quantita) {
-  // assicurati che qui ci sia la validazione
-  const quantitaNota = parseFloat(quantita);
-  const nomeIngrediente = document.getElementById("input-da-ingrediente-ingrediente").value;
-  // prima di fare calcoli, verifica che il nome ingrediente esista
-  // realmente tra gli ingredienti forniti dall'utente
-  const esisteIngrediente = esisteNomeIngredienteInRicettaUtente(nomeIngrediente);
-  //   se l'ingrediente non esiste, non fare niente
-  if (!esisteIngrediente) {
-    return;
-  }
-
-  const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
-  //  ottieni la quantità di questo ingrediente che l'utente fornisce
-  const tableBody = ottieniTabellaDaIngredienteInUI().body;
+  // const tableBody = ottieniTabellaDaIngredienteInUI().body;
 
   // funzione dall'altro script che fa i calcoli
   const datiNoti = {
@@ -120,7 +96,7 @@ function quandoCambiaIngredienteQuantitaDaIngrediente(quantita) {
   };
 
   const proporzioniDaIngrediente = calcolaDaIngrediente(datiNoti);
-  console.log(quantitaNota, proporzioniDaIngrediente);
+  // console.log(quantitaNota, proporzioniDaIngrediente);
 
   //   console.log(proporzioniDaIngrediente)
   aggiornaTabellaDaIngredienteInUI(proporzioniDaIngrediente);
@@ -281,6 +257,17 @@ function esisteNomeIngredienteInRicettaUtente(nomeIngrediente) {
   return false;
 }
 
+/**
+ * Esiste questo ingrediente nella ricetta definita dall'utente,
+ * e contemporaneamente la quantità fornita dall'utente è valida?
+ */
+function esisteNomeIngredienteInRicettaEQuantitaEValida(nomeIngrediente, quantita) {
+  const esisteIngrediente = esisteNomeIngredienteInRicettaUtente(nomeIngrediente)
+  const quantitaValida = !isNaN(quantita)
+  return cond = esisteIngrediente && quantitaValida
+  return cond
+}
+
 function ottieniTabellaRicettaInUI() {
   const htmlTable = document.getElementById("table-ricetta");
   const htmlTableBody = htmlTable.querySelectorAll("tbody")[0];
@@ -310,6 +297,22 @@ function ottieniTabellaDaIngredienteInUI() {
 
 function ottieniIngredienteNomeDaUI(id) {
   return ottieniInputHtmlIngredienteNome(id).value;
+}
+
+function ottieniIngredienteNomeDaIngredienteDaUI() {
+  return ottieniInputHtmlIngredienteNomeDaIngrediente();
+}
+
+function ottieniIngredienteQuantitaDaIngredienteDaUI() {
+  return ottieniInputHtmlIngredienteQuantitaDaIngrediente();
+}
+
+function ottieniInputHtmlIngredienteNomeDaIngrediente() {
+  return document.getElementById("input-da-ingrediente-ingrediente").value;
+}
+
+function ottieniInputHtmlIngredienteQuantitaDaIngrediente() {
+  return parseFloat(document.getElementById("input-da-ingrediente-quantita").value);
 }
 
 /**

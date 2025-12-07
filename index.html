@@ -99,13 +99,13 @@
             <div class="content">
               <div class="input">
                 <p>Ingrediente <input type="text" 
-                                      onkeyup="quandoCambiaIngredienteNomeDaIngrediente(event.target.value)"
+                                      onkeyup="quandoCambiaIngredienteDaIngrediente('ingrediente')"
                                       id="input-da-ingrediente-ingrediente" /></p>
               </div>
               <div class="input">
                 <p>Quantità (g) <input type="number" 
-                                      onkeyup="quandoCambiaIngredienteQuantitaDaIngrediente(event.target.value)" 
-                                      onchange="quandoCambiaIngredienteQuantitaDaIngrediente(event.target.value)"
+                                      onkeyup="quandoCambiaIngredienteDaIngrediente('quantita')" 
+                                      onchange="quandoCambiaIngredienteDaIngrediente('quantita')"
                                       id="input-da-ingrediente-quantita"
                                       value="1"
                                       min="1" /></p>
