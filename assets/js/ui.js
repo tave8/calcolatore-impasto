@@ -68,6 +68,16 @@ function aggiornaTabellaDaIngredienteInUI(proporzioni) {
   }
 }
 
+function aggiornaTabellaDaTotImpastoInUI(proporzioni) {
+  const tableBody = ottieniTabellaDaTotImpastoInUI().body;
+  //   svuota la tabella prima di ripopolarla
+  tableBody.innerHTML = "";
+  for (proporzione of proporzioni.items) {
+    const rigaProporzione = generaRigaProporzioneUI(proporzione);
+    tableBody.insertAdjacentHTML("beforeend", rigaProporzione);
+  }
+}
+
 // IN "DA INGREDIENTE"
 
 /**
@@ -88,7 +98,7 @@ function quandoCambiaIngredienteDaIngrediente(cosaCambia = null) {
   // realmente tra gli ingredienti forniti dall'utente
   const possoFareCalcoli = esisteNomeIngredienteInRicettaEQuantitaEValida(nomeIngrediente, quantitaNota);
   //   se l'ingrediente non esiste o la quantitaà non è valida, non fare niente
-  console.log(nomeIngrediente, quantitaNota);
+  // console.log(nomeIngrediente, quantitaNota);
   // serve forzare il ricalcolo quando l'ingrediente è stato appena rimosso dall'utente
   // e anche nei dati interni, e quindi in teoria non esiste più
   // if (!forzaRicalcolo) {
@@ -115,6 +125,24 @@ function quandoCambiaIngredienteDaIngrediente(cosaCambia = null) {
   aggiornaTabellaDaIngredienteInUI(proporzioniDaIngrediente);
 }
 
+function quandoCambiaTotImpastoDaTot() {
+  const totImpasto = ottieniTotImpastoDaTotDaUI();
+  const possoFareCalcoli = totImpastoEValido(totImpasto);
+
+  if (!possoFareCalcoli) {
+    return;
+  }
+
+  const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti)
+  const quantitaDaTotaleImpasto = calcolaDaTot(totImpasto, proporzioni)
+
+  // console.log(quantitaDaTotaleImpasto)
+
+
+  // //   console.log(proporzioniDaIngrediente)
+  aggiornaTabellaDaTotImpastoInUI(quantitaDaTotaleImpasto);
+}
+
 function aggiornaIngredienteNomeInDato(id, nomeIngrediente) {
   const ingrediente = trovaIngredienteComeDato(id);
   //   aggiorna il nome ingrediente sull'oggetto reale/dato reale
@@ -132,7 +160,10 @@ function generaRigaIngredienteUI(idIngrediente) {
     <tr id="${idIngrediente.idRigaUI}">
         <!-- nome ingrediente -->
         <td>
-            <input type="text" onkeyup="quandoCambiaIngredienteNome('${idIngrediente.id}')" id="${idIngrediente.idNome}" />
+            <input type="text" 
+                  onkeyup="quandoCambiaIngredienteNome('${idIngrediente.id}')" 
+                  id="${idIngrediente.idNome}"
+                  autofocus="true" />
         </td>
 
         <!-- quantità ingrediente -->
@@ -281,9 +312,20 @@ function esisteNomeIngredienteInRicettaUtente(nomeIngrediente) {
  */
 function esisteNomeIngredienteInRicettaEQuantitaEValida(nomeIngrediente, quantita) {
   const esisteIngrediente = esisteNomeIngredienteInRicettaUtente(nomeIngrediente);
-  const quantitaValida = !isNaN(quantita);
-  return (cond = esisteIngrediente && quantitaValida);
-  return cond;
+  const quantitaValida = quantitaEValida(quantita);
+  return esisteIngrediente && quantitaValida;
+}
+
+function numeroEValido(x) {
+  return !isNaN(x);
+}
+
+function quantitaEValida(x) {
+  return numeroEValido(x);
+}
+
+function totImpastoEValido(x) {
+  return numeroEValido(x);
 }
 
 function ottieniTabellaRicettaInUI() {
@@ -313,6 +355,16 @@ function ottieniTabellaDaIngredienteInUI() {
   };
 }
 
+function ottieniTabellaDaTotImpastoInUI() {
+  const htmlTable = document.getElementById("table-da-tot-impasto");
+  const htmlTableBody = htmlTable.querySelectorAll("tbody")[0];
+  return {
+    table: htmlTable,
+    body: htmlTableBody,
+  };
+}
+
+
 function ottieniIngredienteNomeDaUI(id) {
   return ottieniInputHtmlIngredienteNome(id).value;
 }
@@ -331,6 +383,14 @@ function ottieniInputHtmlIngredienteNomeDaIngrediente() {
 
 function ottieniInputHtmlIngredienteQuantitaDaIngrediente() {
   return parseFloat(document.getElementById("input-da-ingrediente-quantita").value);
+}
+
+function ottieniInputHtmlTotImpastoDaTot() {
+  return document.getElementById("input-da-tot-tot-impasto");
+}
+
+function ottieniTotImpastoDaTotDaUI() {
+  return parseFloat(ottieniInputHtmlTotImpastoDaTot().value);
 }
 
 /**

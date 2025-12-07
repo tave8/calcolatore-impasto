@@ -71,9 +71,7 @@
                       <th>% su impasto</th>
                     </tr>
                   </thead>
-                  <tbody>
-
-                  </tbody>
+                  <tbody></tbody>
                   <!-- <tfoot>
                     <tr>
                       <td>Totale:</td>
@@ -98,17 +96,20 @@
             <div class="title"><p>INPUT</p></div>
             <div class="content">
               <div class="input">
-                <p>Ingrediente <input type="text" 
-                                      onkeyup="quandoCambiaIngredienteDaIngrediente('ingrediente')"
-                                      id="input-da-ingrediente-ingrediente" /></p>
+                <p>Ingrediente <input type="text" onkeyup="quandoCambiaIngredienteDaIngrediente('ingrediente')" id="input-da-ingrediente-ingrediente" /></p>
               </div>
               <div class="input">
-                <p>Quantità (g) <input type="number" 
-                                      onkeyup="quandoCambiaIngredienteDaIngrediente('quantita')" 
-                                      onchange="quandoCambiaIngredienteDaIngrediente('quantita')"
-                                      id="input-da-ingrediente-quantita"
-                                      value="1"
-                                      min="1" /></p>
+                <p>
+                  Quantità (g)
+                  <input
+                    type="number"
+                    onkeyup="quandoCambiaIngredienteDaIngrediente('quantita')"
+                    onchange="quandoCambiaIngredienteDaIngrediente('quantita')"
+                    id="input-da-ingrediente-quantita"
+                    value="1"
+                    min="1"
+                  />
+                </p>
               </div>
             </div>
           </div>
@@ -127,9 +128,7 @@
                       <th>% su impasto</th>
                     </tr>
                   </thead>
-                  <tbody>
-
-                  </tbody>
+                  <tbody></tbody>
                   <!-- <tfoot>
                     <tr>
                       <td>Totale:</td>
@@ -154,7 +153,10 @@
             <div class="title"><p>INPUT</p></div>
             <div class="content">
               <div class="input">
-                <p>Totale impasto (g) <input type="number" /></p>
+                <p>
+                  Totale impasto (g)
+                  <input type="number" id="input-da-tot-tot-impasto" onkeyup="quandoCambiaTotImpastoDaTot()" onchange="quandoCambiaTotImpastoDaTot()" />
+                </p>
               </div>
             </div>
           </div>
@@ -165,7 +167,7 @@
             <div class="title"><p>OUTPUT</p></div>
             <div class="content">
               <div class="table-container">
-                <table class="table-default table-con-totali">
+                <table class="table-default table-con-totali" id="table-da-tot-impasto">
                   <thead>
                     <tr>
                       <th>Ingrediente</th>
@@ -173,29 +175,13 @@
                       <th>% su impasto</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>farina</td>
-                      <td>100</td>
-                      <td>54</td>
-                    </tr>
-                    <tr>
-                      <td>farina</td>
-                      <td>100</td>
-                      <td>54</td>
-                    </tr>
-                    <tr>
-                      <td>farina</td>
-                      <td>100</td>
-                      <td>54</td>
-                    </tr>
-                  </tbody>
-                  <tfoot>
+                  <tbody></tbody>
+                  <!-- <tfoot>
                     <tr>
                       <td>Totale:</td>
                       <td colspan="2">3453</td>
                     </tr>
-                  </tfoot>
+                  </tfoot> -->
                 </table>
               </div>
             </div>
