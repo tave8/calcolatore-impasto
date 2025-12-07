@@ -94,11 +94,36 @@ function quandoCambiaIngredienteNomeDaIngrediente(ingredienteNoto) {
   const proporzioniDaIngrediente = calcolaDaIngrediente(datiNoti);
   //   console.log(proporzioniDaIngrediente)
   aggiornaTabellaDaIngredienteInUI(proporzioniDaIngrediente);
-  
 }
 
-function quandoCambiaIngredienteQuantitaDaIngrediente(val) {
-  console.log(val);
+function quandoCambiaIngredienteQuantitaDaIngrediente(quantita) {
+  // assicurati che qui ci sia la validazione
+  const quantitaNota = parseFloat(quantita);
+  const nomeIngrediente = document.getElementById("input-da-ingrediente-ingrediente").value;
+  // prima di fare calcoli, verifica che il nome ingrediente esista
+  // realmente tra gli ingredienti forniti dall'utente
+  const esisteIngrediente = esisteNomeIngredienteInRicettaUtente(nomeIngrediente);
+  //   se l'ingrediente non esiste, non fare niente
+  if (!esisteIngrediente) {
+    return;
+  }
+
+  const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
+  //  ottieni la quantità di questo ingrediente che l'utente fornisce
+  const tableBody = ottieniTabellaDaIngredienteInUI().body;
+
+  // funzione dall'altro script che fa i calcoli
+  const datiNoti = {
+    ingrediente: nomeIngrediente,
+    quantita: quantitaNota,
+    proporzioni: proporzioni,
+  };
+
+  const proporzioniDaIngrediente = calcolaDaIngrediente(datiNoti);
+  console.log(quantitaNota, proporzioniDaIngrediente);
+
+  //   console.log(proporzioniDaIngrediente)
+  aggiornaTabellaDaIngredienteInUI(proporzioniDaIngrediente);
 }
 
 function aggiornaIngredienteNomeInDato(id, nomeIngrediente) {
@@ -148,7 +173,7 @@ function generaRigaProporzioneUI(proporzione) {
 
         <!-- quantità ingrediente -->
         <td>
-            ${proporzione.quantita}
+            ${proporzione.quantitaArrotondata}
         </td>
 
         <!-- percentuale su impasto -->

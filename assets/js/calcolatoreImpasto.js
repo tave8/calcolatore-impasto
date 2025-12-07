@@ -48,6 +48,10 @@ function calcolaProporzioni(ingredienti, ricetta="[non specificato]") {
     nuovoIngrediente["proporzioneArrotondata"] = proporzioneArrotondata;
     nuovoIngrediente["percentuale"] = proporzione * 100;
     nuovoIngrediente["percentualeArrotondata"] = arrotondaPercentuale(proporzione * 100);
+
+    // infine, aggiungi una nuova proprietà, per mantenere la compatibilità 
+    nuovoIngrediente["quantitaArrotondata"] = arrotondaQuantita(ingrediente.quantita);
+
     ret.items.push(nuovoIngrediente);
   }
 
