@@ -26,11 +26,12 @@ window.addEventListener("load", () => {
   aggiungiIngrediente();
 });
 
+// IN RICETTA
 
 function quandoCambiaIngredienteNome(id) {
   const nomeIngrediente = ottieniIngredienteNomeDaUI(id);
   aggiornaIngredienteNomeInDato(id, nomeIngrediente);
-    //   funzione (probabilmente presente nell'altro script) solo per fare i calcoli
+  //   funzione (probabilmente presente nell'altro script) solo per fare i calcoli
   const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
   //   una volta calcolate le proporzioni, aggiorna finalmente la
   // tabella UI delle proporzioni degli ingredienti, così l'utente può vederle
@@ -45,7 +46,6 @@ function quandoCambiaIngredienteQuantita(id) {
   //   una volta calcolate le proporzioni, aggiorna finalmente la
   // tabella UI delle proporzioni degli ingredienti, così l'utente può vederle
   aggiornaTabellaProporzioniInUI(proporzioni);
-
 }
 
 function aggiornaTabellaProporzioniInUI(proporzioni) {
@@ -53,9 +53,52 @@ function aggiornaTabellaProporzioniInUI(proporzioni) {
   //   svuota la tabella prima di ripopolarla
   tableBody.innerHTML = "";
   for (proporzione of proporzioni.items) {
-    const rigaProporzione = generaRigaProporzioneUI(proporzione)
+    const rigaProporzione = generaRigaProporzioneUI(proporzione);
     tableBody.insertAdjacentHTML("beforeend", rigaProporzione);
   }
+}
+
+function aggiornaTabellaDaIngredienteInUI(proporzioni) {
+  const tableBody = ottieniTabellaDaIngredienteInUI().body;
+  //   svuota la tabella prima di ripopolarla
+  tableBody.innerHTML = "";
+  for (proporzione of proporzioni.items) {
+    const rigaProporzione = generaRigaProporzioneUI(proporzione);
+    tableBody.insertAdjacentHTML("beforeend", rigaProporzione);
+  }
+}
+
+// IN "DA INGREDIENTE"
+
+function quandoCambiaIngredienteNomeDaIngrediente(ingredienteNoto) {
+  // prima di fare calcoli, verifica che il nome ingrediente esista
+  // realmente tra gli ingredienti forniti dall'utente
+  const esisteIngrediente = esisteNomeIngredienteInRicettaUtente(ingredienteNoto);
+  //   se l'ingrediente non esiste, non fare niente
+  if (!esisteIngrediente) {
+    return;
+  }
+
+  const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
+  //  ottieni la quantità di questo ingrediente che l'utente fornisce
+  const quantitaNota = parseFloat(document.getElementById("input-da-ingrediente-quantita").value);
+  const tableBody = ottieniTabellaDaIngredienteInUI().body;
+
+  // funzione dall'altro script che fa i calcoli
+  const datiNoti = {
+    ingrediente: ingredienteNoto,
+    quantita: quantitaNota,
+    proporzioni: proporzioni,
+  };
+
+  const proporzioniDaIngrediente = calcolaDaIngrediente(datiNoti);
+  //   console.log(proporzioniDaIngrediente)
+  aggiornaTabellaDaIngredienteInUI(proporzioniDaIngrediente);
+  
+}
+
+function quandoCambiaIngredienteQuantitaDaIngrediente(val) {
+  console.log(val);
 }
 
 function aggiornaIngredienteNomeInDato(id, nomeIngrediente) {
@@ -94,9 +137,8 @@ function generaRigaIngredienteUI(idIngrediente) {
   `;
 }
 
-
 function generaRigaProporzioneUI(proporzione) {
-    console.log(proporzione)
+  //   console.log(proporzione);
   return `
     <tr>
         <!-- nome ingrediente -->
@@ -125,10 +167,10 @@ function aggiungiIngrediente() {
   aggiungiIngredienteInDato(idIngrediente);
 
   //   funzione (probabilmente presente nell'altro script) solo per fare i calcoli
-//   const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
-//   //   una volta calcolate le proporzioni, aggiorna finalmente la
-//   // tabella UI delle proporzioni degli ingredienti, così l'utente può vederle
-//   aggiornaTabellaProporzioniInUI(proporzioni);
+  //   const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
+  //   //   una volta calcolate le proporzioni, aggiorna finalmente la
+  //   // tabella UI delle proporzioni degli ingredienti, così l'utente può vederle
+  //   aggiornaTabellaProporzioniInUI(proporzioni);
 }
 
 function aggiungiIngredienteInUI(idIngrediente) {
@@ -155,7 +197,7 @@ function rimuoviIngrediente(id) {
   rimuoviIngredienteInUI(id);
   rimuoviIngredienteInDato(id);
 
-    //   funzione (probabilmente presente nell'altro script) solo per fare i calcoli
+  //   funzione (probabilmente presente nell'altro script) solo per fare i calcoli
   const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
   //   una volta calcolate le proporzioni, aggiorna finalmente la
   // tabella UI delle proporzioni degli ingredienti, così l'utente può vederle
@@ -205,6 +247,15 @@ function avviaEsempioUI() {
 
 // HELPER
 
+function esisteNomeIngredienteInRicettaUtente(nomeIngrediente) {
+  for (ingrediente of ricettaUtente.ingredienti) {
+    if (ingrediente.ingrediente === nomeIngrediente) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function ottieniTabellaRicettaInUI() {
   const htmlTable = document.getElementById("table-ricetta");
   const htmlTableBody = htmlTable.querySelectorAll("tbody")[0];
@@ -216,6 +267,15 @@ function ottieniTabellaRicettaInUI() {
 
 function ottieniTabellaProporzioniInUI() {
   const htmlTable = document.getElementById("table-proporzioni");
+  const htmlTableBody = htmlTable.querySelectorAll("tbody")[0];
+  return {
+    table: htmlTable,
+    body: htmlTableBody,
+  };
+}
+
+function ottieniTabellaDaIngredienteInUI() {
+  const htmlTable = document.getElementById("table-da-ingrediente");
   const htmlTableBody = htmlTable.querySelectorAll("tbody")[0];
   return {
     table: htmlTable,

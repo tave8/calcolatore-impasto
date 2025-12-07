@@ -98,10 +98,17 @@
             <div class="title"><p>INPUT</p></div>
             <div class="content">
               <div class="input">
-                <p>Ingrediente <input type="text" /></p>
+                <p>Ingrediente <input type="text" 
+                                      onkeyup="quandoCambiaIngredienteNomeDaIngrediente(event.target.value)"
+                                      id="input-da-ingrediente-ingrediente" /></p>
               </div>
               <div class="input">
-                <p>Quantità (g) <input type="number" /></p>
+                <p>Quantità (g) <input type="number" 
+                                      onkeyup="quandoCambiaIngredienteQuantitaDaIngrediente(event.target.value)" 
+                                      onchange="quandoCambiaIngredienteQuantitaDaIngrediente(event.target.value)"
+                                      id="input-da-ingrediente-quantita"
+                                      value="1"
+                                      min="1" /></p>
               </div>
             </div>
           </div>
@@ -112,7 +119,7 @@
             <div class="title"><p>OUTPUT</p></div>
             <div class="content">
               <div class="table-container">
-                <table class="table-default table-con-totali">
+                <table class="table-default table-con-totali" id="table-da-ingrediente">
                   <thead>
                     <tr>
                       <th>Ingrediente</th>
@@ -121,28 +128,14 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>farina</td>
-                      <td>100</td>
-                      <td>54</td>
-                    </tr>
-                    <tr>
-                      <td>farina</td>
-                      <td>100</td>
-                      <td>54</td>
-                    </tr>
-                    <tr>
-                      <td>farina</td>
-                      <td>100</td>
-                      <td>54</td>
-                    </tr>
+
                   </tbody>
-                  <tfoot>
+                  <!-- <tfoot>
                     <tr>
                       <td>Totale:</td>
                       <td colspan="2">3453</td>
                     </tr>
-                  </tfoot>
+                  </tfoot> -->
                 </table>
               </div>
             </div>
