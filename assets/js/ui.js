@@ -71,18 +71,31 @@ function aggiornaTabellaDaIngredienteInUI(proporzioni) {
 // IN "DA INGREDIENTE"
 
 /**
+ * Chiama questa funzione sia quando l'utente sta cambiando
+ * il nome dell'ingrediente o la sua quantità nella funzionalità
+ * "da ingrediente", sia quando altri cambiamenti input
+ * vengono fatte, ad esempio quando l'utente cambia/rimuove/aggiunge
+ * un ingrediente.
+ *
  * param cosaCambia: str: "ingrediente" | "quantita"
  */
-function quandoCambiaIngredienteDaIngrediente(cosaCambia) {
+function quandoCambiaIngredienteDaIngrediente(cosaCambia = null) {
+  // console.log(forzaRicalcolo)
   const nomeIngrediente = ottieniIngredienteNomeDaIngredienteDaUI();
   const quantitaNota = ottieniIngredienteQuantitaDaIngredienteDaUI();
+
   // prima di fare calcoli, verifica che il nome ingrediente esista
   // realmente tra gli ingredienti forniti dall'utente
-  const possoFareCalcoli = esisteNomeIngredienteInRicettaEQuantitaEValida(nomeIngrediente, quantitaNota)
+  const possoFareCalcoli = esisteNomeIngredienteInRicettaEQuantitaEValida(nomeIngrediente, quantitaNota);
   //   se l'ingrediente non esiste o la quantitaà non è valida, non fare niente
+  console.log(nomeIngrediente, quantitaNota);
+  // serve forzare il ricalcolo quando l'ingrediente è stato appena rimosso dall'utente
+  // e anche nei dati interni, e quindi in teoria non esiste più
+  // if (!forzaRicalcolo) {
   if (!possoFareCalcoli) {
     return;
   }
+  // }
 
   const proporzioni = calcolaProporzioni(ricettaUtente.ingredienti);
   //  ottieni la quantità di questo ingrediente che l'utente fornisce
@@ -203,6 +216,11 @@ function rimuoviIngrediente(id) {
   //   una volta calcolate le proporzioni, aggiorna finalmente la
   // tabella UI delle proporzioni degli ingredienti, così l'utente può vederle
   aggiornaTabellaProporzioniInUI(proporzioni);
+
+  // console.log("sto per aggiornare tabella da ingrediente")
+  // quando viene rimosso un ingrediente,allora aggiorna
+  // anche la tabella "da ingrediente", ricalcolandola
+  quandoCambiaIngredienteDaIngrediente();
 }
 
 function rimuoviIngredienteInUI(id) {
@@ -262,10 +280,10 @@ function esisteNomeIngredienteInRicettaUtente(nomeIngrediente) {
  * e contemporaneamente la quantità fornita dall'utente è valida?
  */
 function esisteNomeIngredienteInRicettaEQuantitaEValida(nomeIngrediente, quantita) {
-  const esisteIngrediente = esisteNomeIngredienteInRicettaUtente(nomeIngrediente)
-  const quantitaValida = !isNaN(quantita)
-  return cond = esisteIngrediente && quantitaValida
-  return cond
+  const esisteIngrediente = esisteNomeIngredienteInRicettaUtente(nomeIngrediente);
+  const quantitaValida = !isNaN(quantita);
+  return (cond = esisteIngrediente && quantitaValida);
+  return cond;
 }
 
 function ottieniTabellaRicettaInUI() {
