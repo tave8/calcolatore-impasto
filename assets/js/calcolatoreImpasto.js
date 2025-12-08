@@ -1,5 +1,7 @@
 // Algoritmo per calcolare proporzioni impasto/lievito e ingredienti
 
+// branch standardize
+
 /**
  * ## Ho la ricetta, voglio le proporzioni degli ingredienti
  *
@@ -22,7 +24,7 @@
  * }
  *
  */
-function calcolaProporzioni(ingredienti, ricetta="[non specificato]") {
+function calcolaProporzioni(ingredienti, ricetta = "[non specificato]") {
   const ret = {
     ricetta: ricetta,
     request: "Ho la ricetta, voglio le proporzioni degli ingredienti",
@@ -43,13 +45,13 @@ function calcolaProporzioni(ingredienti, ricetta="[non specificato]") {
     // rimuovi la quantita inizialmente fornita dall'utente
     // delete nuovoIngrediente.quantita;
     // arrotondamenti e non
-    const proporzioneArrotondata = arrotondaProporzione(proporzione)
+    const proporzioneArrotondata = arrotondaProporzione(proporzione);
     nuovoIngrediente["proporzione"] = proporzione;
     nuovoIngrediente["proporzioneArrotondata"] = proporzioneArrotondata;
     nuovoIngrediente["percentuale"] = proporzione * 100;
     nuovoIngrediente["percentualeArrotondata"] = arrotondaPercentuale(proporzione * 100);
 
-    // infine, aggiungi una nuova proprietà, per mantenere la compatibilità 
+    // infine, aggiungi una nuova proprietà, per mantenere la compatibilità
     nuovoIngrediente["quantitaArrotondata"] = arrotondaQuantita(ingrediente.quantita);
 
     ret.items.push(nuovoIngrediente);
@@ -91,7 +93,7 @@ function calcolaDaIngrediente({ ingrediente: ingredienteNoto, quantita: quantita
       ingrediente: ingredienteNoto,
       quantita: quantitaNota,
     },
-    ricetta: proporzioni.ricetta
+    ricetta: proporzioni.ricetta,
   };
   //   trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
   const proporzioneNota = trovaProporzioneDiIngrediente(ingredienteNoto, proporzioni.items);
@@ -151,7 +153,7 @@ function calcolaDaTot(quantitaTot, proporzioni) {
     input: {
       quantita: quantitaTot,
     },
-    ricetta: proporzioni.ricetta
+    ricetta: proporzioni.ricetta,
   };
   // console.log(quantitaTot, proporzioni)
   for (ingrediente of proporzioni.items) {
@@ -178,10 +180,10 @@ function calcolaDaTot(quantitaTot, proporzioni) {
  */
 
 function generaStoriaEsempio() {
-  // *** INPUT 
+  // *** INPUT
   // questi sono gli input
 
-  const nomeRicetta = "Pizza di Fatima"
+  const nomeRicetta = "Pizza di Fatima";
 
   const ricetta = [
     { ingrediente: "farina v300", quantita: 430 },
@@ -198,8 +200,8 @@ function generaStoriaEsempio() {
   const proporzioni = calcolaProporzioni(ricetta, nomeRicetta);
 
   // da ingrediente
-  const ingredienteNoto = "farina v300"
-  const quantitaIngredienteNoto = 660
+  const ingredienteNoto = "farina v300";
+  const quantitaIngredienteNoto = 660;
   const proporzioniDaIngrediente = calcolaDaIngrediente({
     ingrediente: ingredienteNoto,
     quantita: quantitaIngredienteNoto,
@@ -207,16 +209,16 @@ function generaStoriaEsempio() {
   });
 
   // da totale
-  const quantitaTot = 1000 //calcolaTotDaUnita(8, 350);
+  const quantitaTot = 1000; //calcolaTotDaUnita(8, 350);
   const quantitaDaTotaleImpasto = calcolaDaTot(quantitaTot, proporzioni);
 
   // *** GENERA PEZZI DI STORIA
-  const storiaIngredienti = generaStoriaIngredienti(ricetta)
+  const storiaIngredienti = generaStoriaIngredienti(ricetta);
   // console.log(storiaIngredienti)
-  
-  const storiaDaIngrediente = generaStoriaDaIngrediente(proporzioniDaIngrediente)
-  const storiaDaTot = generaStoriaDaTot(quantitaDaTotaleImpasto)
-  const storiaPercentuali = generaStoriaPercentuali(proporzioni)
+
+  const storiaDaIngrediente = generaStoriaDaIngrediente(proporzioniDaIngrediente);
+  const storiaDaTot = generaStoriaDaTot(quantitaDaTotaleImpasto);
+  const storiaPercentuali = generaStoriaPercentuali(proporzioni);
 
   // console.log(storiaDaTot)
 
@@ -233,56 +235,53 @@ function generaStoriaEsempio() {
     Se ho ${quantitaTot}g di impasto, allora mi serviranno: ${storiaDaTot}
 
     Ecco le percentuali degli ingredienti in ${nomeRicetta}: ${storiaPercentuali}
-  `
+  `;
 
   // console.log(storia)
-
 
   // console.log(proporzioni);
   // console.log(proporzioniDaIngrediente);
   // console.log(quantitaDaTotaleImpasto);
-  return storia
+  return storia;
 }
-
 
 /**
  * ## Voglio la storia di quello che mi serve a partire da un ingrediente e la sua quantità.
  */
 function generaStoriaDaIngrediente(proporzioni) {
-  let ret = ""
-  for(proporzione of proporzioni.items) {
+  let ret = "";
+  for (proporzione of proporzioni.items) {
     ret += `
     ${proporzione.quantitaArrotondata}g di ${proporzione.ingrediente}
-    `
+    `;
   }
-  return ret
+  return ret;
 }
 
 /**
  * ## Voglio la storia di quello che mi serve a partire da un totale impasto.
  */
 function generaStoriaDaTot(proporzioni) {
-  let ret = ""
-  for(proporzione of proporzioni.items) {
+  let ret = "";
+  for (proporzione of proporzioni.items) {
     ret += `
     ${proporzione.quantitaArrotondata}g di ${proporzione.ingrediente}
-    `
+    `;
   }
-  return ret
+  return ret;
 }
-
 
 /**
  * ## Voglio la storia delle percentuali degli ingredienti.
  */
 function generaStoriaPercentuali(proporzioni) {
-  let ret = ""
-  for(proporzione of proporzioni.items) {
+  let ret = "";
+  for (proporzione of proporzioni.items) {
     ret += `
     ${proporzione.percentualeArrotondata}% di ${proporzione.ingrediente}
-    `
+    `;
   }
-  return ret
+  return ret;
 }
 
 /**
@@ -290,17 +289,14 @@ function generaStoriaPercentuali(proporzioni) {
  *
  */
 function generaStoriaIngredienti(ricetta) {
-  let ret = ""
-  for(ingrediente of ricetta) {
+  let ret = "";
+  for (ingrediente of ricetta) {
     ret += `
     ${ingrediente.quantita}g di ${ingrediente.ingrediente}
-    `
+    `;
   }
-  return ret
+  return ret;
 }
-
-
-
 
 // HELPER
 
@@ -346,18 +342,17 @@ function arrotonda(x, nDigits) {
   return parseFloat(x.toFixed(nDigits));
 }
 
-function arrotondaPercentuale(x, nDigits=2) {
-  return arrotonda(x, nDigits)
+function arrotondaPercentuale(x, nDigits = 2) {
+  return arrotonda(x, nDigits);
 }
 
-function arrotondaQuantita(x, nDigits=2) {
-  return arrotonda(x, nDigits)
+function arrotondaQuantita(x, nDigits = 2) {
+  return arrotonda(x, nDigits);
 }
 
-function arrotondaProporzione(x, nDigits=4) {
-  return arrotonda(x, nDigits)
+function arrotondaProporzione(x, nDigits = 4) {
+  return arrotonda(x, nDigits);
 }
-
 
 /**
  * ## Ho il numero di unità e quanto un unità pesa, voglio il totale
