@@ -22,6 +22,16 @@ CREATE TABLE opzioni_categorie_ricette (
     PRIMARY KEY(nome)
 );
 
+-- table opzioni_sottocategorie_ricette
+-- CREATE TABLE opzioni_sottocategorie_ricette (
+--     nome VARCHAR(50) NOT NULL,
+--     categoria VARCHAR(50) NOT NULL,
+--     PRIMARY KEY(nome),
+--     FOREIGN KEY(categoria) REFERENCES opzioni_categorie_ricette(nome)
+-- );
+
+-- nel salato c'è: salsa, contorno, 
+
 -- table ricette
 CREATE TABLE ricette (
     id INT AUTO_INCREMENT,
