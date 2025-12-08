@@ -300,6 +300,51 @@ class Recipe {
   //   this.instances.push(recipeInstance);
   // }
 
+  calcFromIngredient({ name: ingredientKnown, quantity: quantityKnown }) {
+    // console.log(ingredientKnown)
+    // return
+    const newRecipeInstance = new RecipeInstance([], this);
+    this.instances.push(newRecipeInstance);
+
+    // console.log(this.instances)
+    // return
+
+    //   trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
+    const proportionKnown = this._findProportionOfIngredient(ingredientKnown);
+    // console.log(proportionKnown)
+
+    // visto che il totale delle proporzioni sarà sempre 1, allora
+    // la proporzione rimanente si ottiene sottraendo  1 - proporzioneNota
+    const proportionKnownRemaining = 1 - proportionKnown;
+    // la quantita rimanente del totale
+    // si basa sulla seguente proporzione
+    // quantitaNota : quantitaRimanente = proporzioneNota : proporzioneNotaRimanente
+    // esempio:
+    // 10 g di sale stanno alla quantità di impasto che rimane, come la proporzione del sale (nel totale impasto)
+    // sta al totale delle proporzioni degli altri ingredienti
+    const quantityRemaining = (quantityKnown * proportionKnownRemaining) / proportionKnown;
+    // alla fine, dalla quantita nota di un ingrediente, e dalle proporzioni della ricetta,
+    // si ricava la quantità totale di questo (nuovo?) impasto, non di quello dato
+    // prima dall'utente come input
+    const totNewQuantity = quantityKnown + quantityRemaining;
+
+    // console.log(proportionKnown, totNewQuantity)
+    // return
+
+    for (let i = 0; i < this.ingredients.length; i++) {
+      // always refer to the real ingredient (so the proportion)
+      const ingredient = this.ingredients[i];
+      // moltiplicando la quantità totale con la proporzione del singolo ingrediente,
+      // ricavo finalmente la quantità di ogni altro ingrediente, oltre all'ingrediente dato
+      const newQuantity = totNewQuantity * ingredient.proportion;
+      // arrotondamenti e non
+      newRecipeInstance.addIngredient({ quantity: newQuantity }, ingredient);
+    }
+
+    // console.log(this.instances)
+
+    return newRecipeInstance;
+  }
 
   _calcProportions() {
     // to compute the proportions, the first recipe instance
@@ -317,6 +362,17 @@ class Recipe {
       ingredient._setPercentage(proportion);
     }
     return this;
+  }
+
+  _findProportionOfIngredient(ingredientName) {
+    for (let i = 0; i < this.ingredients.length; i++) {
+      const ingredient = this.ingredients[i];
+      // se trovo l'ingrediente che mi interessa
+      if (ingredient.name === ingredientName) {
+        return ingredient.proportion;
+      }
+    }
+    throw Error("Non è stato trovato nessuna proporzione per l'ingrediente dato.");
   }
 }
 
@@ -339,6 +395,7 @@ class RecipeInstance {
   addIngredient(ingredientInfo, ingredient) {
     const ingredientInstance = new IngredientInstance(ingredientInfo, ingredient);
     this.ingredients.push(ingredientInstance);
+    this.totIngredients += ingredientInstance.quantity;
   }
 
   calcTotIngredients() {
@@ -437,11 +494,11 @@ const recipeFatimasBread = new Recipe("Fatima's Bread", [
 // recipe instance
 const recipeFatimasBreadFromXWheat = recipeFatimasBread.calcFromIngredient({
   name: "farina v300",
-  quantity: 430,
+  quantity: 800,
 });
 
 // recipe instance
 // const recipeFatimasBreadFromXTot = recipeFatimasBread.calcFromTot(1500);
 
-console.log(recipeFatimasBread);
-// console.log(recipeInstance)
+// console.log(recipeFatimasBread);
+// console.log(recipeFatimasBreadFromXWheat)
