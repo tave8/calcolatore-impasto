@@ -91,13 +91,52 @@ class RecipeCalculator {
     return this;
   }
 
-  calcFromIngredient() {}
+  /**
+   *
+   */
+  calcFromIngredient({ name: knownIngredient, quantity: knownQuantity }) {
+    //   trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
+    const proporzioneNota = this._findProportionOfIngredient(knownIngredient);
+    // visto che il totale delle proporzioni sarà sempre 1, allora
+    // la proporzione rimanente si ottiene sottraendo  1 - proporzioneNota
+    const proporzioneNotaRimanente = 1 - proporzioneNota;
+    // la quantita rimanente del totale
+    // si basa sulla seguente proporzione
+    // quantitaNota : quantitaRimanente = proporzioneNota : proporzioneNotaRimanente
+    // esempio:
+    // 10 g di sale stanno alla quantità di impasto che rimane, come la proporzione del sale (nel totale impasto)
+    // sta al totale delle proporzioni degli altri ingredienti
+    const quantitaRimanente = (quantitaNota * proporzioneNotaRimanente) / proporzioneNota;
+    // alla fine, dalla quantita nota di un ingrediente, e dalle proporzioni della ricetta,
+    // si ricava la quantità totale di quell'impasto
+    const quantitaTot = quantitaNota + quantitaRimanente;
+    for (ingrediente of proporzioni.items) {
+      const nuovoIngrediente = Object.assign({}, ingrediente);
+      // moltiplicando la quantità totale con la proporzione del singolo ingrediente,
+      // ricavo finalmente la quantità di ogni altro ingrediente, oltre all'ingrediente dato
+      const quantita = quantitaTot * ingrediente.proporzione;
+      // arrotondamenti e non
+      const quantitaArrotondata = arrotondaQuantita(quantita);
+      nuovoIngrediente["quantita"] = quantita;
+      nuovoIngrediente["quantitaArrotondata"] = quantitaArrotondata;
+      ret.items.push(nuovoIngrediente);
+    }
+  }
 
   calcFromTot() {}
 
-  //   SETTERS & GETTERS
-
   // HELPERS
+
+  _findProportionOfIngredient(ingredientName) {
+    for (let i = 0; i < this.recipe.ingredients.length; i++) {
+      const ingredient = this.recipe.ingredients[i];
+      // se trovo l'ingrediente che mi interessa
+      if (ingredient.name === ingredientName) {
+        return ingredient.proportion;
+      }
+    }
+    throw Error("Non è stato trovato nessuna proporzione per l'ingrediente dato.");
+  }
 
   _roundNumber(x, nDigits) {
     return parseFloat(x.toFixed(nDigits));
@@ -227,3 +266,8 @@ const recipeAsList = [
 ];
 
 const recipe = new RecipeCalculator(recipeName, recipeAsList);
+
+recipe.calcFromIngredient({
+  name: "farina v300",
+  quantity: 700,
+});
