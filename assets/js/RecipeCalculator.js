@@ -122,17 +122,37 @@ class Recipe {
     return recipeInstance;
   }
 
-  calcFromTot(totIngredientsKnown) {
-    const newRecipeInstance = this.addInstance([]);
-    for (let i = 0; i < this.ingredients.length; i++) {
-      const ingredient = this.ingredients[i];
-      // la quantità dell'ingrediente si ottiene moltiplicando
-      // la quantità totale (che è nota) con la proporzione
-      // del singolo elemento
-      const newQuantity = totIngredientsKnown * ingredient.proportion;
-      newRecipeInstance.addIngredient({ quantity: newQuantity }, ingredient);
+  calcFromTot(recipeQuantity, existingRecipeInstance = null) {
+    let recipeInstance = null;
+    if (existingRecipeInstance) {
+      recipeInstance = existingRecipeInstance;
+    } else {
+      recipeInstance = this.addInstance(
+        [],
+        {
+          haveRecipeQuantity: true,
+        },
+        {
+          recipeQuantity: recipeQuantity,
+        }
+      );
     }
-    return newRecipeInstance;
+
+    // console.log(existingRecipeInstance)
+
+
+    for (let i = 0; i < this.coreInstance.ingredients.length; i++) {
+      const ingredientInstance = this.coreInstance.ingredients[i];
+      const ingredient = ingredientInstance.ingredient;
+      const newQuantity = recipeQuantity * ingredient.proportion;
+      
+      if (existingRecipeInstance) {
+        recipeInstance.ingredients[i].quantity = newQuantity;
+      } else {
+        recipeInstance.addIngredient({ quantity: newQuantity }, ingredient);
+      }
+    }
+    return recipeInstance;
   }
 
   addIngredients(ingredientsList) {
@@ -203,7 +223,6 @@ class Recipe {
         quantity: newQuantity,
       });
     }
-
   }
 
   /**
@@ -215,11 +234,9 @@ class Recipe {
       throw Error(`No ingredient '${ingredientName}' was found.`);
     }
 
-    let ingredientFound = false;
     for (let i = 0; i < this.ingredients.length; i++) {
       const ingredient = this.ingredients[i];
       if (ingredientName === ingredient.name) {
-        ingredientFound = true;
         this.ingredients.splice(i, 1);
         this.coreInstance.ingredients.splice(i, 1);
       }
@@ -283,7 +300,7 @@ class Recipe {
         );
       }
       // CASE: the user had the recipe total
-      else if (recipeInstance.userRequest.haveRecipeTotal) {
+      else if (recipeInstance.userRequest.haveRecipeQuantity) {
         //
       } else {
         throw Error(`The request ${JSON.stringify(recipeInstance.userRequest)} 
@@ -313,7 +330,7 @@ class Recipe {
         );
       }
       // CASE: the user had the recipe total
-      else if (recipeInstance.userRequest.haveRecipeTotal) {
+      else if (recipeInstance.userRequest.haveRecipeQuantity) {
         //
       } else {
         throw Error(`The request ${JSON.stringify(recipeInstance.userRequest)} 
@@ -324,31 +341,56 @@ class Recipe {
 
   _removeIngredientToAllInstances(ingredientName) {
     // iterate all recipe instances
+    let indexIngredientInstance = null
     for (let i = 0; i < this.instances.length; i++) {
       const recipeInstance = this.instances[i];
+      // console.log(recipeInstance)
       // find the ingredient instance in the recipe instance
       for (let j = 0; j < recipeInstance.ingredients.length; j++) {
         const ingredientInstance = recipeInstance.ingredients[j];
-        if (ingredientInstance.ingredient.name === ingredientName) {
+        const ingredient = ingredientInstance.ingredient
+        if (ingredientName === ingredient.name) {
+          // console.log(recipeInstance)
           // remove that ingredient instance from the ingredients list
-          recipeInstance.ingredients.splice(j, 1);
+          // recipeInstance.ingredients.splice(j, 1);
+          indexIngredientInstance = j
           break;
         }
       }
 
+      console.log(recipeInstance)
+
       if (recipeInstance.userRequest.haveOneIngredient) {
         // console.log(recipeInstance)
         // prevent from adding a new instance, simply update the existing one
-        this.calcFromIngredient(
-          {
-            name: recipeInstance.userData.ingredientName,
-            quantity: recipeInstance.userData.ingredientQuantity,
-          },
-          recipeInstance
-        );
+        // if the ingredient name to be deleted, matches a computation
+        // that relied on that ingredient name as input, then delete the 
+        // computation/recipe instance
+        if (ingredientName === recipeInstance.userData.ingredientName) {
+          this.instances.splice(i, 1)
+        }
+        else {
+          this.calcFromIngredient(
+            {
+              name: recipeInstance.userData.ingredientName,
+              quantity: recipeInstance.userData.ingredientQuantity,
+            },
+            recipeInstance
+          );
+        }
+
       }
       // CASE: the user had the recipe total
-      else if (recipeInstance.userRequest.haveRecipeTotal) {
+      else if (recipeInstance.userRequest.haveRecipeQuantity) {
+        console.log(recipeInstance)
+        
+        this.calcFromTot(
+          this.userData.recipeQuantity,
+          recipeInstance
+        )
+
+        // recipeInstance.ingredients.splice(indexIngredientInstance, 1);
+
         //
       } else {
         throw Error(`The request ${JSON.stringify(recipeInstance.userRequest)} 
@@ -369,12 +411,12 @@ class Recipe {
   removeInstance() {}
 
   _showStringifyInHtml(elId, notes) {
-    const elHtml = document.getElementById(elId)
-    const stringified = this._stringify()
+    const elHtml = document.getElementById(elId);
+    const stringified = this._stringify();
     const finalText = `========> NOTE: ${notes} 
     
-    ${stringified}`
-    elHtml.textContent += finalText
+    ${stringified}`;
+    elHtml.textContent += finalText;
   }
 
   /**
@@ -417,9 +459,10 @@ class Recipe {
     // const totIngredients = this.coreInstance.totIngredients;
     for (let i = 0; i < this.instances.length; i++) {
       const recipeInstance = this.instances[i];
-      const {ingredients: ingredientInstances, userData, userRequest, totIngredients} = recipeInstance
+      const { ingredients: ingredientInstances, userData, userRequest, totIngredients } = recipeInstance;
       ret += `
 
+        Recipe instance: ${i + 1}
 
         User request: ${JSON.stringify(userRequest)}
 
@@ -429,21 +472,21 @@ class Recipe {
 
         Ingredient instances: 
         `;
-        for (let i = 0; i < ingredientInstances.length; i++) {
-          const ingredientInstance = ingredientInstances[i];
-          const ingredient = ingredientInstance.ingredient
-          const {quantity} = ingredientInstance
-          const {name, proportion} = ingredient
-          ret += `
+      for (let i = 0; i < ingredientInstances.length; i++) {
+        const ingredientInstance = ingredientInstances[i];
+        const ingredient = ingredientInstance.ingredient;
+        const { quantity } = ingredientInstance;
+        const { name, proportion } = ingredient;
+        ret += `
             Ingredient:   ${name}
             Quantity:     ${quantity.toFixed(4)}
             Proportion:   ${proportion.toFixed(4)}
 
-          `
-        }
-        ret += `
+          `;
+      }
+      ret += `
         -------------
-        `
+        `;
     }
     return ret;
   }
@@ -576,56 +619,46 @@ const myRecipe = new Recipe("My Recipe", [
 
 // console.log(myRecipe)
 
-myRecipe.addIngredient({
-  name: "oil",
-  quantity: 10,
-});
-
-
-myRecipe.calcFromIngredient({
-  name: "water",
-  quantity: 90,
-});
-
-// myRecipe.removeIngredient("water");
-
-myRecipe.calcFromIngredient({
-  name: "water",
-  quantity: 90,
-});
-
-myRecipe.removeIngredient("salt");
-
-// myRecipe._showStringifyInHtml("show-results", "BEFORE EDITING INGREDIENT")
-
-
-// myRecipe.editIngredient("salt", {
-//   quantity: 20,
-// });
-
-
-
-
-
-// myRecipe.editIngredient("salt", {
-//   name: "salty",
-//   quantity: 20,
-// });
-
 // myRecipe.addIngredient({
 //   name: "oil",
-//   quantity: 20,
+//   quantity: 10,
 // });
+
+myRecipe.calcFromIngredient({
+  name: "water",
+  quantity: 90,
+});
+
+myRecipe.calcFromTot(150);
+
+myRecipe.removeIngredient("water");
+
+
+// myRecipe._showStringifyInHtml("show-results", "BEFORE ADDING CHIA")
 
 // myRecipe.addIngredient({
 //   name: "chia",
-//   quantity: 10,
+//   quantity: 30,
+// });
+
+// myRecipe.removeIngredient("water");
+
+// myRecipe.calcFromIngredient({
+//   name: "water",
+//   quantity: 90,
+// });
+
+// myRecipe.removeIngredient("salt");
+
+// myRecipe._showStringifyInHtml("show-results", "BEFORE EDITING INGREDIENT")
+
+// myRecipe.editIngredient("salt", {
+//   quantity: 20,
 // });
 
 // console.log(myRecipe);
 // console.log("%s", myRecipe._stringify())
-myRecipe._showStringifyInHtml("show-results", "LAST COMPUTATION")
-
+myRecipe._showStringifyInHtml("show-results", "LAST COMPUTATION");
 
 // the actual recipe
 // const recipeFatimasBread = new Recipe("Fatima's Bread", [
