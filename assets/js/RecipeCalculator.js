@@ -35,93 +35,37 @@ class Recipe {
     this.addIngredients(ingredientsList);
   }
 
-  addIngredients(ingredientsList) {
-    for (let i = 0; i < ingredientsList.length; i++) {
-      const ingredientInfo = ingredientsList[i];
-      this.addIngredient(ingredientInfo);
-    }
-  }
-
   /**
-   * Every time a new ingredient is added, the proportions will be re-computed.
+   *
+   * The function that computes the proportions.
+   * The proportion computation is based on the
+   * core instance recipe, which is initially provided by the user,
+   * as well as being able to be updated, by adding or removing ingredients.
    */
-  addIngredient(ingredientInfo) {
-    // check: the name of the ingredient must be unique
-
-    const ingredient = new Ingredient(ingredientInfo);
-    const ingredientInstance = new IngredientInstance(ingredientInfo, ingredient, this.coreInstance);
-    this.ingredients.push(ingredient);
-    this.coreInstance.ingredients.push(ingredientInstance);
-    // important: you must compute the total ingredients,
-    // before computing the proportions. this is because
-    // the proportion of the ingredient, depends on the total quantity
-    // of the core recipe instance
-    // every time a new ingredient is added to the core recipe instance,
-    // then you must update the ingredient proportions,
-    // because there will be new rations, proportions, between ingredients
-    this._calcProportions();
-    // when I add an ingredient, then i need to add it to all
-    // recipe instances that have been already created
-    this._addIngredientToAllInstances(ingredientInstance);
-    return ingredient;
-  }
-
-  _addIngredientToAllInstances(ingredientInstance) {
-    for (let i = 0; i < this.instances.length; i++) {
-      const recipeInstance = this.instances[i];
-      recipeInstance.ingredients.push(ingredientInstance);
-      recipeInstance.calcTotIngredients();
-      // re-compute whatever was the initial request done
-      // in this recipe instance
-      // CASE: the user had 1 ingredient
-      if (recipeInstance.userRequest.haveOneIngredient) {
-        // this
-        // prevent from adding a new instance, simply update the existing one
-
-        this.calcFromIngredient(
-          {
-            name: recipeInstance.userData.ingredientName,
-            quantity: recipeInstance.userData.ingredientQuantity,
-          },
-          recipeInstance
-        );
-      }
-      // CASE: the user had the recipe total
-      else if (recipeInstance.userRequest.haveRecipeTotal) {
-        //
-      } else {
-        throw Error(`The request ${JSON.stringify(recipeInstance.userRequest)} 
-              of the recipe instance is not known`);
-      }
+  _calcProportions() {
+    // make sure the core instance always has the correct total,
+    // otherwise proportions will not be correct
+    // to compute the proportions, consider the "core recipe instance"
+    // which is the recipe that the user initially provided, as well as
+    // any additional ingredients that the user will add later on
+    // how many ingredients are there
+    this.coreInstance.calcTotIngredients();
+    // to compute the proportions, you need to get every ingredient
+    // from the core recipe instance, because proportions are nothing but the ratio
+    // of a part quantity against the total quantity.
+    for (let i = 0; i < this.coreInstance.ingredients.length; i++) {
+      // get the user-provided ingredients
+      const ingredientInstance = this.coreInstance.ingredients[i];
+      // get the actual ingredient (so the proportion) of the ingredient instance
+      const ingredient = ingredientInstance.ingredient;
+      // the proportion of the single ingredient is given by the
+      // quantity against the total quantity
+      const proportion = ingredientInstance.quantity / this.coreInstance.totIngredients;
+      // proportion computed
+      ingredient._setProportion(proportion);
+      ingredient._setPercentage(proportion);
     }
-  }
-
-  /**
-   * Every time an ingredient is removed, the proportions will be re-computed.
-   */
-  removeIngredient(ingredientName) {
-    let ingredientFound = false;
-    for (let i = 0; i < this.ingredients.length; i++) {
-      const ingredient = this.ingredients[i];
-      if (ingredientName === ingredient.name) {
-        ingredientFound = true;
-        this.ingredients.splice(i, 1);
-        this.coreInstance.ingredients.splice(i, 1);
-      }
-    }
-    if (!ingredientFound) {
-      throw Error(`No ingredient '${ingredientName}' was found.`);
-    }
-    this._calcProportions();
-  }
-
-  /**
-   * Adds and returns the newly created recipe instance.
-   */
-  addInstance(ingredientsList, requestInfo, givenData) {
-    const recipeInstance = new RecipeInstance(ingredientsList, this, requestInfo, givenData);
-    this.instances.push(recipeInstance);
-    return recipeInstance;
+    return this;
   }
 
   calcFromIngredient({ name: ingredientKnown, quantity: quantityKnown }, existingRecipeInstance = null) {
@@ -168,7 +112,7 @@ class Recipe {
       const newQuantity = totNewQuantity * ingredient.proportion;
       // arrotondamenti e non
       if (existingRecipeInstance) {
-        recipeInstance.ingredients[i].quantity = newQuantity
+        recipeInstance.ingredients[i].quantity = newQuantity;
       } else {
         recipeInstance.addIngredient({ quantity: newQuantity }, ingredient);
       }
@@ -191,37 +135,317 @@ class Recipe {
     return newRecipeInstance;
   }
 
+  addIngredients(ingredientsList) {
+    for (let i = 0; i < ingredientsList.length; i++) {
+      const ingredientInfo = ingredientsList[i];
+      this.addIngredient(ingredientInfo);
+    }
+  }
+
   /**
-   *
-   * The function that computes the proportions.
-   * The proportion computation is based on the
-   * core instance recipe, which is initially provided by the user,
-   * as well as being able to be updated, by adding or removing ingredients.
+   * Every time a new ingredient is added, the proportions will be re-computed.
    */
-  _calcProportions() {
-    // make sure the core instance always has the correct total,
-    // otherwise proportions will not be correct
-    this.coreInstance.calcTotIngredients();
-    // console.log(this.coreInstance)
-    // return
-    // to compute the proportions, consider the "core recipe instance"
-    // which is the recipe that the user initially provided, as well as
-    // any additional ingredients that the user will add later on
-    // if (recipeInstance === undefined) {
-    //   throw Error("Cannot compute recipe proportions " + "if there's no recipe instance.");
-    // }
-    // how many ingredients are there
+  addIngredient(ingredientInfo) {
+    // check: the name of the ingredient must be unique
+    if (this._ingredientExists(ingredientInfo.name)) {
+      throw Error(`The ingredient '${ingredientInfo.name}' you are trying to add is already present.`);
+    }
+    const ingredient = new Ingredient(ingredientInfo);
+    const ingredientInstance = new IngredientInstance(ingredientInfo, ingredient, this.coreInstance);
+    // add the ingredient to the list of ingredients (so the proportions)
+    this.ingredients.push(ingredient);
+    // add the ingredient instance to the core instance recipe,
+    // which keeps track of the user input and allows for async ingredient addition
+    // (meaning ingredients can be added in different moments and not necessarily all at once)
+    this.coreInstance.ingredients.push(ingredientInstance);
+    // important: you must compute the total ingredients,
+    // before computing the proportions. this is because
+    // the proportion of the ingredient, depends on the total quantity
+    // of the core recipe instance
+    // every time a new ingredient is added to the core recipe instance,
+    // then you must update the ingredient proportions,
+    // because there will be new rations, proportions, between ingredients
+    this._calcProportions();
+    // when I add an ingredient, then i need to add it to all
+    // recipe instances that have been already created
+    this._addIngredientToAllInstances(ingredientInstance);
+    return ingredient;
+  }
+
+  /**
+   * Edit the name or quantity of an existing ingredient
+   */
+  editIngredient(currIngredientName, newIngredientInfo) {
+    const { name: newIngredientName, quantity: newQuantity } = newIngredientInfo;
+    // check that the given ingredient exists
+    if (!this._ingredientExists(currIngredientName)) {
+      throw Error(`The ingredient ${currIngredientName} has not been found.`);
+    }
+    // check that the new name of the ingredient is not already taken
+    if (this._ingredientExists(newIngredientName)) {
+      throw Error(`The new ingredient name '${newIngredientName}' ` + `from current ingredient ${currIngredientName} ` + `you are is already present.`);
+    }
+
+    const ingredientCoreInstance = this._findIngredientCoreInstance(currIngredientName);
+    const ingredient = ingredientCoreInstance.ingredient;
+    // console.log(ingredientCoreInstance)
+    // the ingredient name is modified at the ingredient level
+    // the user doesn't need to give the ingredient a new name
+    if (newIngredientName !== undefined) {
+      ingredient.name = newIngredientName;
+    }
+    // the ingredient quantity is modified at the ingredient instance level
+    if (newQuantity !== undefined) {
+      ingredientCoreInstance.quantity = newQuantity;
+      this._calcProportions();
+      // now edit all recipe instances
+      this._editIngredientInAllInstances(currIngredientName, {
+        quantity: newQuantity,
+      });
+    }
+
+  }
+
+  /**
+   * Every time an ingredient is removed, the proportions will be re-computed.
+   */
+  removeIngredient(ingredientName) {
+    const ingredientExists = this._ingredientExists(ingredientName);
+    if (!ingredientExists) {
+      throw Error(`No ingredient '${ingredientName}' was found.`);
+    }
+
+    let ingredientFound = false;
+    for (let i = 0; i < this.ingredients.length; i++) {
+      const ingredient = this.ingredients[i];
+      if (ingredientName === ingredient.name) {
+        ingredientFound = true;
+        this.ingredients.splice(i, 1);
+        this.coreInstance.ingredients.splice(i, 1);
+      }
+    }
+
+    this._calcProportions();
+    this._removeIngredientToAllInstances(ingredientName);
+  }
+
+  /**
+   * Find and return an ingredient, given its name.
+   */
+  _findIngredientCoreInstance(ingredientName) {
+    for (let i = 0; i < this.coreInstance.ingredients.length; i++) {
+      const ingredientInstance = this.coreInstance.ingredients[i];
+      if (ingredientInstance.ingredient.name === ingredientName) {
+        return ingredientInstance;
+      }
+    }
+    throw Error(`Ingredient ${ingredientName} not found.`);
+  }
+
+  _ingredientExists(ingredientName) {
+    for (let i = 0; i < this.ingredients.length; i++) {
+      const ingredient = this.ingredients[i];
+      if (ingredient.name === ingredientName) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * When we add an ingredient to the core recipe instance,
+   * we need to add that ingredient to all the instances/computations created
+   * from that recipe. Why? Because if I add an ingredient AFTER
+   * I've computed the recipe proportions, then I need to re-compute
+   * those proportions, based on the newly added ingredient.
+   * And these latter newly computed proportions will now impact how the
+   * ALREADY made computations will be, which will now need to be re-computed.
+   */
+  _addIngredientToAllInstances(ingredientInstance) {
+    for (let i = 0; i < this.instances.length; i++) {
+      // a recipe instance is simply a computation performed by the user
+      const recipeInstance = this.instances[i];
+      // we add the newly created ingredient to each recipe instance
+      recipeInstance.ingredients.push(ingredientInstance);
+      // compute the total of the recipe instance
+      recipeInstance.calcTotIngredients();
+      // re-compute whatever was the initial request done
+      // in this recipe instance
+      // CASE: the user had 1 ingredient
+      if (recipeInstance.userRequest.haveOneIngredient) {
+        // prevent from adding a new instance, simply update the existing one
+        this.calcFromIngredient(
+          {
+            name: recipeInstance.userData.ingredientName,
+            quantity: recipeInstance.userData.ingredientQuantity,
+          },
+          recipeInstance
+        );
+      }
+      // CASE: the user had the recipe total
+      else if (recipeInstance.userRequest.haveRecipeTotal) {
+        //
+      } else {
+        throw Error(`The request ${JSON.stringify(recipeInstance.userRequest)} 
+              of the recipe instance is not known`);
+      }
+    }
+  }
+
+  _editIngredientInAllInstances(ingredientName, ingredientInfo) {
+    for (let i = 0; i < this.instances.length; i++) {
+      const recipeInstance = this.instances[i];
+      // console.log(recipeInstance)
+      // calculate the total for each recipe instance
+      // recipeInstance.calcTotIngredients();
+      // re-compute whatever was the initial request done
+      // in this recipe instance
+      // CASE: the user had 1 ingredient
+      if (recipeInstance.userRequest.haveOneIngredient) {
+        // console.log(recipeInstance)
+        // prevent from adding a new instance, simply update the existing one
+        this.calcFromIngredient(
+          {
+            name: recipeInstance.userData.ingredientName,
+            quantity: recipeInstance.userData.ingredientQuantity,
+          },
+          recipeInstance
+        );
+      }
+      // CASE: the user had the recipe total
+      else if (recipeInstance.userRequest.haveRecipeTotal) {
+        //
+      } else {
+        throw Error(`The request ${JSON.stringify(recipeInstance.userRequest)} 
+              of the recipe instance is not known`);
+      }
+    }
+  }
+
+  _removeIngredientToAllInstances(ingredientName) {
+    // iterate all recipe instances
+    for (let i = 0; i < this.instances.length; i++) {
+      const recipeInstance = this.instances[i];
+      // find the ingredient instance in the recipe instance
+      for (let j = 0; j < recipeInstance.ingredients.length; j++) {
+        const ingredientInstance = recipeInstance.ingredients[j];
+        if (ingredientInstance.ingredient.name === ingredientName) {
+          // remove that ingredient instance from the ingredients list
+          recipeInstance.ingredients.splice(j, 1);
+          break;
+        }
+      }
+
+      if (recipeInstance.userRequest.haveOneIngredient) {
+        // console.log(recipeInstance)
+        // prevent from adding a new instance, simply update the existing one
+        this.calcFromIngredient(
+          {
+            name: recipeInstance.userData.ingredientName,
+            quantity: recipeInstance.userData.ingredientQuantity,
+          },
+          recipeInstance
+        );
+      }
+      // CASE: the user had the recipe total
+      else if (recipeInstance.userRequest.haveRecipeTotal) {
+        //
+      } else {
+        throw Error(`The request ${JSON.stringify(recipeInstance.userRequest)} 
+              of the recipe instance is not known`);
+      }
+    }
+  }
+
+  /**
+   * Adds and returns the newly created recipe instance.
+   */
+  addInstance(ingredientsList, requestInfo, givenData) {
+    const recipeInstance = new RecipeInstance(ingredientsList, this, requestInfo, givenData);
+    this.instances.push(recipeInstance);
+    return recipeInstance;
+  }
+
+  removeInstance() {}
+
+  _showStringifyInHtml(elId, notes) {
+    const elHtml = document.getElementById(elId)
+    const stringified = this._stringify()
+    const finalText = `========> NOTE: ${notes} 
+    
+    ${stringified}`
+    elHtml.textContent += finalText
+  }
+
+  /**
+   * Returns an easy to read summary of all data for the given instance.
+   */
+  _stringify() {
+    return `      
+      ***  RECIPE  ***
+        ${this._stringifyCoreInstance()}
+
+      ***  RECIPE INSTANCES  ***
+        ${this._stringifyInstances()}
+    `;
+  }
+
+  _stringifyCoreInstance() {
+    let ret = "";
+    const totIngredients = this.coreInstance.totIngredients;
+    const totals = `
+        Tot quantity ingredients: ${totIngredients.toFixed(4)}
+    `;
     for (let i = 0; i < this.coreInstance.ingredients.length; i++) {
       const ingredientInstance = this.coreInstance.ingredients[i];
       const ingredient = ingredientInstance.ingredient;
-      // la proporzione del singolo ingrediente è data dalla sua quantita
-      // rispetto alla quantità totale
-      const proportion = ingredientInstance.quantity / this.coreInstance.totIngredients;
+      const { quantity } = ingredientInstance;
+      const { name, proportion, percentage } = ingredient;
+      ret += `
+        Ingredient: ${name}
+        Quantity:   ${quantity.toFixed(4)}
+        Proportion: ${proportion.toFixed(4)}
 
-      ingredient._setProportion(proportion);
-      ingredient._setPercentage(proportion);
+      `;
     }
-    return this;
+    ret = totals + ret;
+    return ret;
+  }
+
+  _stringifyInstances() {
+    let ret = "";
+    // const totIngredients = this.coreInstance.totIngredients;
+    for (let i = 0; i < this.instances.length; i++) {
+      const recipeInstance = this.instances[i];
+      const {ingredients: ingredientInstances, userData, userRequest, totIngredients} = recipeInstance
+      ret += `
+
+
+        User request: ${JSON.stringify(userRequest)}
+
+        User data: ${JSON.stringify(userData)}
+
+        Tot ingredients: ${totIngredients.toFixed(4)}
+
+        Ingredient instances: 
+        `;
+        for (let i = 0; i < ingredientInstances.length; i++) {
+          const ingredientInstance = ingredientInstances[i];
+          const ingredient = ingredientInstance.ingredient
+          const {quantity} = ingredientInstance
+          const {name, proportion} = ingredient
+          ret += `
+            Ingredient:   ${name}
+            Quantity:     ${quantity.toFixed(4)}
+            Proportion:   ${proportion.toFixed(4)}
+
+          `
+        }
+        ret += `
+        -------------
+        `
+    }
+    return ret;
   }
 
   _findProportionOfIngredient(ingredientName) {
@@ -232,7 +456,7 @@ class Recipe {
         return ingredient.proportion;
       }
     }
-    throw Error("Non è stato trovato nessuna proporzione per l'ingrediente dato.");
+    throw Error(`The ingredient '${ingredientName}' has not been found.`);
   }
 }
 
@@ -269,6 +493,16 @@ class RecipeInstance {
       this.totIngredients += ingredientInstance.quantity;
     }
     return this;
+  }
+
+  _findIngredient(ingredientName) {
+    for (let i = 0; i < this.ingredients.length; i++) {
+      const ingredientInstance = this.ingredients[i];
+      if (ingredientInstance.ingredient.name === ingredientName) {
+        return ingredientInstance;
+      }
+    }
+    throw Error(`The ingredient '${ingredientName}' in the recipe instance, has not been found.`);
   }
 }
 
@@ -336,33 +570,62 @@ class IngredientInstance {
 // USAGE
 
 const myRecipe = new Recipe("My Recipe", [
-  { name: "water", quantity: 800 },
-  { name: "wheat", quantity: 100 },
+  { name: "water", quantity: 90 },
+  { name: "salt", quantity: 10 },
 ]);
 
-myRecipe.addIngredient({
-  name: "salt",
-  quantity: 100,
-});
-
-// myRecipe.removeIngredient("salt");
-
-myRecipe.calcFromIngredient({
-  name: "water",
-  quantity: 1600,
-});
+// console.log(myRecipe)
 
 myRecipe.addIngredient({
   name: "oil",
-  quantity: 20,
-});
-
-myRecipe.addIngredient({
-  name: "chia",
   quantity: 10,
 });
 
-console.log(myRecipe);
+
+myRecipe.calcFromIngredient({
+  name: "water",
+  quantity: 90,
+});
+
+// myRecipe.removeIngredient("water");
+
+myRecipe.calcFromIngredient({
+  name: "water",
+  quantity: 90,
+});
+
+myRecipe.removeIngredient("salt");
+
+// myRecipe._showStringifyInHtml("show-results", "BEFORE EDITING INGREDIENT")
+
+
+// myRecipe.editIngredient("salt", {
+//   quantity: 20,
+// });
+
+
+
+
+
+// myRecipe.editIngredient("salt", {
+//   name: "salty",
+//   quantity: 20,
+// });
+
+// myRecipe.addIngredient({
+//   name: "oil",
+//   quantity: 20,
+// });
+
+// myRecipe.addIngredient({
+//   name: "chia",
+//   quantity: 10,
+// });
+
+// console.log(myRecipe);
+// console.log("%s", myRecipe._stringify())
+myRecipe._showStringifyInHtml("show-results", "LAST COMPUTATION")
+
 
 // the actual recipe
 // const recipeFatimasBread = new Recipe("Fatima's Bread", [
