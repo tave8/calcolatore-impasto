@@ -167,9 +167,9 @@ class Recipe {
    */
   addIngredient(ingredientInfo) {
     // check: the name of the ingredient must be unique
-    if (this._ingredientExists(ingredientInfo.name)) {
-      throw Error(`The ingredient '${ingredientInfo.name}' you are trying to add is already present.`);
-    }
+    // if (this._ingredientExists(ingredientInfo.name)) {
+    //   throw Error(`The ingredient '${ingredientInfo.name}' you are trying to add is already present.`);
+    // }
     const ingredient = new Ingredient(ingredientInfo);
     const ingredientInstance = new IngredientInstance(ingredientInfo, ingredient, this.coreInstance);
     // add the ingredient to the list of ingredients (so the proportions)
