@@ -34,22 +34,6 @@ class Recipe {
     this.ingredients = [];
     this.instances = [];
     this.addIngredients(ingredientsAsList);
-    this.calcProportions();
-  }
-
-  calcProportions() {
-    // to compute the proportions, you need to get every ingredient
-    // from the core recipe instance, because proportions are nothing but the ratio
-    // of a part quantity against the total quantity.
-    this.ingredients.forEach((ingredient) => {
-      // the proportion of the single ingredient is given by the
-      // quantity against the total quantity
-      const proportion = ingredient.getQuantity() / this.getTotIngredients();
-      // proportion computed
-      ingredient.setProportion(proportion);
-      ingredient.setPercentage(proportion);
-    });
-    return this;
   }
 
   getTotIngredients() {
@@ -63,6 +47,7 @@ class Recipe {
   }
 
   addIngredient(ingredientInfo) {
+    // add ingredient to recipe
     const ingredient = new Ingredient({
       name: ingredientInfo.name,
       quantity: ingredientInfo.quantity,
@@ -70,6 +55,14 @@ class Recipe {
       proportion: null,
     });
     this.ingredients.push(ingredient);
+
+    // add ingredient to all instances
+    this.instances.forEach((instance) => {
+      instance.ingredients.push(ingredient);
+    });
+
+    this.refreshInstances()
+
     return ingredient;
   }
 
@@ -86,8 +79,13 @@ class Recipe {
       }
     });
 
-    this.calcProportions();
-    // this._removeIngredientToAllInstances(ingredientName);
+    this.refreshInstances()
+  }
+
+  refreshInstances() {
+    this.instances.forEach(instance => {
+        instance.refresh()
+    })
   }
 }
 
@@ -99,6 +97,11 @@ class Ingredient {
     this.quantity = quantity;
     this.recipe = recipe;
   }
+
+  getProportion() {
+    return this.getQuantity() / this.recipe.getTotIngredients()
+  }
+
   getQuantity() {
     return this.quantity;
   }
@@ -112,10 +115,19 @@ class Ingredient {
 }
 
 class RecipeInstance {
-  constructor() {
-    this.recipe;
-    this.ingredients;
+  constructor({ recipe }) {
+    this.recipe = recipe;
+    this.ingredients = [];
     // this.user
+  }
+  /**
+   * Re-compute the recipe instance based on 
+   * the state of the recipe. 
+   */
+  refresh() {
+    // if this recipe instance is "from one ingredient, derive the others"
+
+    // if this recipe instance is "from the recipe total, derive every ingredient"
   }
 }
 
