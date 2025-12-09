@@ -29,14 +29,19 @@ class Recipe {
     // that's a "recipe instance". a recipe instance is a recipe with the quantities,
     // whereas a recipe is the ingredients with their proportions
     this.instances = [];
+    // the initial recipe that the user provides
+    this.coreInstance = new RecipeInstance([], this)
+
     this.addIngredients(ingredientsList);
+
     // important: adding the first recipe instance must come BEFORE
     // calculating the proportions. because calculating the recipe proportions
     // depends on the "recipe" (so the recipe instance) that the user provides,
     // then we must first add this recipe instance, and then
     // we calculate the proportions based on that
-    this.addInstance(ingredientsList);
-    this._calcProportions();
+
+    // this.addInstance(ingredientsList);
+    // this._calcProportions();
   }
 
   addIngredients(ingredientsList) {
@@ -46,20 +51,36 @@ class Recipe {
     }
   }
 
+  /**
+   * Every time a new recipe is added, the proportions will be re-computed.
+   */
   addIngredient(ingredientInfo) {
+    // check: the name of the ingredient must be unique
+
     const ingredient = new Ingredient(ingredientInfo);
+    const ingredientInstance = new IngredientInstance(ingredientInfo, ingredient, this.coreInstance)
     this.ingredients.push(ingredient);
+    this.coreInstance.ingredients.push(ingredientInstance);
+    // important: you must compute the total ingredients,
+    // before computing the proportions. this is because 
+    // the proportion of the ingredient, depends on the total quantity
+    // of the core recipe instance
+    this.coreInstance.calcTotIngredients()
+    // every time a new ingredient is added to the core recipe instance,
+    // then you must update the ingredient proportions,
+    // because there will be new rations, proportions, between ingredients
+    this._calcProportions()
     return ingredient;
   }
 
   /**
    * Adds and returns the newly created recipe instance.
    */
-  addInstance(ingredientsList) {
-    const recipeInstance = new RecipeInstance(ingredientsList, this);
-    this.instances.push(recipeInstance);
-    return recipeInstance;
-  }
+  // addInstance(ingredientsList) {
+  //   const recipeInstance = new RecipeInstance(ingredientsList, this);
+  //   this.instances.push(recipeInstance);
+  //   return recipeInstance;
+  // }
 
   calcFromIngredient({ name: ingredientKnown, quantity: quantityKnown }) {
     const newRecipeInstance = this.addInstance([]);
@@ -106,21 +127,29 @@ class Recipe {
     return newRecipeInstance;
   }
 
+  /**
+   * 
+   * The function that computes the proportions.
+   * The proportion computation is based on the 
+   * core instance recipe, which is initially provided by the user,
+   * as well as being able to be updated, by adding or removing ingredients.
+   */
   _calcProportions() {
-    // to compute the proportions, the first recipe instance
-    // is taken
-    const recipeInstance = this.instances[0];
-    if (recipeInstance === undefined) {
-      throw Error("Cannot compute recipe proportions " + "if there's no recipe instance.");
-    }
-
+    // console.log(this.coreInstance)
+    // return 
+    // to compute the proportions, consider the "core recipe instance"
+    // which is the recipe that the user initially provided, as well as
+    // any additional ingredients that the user will add later on
+    // if (recipeInstance === undefined) {
+    //   throw Error("Cannot compute recipe proportions " + "if there's no recipe instance.");
+    // }
     // how many ingredients are there
-    for (let i = 0; i < recipeInstance.ingredients.length; i++) {
-      const ingredientInstance = recipeInstance.ingredients[i];
+    for (let i = 0; i < this.coreInstance.ingredients.length; i++) {
+      const ingredientInstance = this.coreInstance.ingredients[i];
       const ingredient = ingredientInstance.ingredient;
       // la proporzione del singolo ingrediente è data dalla sua quantita
       // rispetto alla quantità totale
-      const proportion = ingredientInstance.quantity / recipeInstance.totIngredients;
+      const proportion = ingredientInstance.quantity / this.coreInstance.totIngredients;
 
       ingredient._setProportion(proportion);
       ingredient._setPercentage(proportion);
@@ -142,7 +171,7 @@ class Recipe {
 
 class RecipeInstance {
   constructor(ingredientsList, recipe) {
-    this.recipe = recipe;
+    // this.recipe = recipe;
     this.ingredients = [];
     this.totIngredients = 0;
     this.addIngredients(ingredientsList, recipe);
@@ -157,7 +186,7 @@ class RecipeInstance {
   }
 
   addIngredient(ingredientInfo, ingredient) {
-    const ingredientInstance = new IngredientInstance(ingredientInfo, ingredient);
+    const ingredientInstance = new IngredientInstance(ingredientInfo, ingredient, this);
     this.ingredients.push(ingredientInstance);
     this.totIngredients += ingredientInstance.quantity;
     return ingredientInstance;
@@ -227,9 +256,10 @@ class Ingredient {
 }
 
 class IngredientInstance {
-  constructor(info, ingredient) {
+  constructor(info, ingredient, recipeInstance) {
     this.quantity = info.quantity;
     this.ingredient = ingredient;
+    this.recipeInstance = recipeInstance
   }
 }
 
@@ -247,15 +277,20 @@ const recipeFatimasBread = new Recipe("Fatima's Bread", [
   { name: "lievito birra", quantity: 1 },
 ]);
 
-// recipe instance
-const recipeFatimasBreadFromXWheat = recipeFatimasBread.calcFromIngredient({
-  name: "farina v300",
-  quantity: 800,
+recipeFatimasBread.addIngredient({
+  name: "malto2",
+  quantity: 4,
 });
 
 // recipe instance
-const recipeFatimasBreadFromXTot = recipeFatimasBread.calcFromTot(1000);
+// const recipeFatimasBreadFromXWheat = recipeFatimasBread.calcFromIngredient({
+//   name: "farina v300",
+//   quantity: 800,
+// });
+
+// recipe instance
+// const recipeFatimasBreadFromXTot = recipeFatimasBread.calcFromTot(1000);
 
 console.log(recipeFatimasBread);
-console.log(recipeFatimasBreadFromXWheat);
-console.log(recipeFatimasBreadFromXTot);
+// console.log(recipeFatimasBreadFromXWheat);
+// console.log(recipeFatimasBreadFromXTot);
