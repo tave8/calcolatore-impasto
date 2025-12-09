@@ -60,7 +60,40 @@ class Recipe {
     // then you must update the ingredient proportions,
     // because there will be new rations, proportions, between ingredients
     this._calcProportions();
+    // when I add an ingredient, then i need to add it to all
+    // recipe instances that have been already created
+    this._addIngredientToAllInstances(ingredientInstance);
     return ingredient;
+  }
+
+  _addIngredientToAllInstances(ingredientInstance) {
+    for (let i = 0; i < this.instances.length; i++) {
+      const recipeInstance = this.instances[i];
+      recipeInstance.ingredients.push(ingredientInstance);
+      recipeInstance.calcTotIngredients();
+      // re-compute whatever was the initial request done
+      // in this recipe instance
+      // CASE: the user had 1 ingredient
+      if (recipeInstance.userRequest.haveOneIngredient) {
+        // this
+        // prevent from adding a new instance, simply update the existing one
+
+        this.calcFromIngredient(
+          {
+            name: recipeInstance.userData.ingredientName,
+            quantity: recipeInstance.userData.ingredientQuantity,
+          },
+          recipeInstance
+        );
+      }
+      // CASE: the user had the recipe total
+      else if (recipeInstance.userRequest.haveRecipeTotal) {
+        //
+      } else {
+        throw Error(`The request ${JSON.stringify(recipeInstance.userRequest)} 
+              of the recipe instance is not known`);
+      }
+    }
   }
 
   /**
@@ -77,7 +110,7 @@ class Recipe {
       }
     }
     if (!ingredientFound) {
-      throw Error(`No ingredient '${ingredientName}' was found.`)
+      throw Error(`No ingredient '${ingredientName}' was found.`);
     }
     this._calcProportions();
   }
@@ -85,14 +118,31 @@ class Recipe {
   /**
    * Adds and returns the newly created recipe instance.
    */
-  // addInstance(ingredientsList) {
-  //   const recipeInstance = new RecipeInstance(ingredientsList, this);
-  //   this.instances.push(recipeInstance);
-  //   return recipeInstance;
-  // }
+  addInstance(ingredientsList, requestInfo, givenData) {
+    const recipeInstance = new RecipeInstance(ingredientsList, this, requestInfo, givenData);
+    this.instances.push(recipeInstance);
+    return recipeInstance;
+  }
 
-  calcFromIngredient({ name: ingredientKnown, quantity: quantityKnown }) {
-    const newRecipeInstance = this.addInstance([]);
+  calcFromIngredient({ name: ingredientKnown, quantity: quantityKnown }, existingRecipeInstance = null) {
+    let recipeInstance = null;
+    // if the recipe instance is given, so when it exists,
+    // then that's going to be the recipe instance on which to make modifications on
+    // otherwise it means we need to create a new one
+    if (existingRecipeInstance) {
+      recipeInstance = existingRecipeInstance;
+    } else {
+      recipeInstance = this.addInstance(
+        [],
+        {
+          haveOneIngredient: true,
+        },
+        {
+          ingredientName: ingredientKnown,
+          ingredientQuantity: quantityKnown,
+        }
+      );
+    }
     //   trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
     const proportionKnown = this._findProportionOfIngredient(ingredientKnown);
     // visto che il totale delle proporzioni sarà sempre 1, allora
@@ -117,10 +167,15 @@ class Recipe {
       // ricavo finalmente la quantità di ogni altro ingrediente, oltre all'ingrediente dato
       const newQuantity = totNewQuantity * ingredient.proportion;
       // arrotondamenti e non
-      newRecipeInstance.addIngredient({ quantity: newQuantity }, ingredient);
+      if (existingRecipeInstance) {
+        recipeInstance.ingredients[i].quantity = newQuantity
+      } else {
+        recipeInstance.addIngredient({ quantity: newQuantity }, ingredient);
+      }
     }
 
-    return newRecipeInstance;
+    recipeInstance.calcTotIngredients();
+    return recipeInstance;
   }
 
   calcFromTot(totIngredientsKnown) {
@@ -182,10 +237,13 @@ class Recipe {
 }
 
 class RecipeInstance {
-  constructor(ingredientsList, recipe) {
+  constructor(ingredientsList, recipe, requestInfo, userData) {
+    // allow the recipe instance to access its recipe?
     // this.recipe = recipe;
     this.ingredients = [];
     this.totIngredients = 0;
+    this.userRequest = requestInfo;
+    this.userData = userData;
     this.addIngredients(ingredientsList, recipe);
   }
 
@@ -278,16 +336,31 @@ class IngredientInstance {
 // USAGE
 
 const myRecipe = new Recipe("My Recipe", [
-  { name: "water", quantity: 900 },
+  { name: "water", quantity: 800 },
   { name: "wheat", quantity: 100 },
 ]);
 
 myRecipe.addIngredient({
   name: "salt",
-  quantity: 10,
+  quantity: 100,
 });
 
-myRecipe.removeIngredient("salt");
+// myRecipe.removeIngredient("salt");
+
+myRecipe.calcFromIngredient({
+  name: "water",
+  quantity: 1600,
+});
+
+myRecipe.addIngredient({
+  name: "oil",
+  quantity: 20,
+});
+
+myRecipe.addIngredient({
+  name: "chia",
+  quantity: 10,
+});
 
 console.log(myRecipe);
 
