@@ -174,10 +174,6 @@ class Recipe {
     const ingredientInstance = new IngredientInstance(ingredientInfo, ingredient, this.coreInstance);
     // add the ingredient to the list of ingredients (so the proportions)
     this.ingredients.push(ingredient);
-    // add the ingredient instance to the core instance recipe,
-    // which keeps track of the user input and allows for async ingredient addition
-    // (meaning ingredients can be added in different moments and not necessarily all at once)
-    this.coreInstance.ingredients.push(ingredientInstance);
     // important: you must compute the total ingredients,
     // before computing the proportions. this is because
     // the proportion of the ingredient, depends on the total quantity

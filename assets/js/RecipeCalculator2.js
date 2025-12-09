@@ -65,12 +65,29 @@ class Recipe {
   addIngredient(ingredientInfo) {
     const ingredient = new Ingredient({
       name: ingredientInfo.name,
+      quantity: ingredientInfo.quantity,
       recipe: this,
       proportion: null,
-      quantity: ingredientInfo.quantity,
     });
     this.ingredients.push(ingredient);
     return ingredient;
+  }
+
+  editIngredient() {}
+
+  removeIngredient(ingredientName) {
+    // const ingredientExists = this._ingredientExists(ingredientName);
+    // if (!ingredientExists) {
+    //   throw Error(`No ingredient '${ingredientName}' was found.`);
+    // }
+    this.ingredients.forEach((ingredient, i) => {
+      if (ingredientName === ingredient.name) {
+        this.ingredients.splice(i, 1);
+      }
+    });
+
+    this.calcProportions();
+    // this._removeIngredientToAllInstances(ingredientName);
   }
 }
 
@@ -85,12 +102,12 @@ class Ingredient {
   getQuantity() {
     return this.quantity;
   }
-  
+
   setProportion(proportion) {
-    this.proportion = proportion
+    this.proportion = proportion;
   }
   setPercentage(proportion) {
-    this.percentage = proportion * 100
+    this.percentage = proportion * 100;
   }
 }
 
@@ -113,10 +130,10 @@ console.log(myRecipe);
 
 myRecipe.addIngredient({
   name: "oik",
-  quantity: 10,
+  quantity: 20,
 });
 
-// myRecipe.removeIngredient("salt")
+myRecipe.removeIngredient("salt");
 
 // myRecipe.calcFromIngredient({
 //   name: "water",
