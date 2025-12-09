@@ -30,18 +30,9 @@ class Recipe {
     // whereas a recipe is the ingredients with their proportions
     this.instances = [];
     // the initial recipe that the user provides
-    this.coreInstance = new RecipeInstance([], this)
+    this.coreInstance = new RecipeInstance([], this);
 
     this.addIngredients(ingredientsList);
-
-    // important: adding the first recipe instance must come BEFORE
-    // calculating the proportions. because calculating the recipe proportions
-    // depends on the "recipe" (so the recipe instance) that the user provides,
-    // then we must first add this recipe instance, and then
-    // we calculate the proportions based on that
-
-    // this.addInstance(ingredientsList);
-    // this._calcProportions();
   }
 
   addIngredients(ingredientsList) {
@@ -52,25 +43,43 @@ class Recipe {
   }
 
   /**
-   * Every time a new recipe is added, the proportions will be re-computed.
+   * Every time a new ingredient is added, the proportions will be re-computed.
    */
   addIngredient(ingredientInfo) {
     // check: the name of the ingredient must be unique
 
     const ingredient = new Ingredient(ingredientInfo);
-    const ingredientInstance = new IngredientInstance(ingredientInfo, ingredient, this.coreInstance)
+    const ingredientInstance = new IngredientInstance(ingredientInfo, ingredient, this.coreInstance);
     this.ingredients.push(ingredient);
     this.coreInstance.ingredients.push(ingredientInstance);
     // important: you must compute the total ingredients,
-    // before computing the proportions. this is because 
+    // before computing the proportions. this is because
     // the proportion of the ingredient, depends on the total quantity
     // of the core recipe instance
-    this.coreInstance.calcTotIngredients()
     // every time a new ingredient is added to the core recipe instance,
     // then you must update the ingredient proportions,
     // because there will be new rations, proportions, between ingredients
-    this._calcProportions()
+    this._calcProportions();
     return ingredient;
+  }
+
+  /**
+   * Every time an ingredient is removed, the proportions will be re-computed.
+   */
+  removeIngredient(ingredientName) {
+    let ingredientFound = false;
+    for (let i = 0; i < this.ingredients.length; i++) {
+      const ingredient = this.ingredients[i];
+      if (ingredientName === ingredient.name) {
+        ingredientFound = true;
+        this.ingredients.splice(i, 1);
+        this.coreInstance.ingredients.splice(i, 1);
+      }
+    }
+    if (!ingredientFound) {
+      throw Error(`No ingredient '${ingredientName}' was found.`)
+    }
+    this._calcProportions();
   }
 
   /**
@@ -128,15 +137,18 @@ class Recipe {
   }
 
   /**
-   * 
+   *
    * The function that computes the proportions.
-   * The proportion computation is based on the 
+   * The proportion computation is based on the
    * core instance recipe, which is initially provided by the user,
    * as well as being able to be updated, by adding or removing ingredients.
    */
   _calcProportions() {
+    // make sure the core instance always has the correct total,
+    // otherwise proportions will not be correct
+    this.coreInstance.calcTotIngredients();
     // console.log(this.coreInstance)
-    // return 
+    // return
     // to compute the proportions, consider the "core recipe instance"
     // which is the recipe that the user initially provided, as well as
     // any additional ingredients that the user will add later on
@@ -259,28 +271,44 @@ class IngredientInstance {
   constructor(info, ingredient, recipeInstance) {
     this.quantity = info.quantity;
     this.ingredient = ingredient;
-    this.recipeInstance = recipeInstance
+    this.recipeInstance = recipeInstance;
   }
 }
 
 // USAGE
 
-// the actual recipe
-const recipeFatimasBread = new Recipe("Fatima's Bread", [
-  { name: "farina v300", quantity: 430 },
-  { name: "farina semola", quantity: 20 },
-  { name: "acqua", quantity: 315 },
-  { name: "olio", quantity: 15 },
-  { name: "sale", quantity: 15 },
-  { name: "malto", quantity: 6 },
-  { name: "zucchero", quantity: 6 },
-  { name: "lievito birra", quantity: 1 },
+const myRecipe = new Recipe("My Recipe", [
+  { name: "water", quantity: 900 },
+  { name: "wheat", quantity: 100 },
 ]);
 
-recipeFatimasBread.addIngredient({
-  name: "malto2",
-  quantity: 4,
+myRecipe.addIngredient({
+  name: "salt",
+  quantity: 10,
 });
+
+myRecipe.removeIngredient("salt");
+
+console.log(myRecipe);
+
+// the actual recipe
+// const recipeFatimasBread = new Recipe("Fatima's Bread", [
+//   { name: "farina v300", quantity: 430 },
+//   { name: "farina semola", quantity: 20 },
+//   { name: "acqua", quantity: 315 },
+//   { name: "olio", quantity: 15 },
+//   { name: "sale", quantity: 15 },
+//   { name: "malto", quantity: 6 },
+//   { name: "zucchero", quantity: 6 },
+//   { name: "lievito birra", quantity: 1 },
+// ]);
+
+// recipeFatimasBread.addIngredient({
+//   name: "malto2",
+//   quantity: 4,
+// });
+
+// recipeFatimasBread.removeIngredient("malto2");
 
 // recipe instance
 // const recipeFatimasBreadFromXWheat = recipeFatimasBread.calcFromIngredient({
@@ -291,6 +319,6 @@ recipeFatimasBread.addIngredient({
 // recipe instance
 // const recipeFatimasBreadFromXTot = recipeFatimasBread.calcFromTot(1000);
 
-console.log(recipeFatimasBread);
+// console.log(recipeFatimasBread);
 // console.log(recipeFatimasBreadFromXWheat);
 // console.log(recipeFatimasBreadFromXTot);
