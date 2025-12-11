@@ -76,6 +76,8 @@ class Recipe {
     return ret;
   }
 
+  calcFromTot() {}
+
   /**
    * The pre-requisite to calculating the ingredient quantities from one ingredient,
    * is knowing the recipe total quantity.
@@ -106,8 +108,7 @@ class Recipe {
   }
 
   getIngredientByName(ingredientName) {
-    const ingredientFound = this.ingredients.find((ingredient) => ingredientName === ingredient.name);
-    return ingredientFound;
+    return this.ingredients.find((ingredient) => ingredientName === ingredient.name);
   }
 
   getTotIngredients() {
@@ -119,6 +120,11 @@ class Recipe {
   }
 
   addIngredient(ingredientInfo) {
+    if (this.existsIngredientByName(ingredientInfo.name)) {
+      throw Error(`The ingredient '${ingredientInfo.name}' you are trying to add is already present.`);
+    }
+    // console.log(this.existsIngredientByName(ingredientInfo.name))
+
     // add ingredient to recipe
     const ingredient = new Ingredient({
       name: ingredientInfo.name,
@@ -130,17 +136,40 @@ class Recipe {
     return ingredient;
   }
 
-  editIngredient() {
-    // myRecipe.editIngredient("salt", {
-    //   quantity: 20,
-    // });
+  existsIngredientByName(ingredientName) {
+    const item = this.getIngredientByName(ingredientName);
+    const exists = item !== undefined && item.constructor.name === "Ingredient";
+    return exists;
+  }
+
+  editIngredient(currIngredientName, { name: newIngredientName, quantity: newIngredientQuantity }) {
+    // check 
+    if (!this.existsIngredientByName(currIngredientName)) {
+      throw Error(`The ingredient '${currIngredientName}' has not been found.`);
+    }
+    // check that the new name of the ingredient is not already taken
+    if (this.existsIngredientByName(newIngredientName)) {
+      throw Error(`Cannot rename current ingredient '${currIngredientName}' ` + `to '${newIngredientName}' because the latter exists already`);
+    }
+
+    const ingredient = this.getIngredientByName(currIngredientName);
+    // console.log(ingredient)
+
+    if(newIngredientName !== undefined) {
+      ingredient.setName(newIngredientName);
+    }
+    if (newIngredientQuantity !== undefined) {
+      ingredient.setQuantity(newIngredientQuantity);
+    }
+    
+    // console.log(ingredient)
   }
 
   removeIngredient(ingredientName) {
-    // const ingredientExists = this._ingredientExists(ingredientName);
-    // if (!ingredientExists) {
-    //   throw Error(`No ingredient '${ingredientName}' was found.`);
-    // }
+
+    if (!this.existsIngredientByName(ingredientName)) {
+      throw Error(`No ingredient '${ingredientName}' was found.`);
+    }
 
     // remove ingredient from the ingredients
     this.ingredients.forEach((ingredient, i) => {
@@ -149,16 +178,6 @@ class Recipe {
       }
     });
 
-    // // remove ingredient from the instances
-    // this.instances.forEach((instance, i) => {
-    //   // a recipe instance has ingredients, so remove the given
-    //   // ingredient from the recipe instance ingredients
-    //   instance.ingredients.forEach((ingredient, j) => {
-    //     if (ingredientName === ingredient.name) {
-    //       instance.ingredients.splice(j, 1);
-    //     }
-    //   });
-    // });
   }
 
   refreshInstances() {
@@ -184,7 +203,15 @@ class Ingredient {
   constructor({ name, recipe, quantity }) {
     this.name = name;
     this.quantity = quantity;
-    this.recipe = recipe;
+    // this.recipe = recipe;
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  setName(name) {
+    this.name = name;
   }
 
   getProportion() {
@@ -193,6 +220,10 @@ class Ingredient {
 
   getQuantity() {
     return this.quantity;
+  }
+
+  setQuantity(quantity) {
+    this.quantity = quantity;
   }
 }
 
@@ -203,15 +234,22 @@ const myRecipe = new Recipe("My Recipe", [
   { name: "salt", quantity: 10 },
 ]);
 
-// myRecipe.addIngredient({
-//   name: "oik",
-//   quantity: 20,
-// });
 
-// myRecipe.removeIngredient("salt");
+myRecipe.addIngredient({
+  name: "oik",
+  quantity: 20,
+});
+
+myRecipe.editIngredient("salt", {
+  quantity: 20
+});
+
+myRecipe.removeIngredient("salt");
 // console.log(myRecipe);
 
-myRecipe.calcFromIngredient({
-  name: "water",
-  quantity: 45,
-});
+// myRecipe.calcFromIngredient({
+//   name: "water",
+//   quantity: 45,
+// });
+
+console.log(myRecipe)
