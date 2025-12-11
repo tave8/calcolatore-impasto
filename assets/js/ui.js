@@ -176,7 +176,7 @@ function generaRigaIngredienteUI(idIngrediente) {
         </td>
         <!-- azioni sull'ingrediente -->
         <td>
-            <button onclick="rimuoviIngrediente('${idIngrediente.id}')">Rimuovi</button>
+            <button onclick="rimuoviIngrediente('${idIngrediente.id}')"><i class="fa-solid fa-trash"></i></button>
         </td>
     </tr>
   `;
