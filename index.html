@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calcolatore Impasto</title>
+    <title>Calcolatore di Ricetta</title>
     <!-- icons -->
     <link
       rel="stylesheet"
@@ -18,10 +18,26 @@
   <body>
     <header>
       <div class="wrapper">
-        <p>Calcolatore di Impasto</p>
+        <p>Calcolatore di Ricetta</p>
+        <p>Concentrati sulla cucina non sulla matematica</p>
       </div>
     </header>
     <main>
+
+      <div class="row row-legend">
+        <div class="head">
+          <div class="title"><p>LEGENDA</p></div>
+          <!-- <div class="description"></div> -->
+        </div>
+        <div class="body">
+          <div class="row">
+            <p><i class="fas fa-carrot icon-big"></i> = ingrediente</p>
+            <p><i class="fas fa-balance-scale-right icon-big"></i> = quantità</p>
+            <p><i class="fas fa-percentage icon-big"></i> = proporzione</p>
+          </div>
+        </div>
+      </div>
+
       <!-- row RICETTA -->
       <div class="row row-ricetta">
         <div class="head">
@@ -66,9 +82,9 @@
                 <table class="table-default table-con-totali" id="table-proporzioni">
                   <thead>
                     <tr>
-                      <th>Ingrediente</th>
-                      <th>Quantità (g)</th>
-                      <th>% su impasto</th>
+                      <th><i class="fas fa-carrot icon-big"></i></th>
+                      <th><i class="fas fa-balance-scale-right icon-big"></i></th>
+                      <th><i class="fas fa-percentage icon-big"></i></th>
                     </tr>
                   </thead>
                   <tbody></tbody>
@@ -123,9 +139,9 @@
                 <table class="table-default table-con-totali" id="table-da-ingrediente">
                   <thead>
                     <tr>
-                      <th>Ingrediente</th>
-                      <th>Quantità (g)</th>
-                      <th>% su impasto</th>
+                      <th><i class="fas fa-carrot icon-big"></i></th>
+                      <th><i class="fas fa-balance-scale-right icon-big"></i></th>
+                      <th><i class="fas fa-percentage icon-big"></i></th>
                     </tr>
                   </thead>
                   <tbody></tbody>
@@ -154,7 +170,7 @@
             <div class="content">
               <div class="input">
                 <p>
-                  Totale impasto (g)
+                  Totale ricetta (g)
                   <input type="number" id="input-da-tot-tot-impasto" onkeyup="quandoCambiaTotImpastoDaTot()" onchange="quandoCambiaTotImpastoDaTot()" />
                 </p>
               </div>
@@ -170,9 +186,9 @@
                 <table class="table-default table-con-totali" id="table-da-tot-impasto">
                   <thead>
                     <tr>
-                      <th>Ingrediente</th>
-                      <th>Quantità (g)</th>
-                      <th>% su impasto</th>
+                      <th><i class="fas fa-carrot icon-big"></i></th>
+                      <th><i class="fas fa-balance-scale-right icon-big"></i></th>
+                      <th><i class="fas fa-percentage icon-big"></i></th>
                     </tr>
                   </thead>
                   <tbody></tbody>
@@ -190,7 +206,7 @@
       </div>
 
       <!-- row ESEMPIO -->
-      <div class="row row-esempio">
+      <!-- <div class="row row-esempio">
         <div class="head">
           <div class="title"><p>ESEMPIO</p></div>
           <div class="description">Ecco un esempio che ti dimostra quanto è veloce fare i calcoli della tua ricetta.</div>
@@ -204,6 +220,7 @@
           </div>
         </div>
       </div>
+       -->
     </main>
     <footer></footer>
 

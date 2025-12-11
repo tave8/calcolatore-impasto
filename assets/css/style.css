@@ -10,7 +10,8 @@ p {
 
 input {
   height: 1.5rem;
-  min-width: 5rem;
+  /* min-width: 5rem; */
+  width: 80px;
 }
 
 table.table-default {
@@ -56,6 +57,10 @@ table.table-default tbody tr td:nth-last-child(1) {
   text-align: right;
 }
 
+.icon-big {
+  font-size: 1.5rem;
+}
+
 header {
   background-color: rgb(78, 78, 78);
   height: 20%;
@@ -71,19 +76,59 @@ header > .wrapper {
   padding-block: 1rem;
 }
 
+header > .wrapper > p + p {
+  font-size: 1rem;
+  font-style: italic;
+  margin-top: .5rem;
+}
+
 /* MAIN */
 
-main {
-  display: flex;
-  flex-direction: column;
-  /* min-height: 700px; */
-  /* min-width: 300px; */
-  width: 70%;
-  padding: 0.2rem;
-  /* border: 1px solid black; */
-  margin: 2rem auto;
-  gap: 2rem;
+@media screen and (width > 900px) {
+  main {
+    display: flex;
+    flex-direction: column;
+    /* min-height: 700px; */
+    /* min-width: 300px; */
+    width: 50%;
+    padding: 0.2rem;
+    /* border: 1px solid black; */
+    margin: 2rem auto;
+    gap: 2rem;
+  }
 }
+
+@media screen and (width > 700px) and (width < 900px) {
+  main {
+    display: flex;
+    flex-direction: column;
+    /* min-height: 700px; */
+    /* min-width: 300px; */
+    width: 70%;
+    padding: 0.2rem;
+    /* border: 1px solid black; */
+    margin: 2rem auto;
+    gap: 2rem;
+  }
+}
+
+@media screen and (width <= 700px) {
+  main {
+    display: flex;
+    flex-direction: column;
+    /* min-height: 700px; */
+    /* min-width: 300px; */
+    width: 95%;
+    padding: 0.2rem;
+    /* border: 1px solid black; */
+    margin: 2rem auto;
+    gap: 2rem;
+  }
+}
+
+
+
+
 
 main > .row {
   padding: 0.2rem;
@@ -143,6 +188,20 @@ main > .row > .body > .row-arrow {
   font-size: 2rem;
 }
 
+main > .row-legend {
+
+}
+
+main > .row-legend > .body {
+  padding: 1rem;
+}
+
+
+main > .row-legend > .body > .row > p:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+
 main > .row-esempio {
 }
 
@@ -189,7 +248,7 @@ main > .row-ricetta > .body {
 
 main > .row-ricetta > .body > .row-input > .content > .ricetta {
   flex: 1;
-  padding: 1rem;
+  padding: 1rem 0;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -207,7 +266,7 @@ main > .row-ricetta > .body > .row-input > .content > .ricetta > .campi {
 }
 
 main > .row-ricetta > .body > .row-input > .content > .ricetta > .campi > table {
-  width: 70%;
+  width: 100%;
   margin: auto;
 }
 
@@ -231,7 +290,7 @@ main > .row-ricetta > .body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 2rem;
+  padding: .1rem;
 }
 
 main > .row-ho-ingrediente > .body > *,
@@ -268,7 +327,7 @@ main > .row-ho-ingrediente > .body > .row-input > .content,
 main > .row-ho-tot > .body > .row-input > .content,
 main > .row-ricetta > .body > .row-input > .content {
   flex: 1;
-  padding: 0.5rem;
+  padding: 0.2rem;
 }
 
 main > .row-ho-ingrediente > .body > .row-output,
@@ -286,7 +345,7 @@ main > .row-ricetta > .body > .row-output > .content {
 main > .row-ho-ingrediente > .body > .row-output > .content > .table-container,
 main > .row-ho-tot > .body > .row-output > .content > .table-container,
 main > .row-ricetta > .body > .row-output > .content > .table-container {
-  width: 50%;
+  width: 100%;
   margin: auto;
   margin-top: 1rem;
 }
@@ -295,7 +354,8 @@ main > .row-ho-ingrediente > .body > .row-output > .content > .table-container >
 main > .row-ho-tot > .body > .row-output > .content > .table-container > table,
 main > .row-ricetta > .body > .row-output > .content > .table-container > table {
   width: 100%;
-  min-width: 300px;
+  /* min-width: 300px; */
+  overflow-wrap: break-word;
 }
 
 /* ROW: HO TOTALE */
