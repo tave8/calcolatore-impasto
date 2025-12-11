@@ -41,9 +41,7 @@ class Recipe {
   }
 
   addIngredients(ingredientsAsList) {
-    ingredientsAsList.forEach((ingredientInfo) => {
-      this.addIngredient(ingredientInfo);
-    });
+    ingredientsAsList.forEach((ingredientInfo) => this.addIngredient(ingredientInfo));
   }
 
   addIngredient(ingredientInfo) {
@@ -52,16 +50,13 @@ class Recipe {
       name: ingredientInfo.name,
       quantity: ingredientInfo.quantity,
       recipe: this,
-      proportion: null,
     });
     this.ingredients.push(ingredient);
 
     // add ingredient to all instances
-    this.instances.forEach((instance) => {
-      instance.ingredients.push(ingredient);
-    });
+    this.instances.forEach((instance) => instance.ingredients.push(ingredient));
 
-    this.refreshInstances()
+    this.refreshInstances(ingredient);
 
     return ingredient;
   }
@@ -73,33 +68,44 @@ class Recipe {
     // if (!ingredientExists) {
     //   throw Error(`No ingredient '${ingredientName}' was found.`);
     // }
+
+    // remove ingredient from the ingredients
     this.ingredients.forEach((ingredient, i) => {
       if (ingredientName === ingredient.name) {
         this.ingredients.splice(i, 1);
       }
     });
 
-    this.refreshInstances()
+    // remove ingredient from the instances
+    this.instances.forEach((instance, i) => {
+      // a recipe instance has ingredients, so remove the given
+      // ingredient from the recipe instance ingredients
+      instance.ingredients.forEach((ingredient, j) => {
+        if (ingredientName === ingredient.name) {
+          instance.ingredients.splice(j, 1);
+        }
+      });
+    });
+
+    this.refreshInstances();
   }
 
   refreshInstances() {
-    this.instances.forEach(instance => {
-        instance.refresh()
-    })
+    this.instances.forEach((instance) => {
+      instance.refresh();
+    });
   }
 }
 
 class Ingredient {
-  constructor({ name, recipe, proportion, quantity }) {
+  constructor({ name, recipe, quantity }) {
     this.name = name;
-    this.proportion = proportion;
-    this.percentage = null;
     this.quantity = quantity;
     this.recipe = recipe;
   }
 
   getProportion() {
-    return this.getQuantity() / this.recipe.getTotIngredients()
+    return this.getQuantity() / this.recipe.getTotIngredients();
   }
 
   getQuantity() {
@@ -121,12 +127,11 @@ class RecipeInstance {
     // this.user
   }
   /**
-   * Re-compute the recipe instance based on 
-   * the state of the recipe. 
+   * Re-compute the recipe instance based on
+   * the state of the recipe.
    */
   refresh() {
     // if this recipe instance is "from one ingredient, derive the others"
-
     // if this recipe instance is "from the recipe total, derive every ingredient"
   }
 }
@@ -151,3 +156,5 @@ myRecipe.removeIngredient("salt");
 //   name: "water",
 //   quantity: 90,
 // });
+
+console.log("cuai");
