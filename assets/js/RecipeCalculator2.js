@@ -32,8 +32,82 @@ class Recipe {
   constructor(name, ingredientsAsList) {
     this.name = name;
     this.ingredients = [];
-    this.instances = [];
+    this.requests = [];
     this.addIngredients(ingredientsAsList);
+  }
+
+  calcFromIngredient({ name: ingredientName, quantity: ingredientQuantity }) {
+    const ret = [];
+
+    const recipeQuantityTotal = this.getRecipeQuantityFromIngredientInfo({
+      name: ingredientName,
+      quantity: ingredientQuantity,
+    });
+
+    // console.log(this);
+    // add a new recipe instance, because every time we run this method,
+    // the user is creating a new recipe instance/computation
+    const newRequest = {
+      data: {
+        ingredientName: ingredientName,
+        ingredientQuantity: ingredientQuantity,
+      },
+      request: {
+        haveOneIngredient: true,
+      },
+    };
+
+    this.requests.push(newRequest);
+
+    // create the result
+    this.ingredients.forEach((ingredient, i) => {
+      // moltiplicando la quantità totale con la proporzione del singolo ingrediente,
+      // ricavo finalmente la quantità di ogni altro ingrediente, oltre all'ingrediente dato
+      const proportion = ingredient.getProportion();
+      const newQuantity = recipeQuantityTotal * proportion;
+      ret.push({
+        name: ingredient.name,
+        proportion,
+        quantity: newQuantity,
+      });
+      // console.log(newQuantity)
+    });
+
+    return ret;
+  }
+
+  /**
+   * The pre-requisite to calculating the ingredient quantities from one ingredient,
+   * is knowing the recipe total quantity.
+   */
+  getRecipeQuantityFromIngredientInfo({ name: ingredientName, quantity: ingredientQuantity }) {
+    //   trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
+    const proportionKnown = this.getIngredientProportionByName(ingredientName);
+    // visto che il totale delle proporzioni sarà sempre 1, allora
+    // la proporzione rimanente si ottiene sottraendo  1 - proporzioneNota
+    const proportionRemainingKnown = 1 - proportionKnown;
+    // la quantita rimanente del totale
+    // si basa sulla seguente proporzione
+    // quantitaNota : quantitaRimanente = proporzioneNota : proporzioneNotaRimanente
+    // esempio:
+    // 10 g di sale stanno alla quantità di impasto che rimane, come la proporzione del sale (nel totale impasto)
+    // sta al totale delle proporzioni degli altri ingredienti
+    const recipeQuantityRemaining = (ingredientQuantity * proportionRemainingKnown) / proportionKnown;
+    // alla fine, dalla quantita nota di un ingrediente, e dalle proporzioni della ricetta,
+    // si ricava la quantità totale di questo (nuovo?) impasto, non di quello dato
+    // prima dall'utente come input
+    const recipeQuantityTotal = ingredientQuantity + recipeQuantityRemaining;
+
+    return recipeQuantityTotal;
+  }
+
+  getIngredientProportionByName(ingredientName) {
+    return this.getIngredientByName(ingredientName).getProportion();
+  }
+
+  getIngredientByName(ingredientName) {
+    const ingredientFound = this.ingredients.find((ingredient) => ingredientName === ingredient.name);
+    return ingredientFound;
   }
 
   getTotIngredients() {
@@ -53,15 +127,14 @@ class Recipe {
     });
     this.ingredients.push(ingredient);
 
-    // add ingredient to all instances
-    this.instances.forEach((instance) => instance.ingredients.push(ingredient));
-
-    this.refreshInstances(ingredient);
-
     return ingredient;
   }
 
-  editIngredient() {}
+  editIngredient() {
+    // myRecipe.editIngredient("salt", {
+    //   quantity: 20,
+    // });
+  }
 
   removeIngredient(ingredientName) {
     // const ingredientExists = this._ingredientExists(ingredientName);
@@ -76,24 +149,34 @@ class Recipe {
       }
     });
 
-    // remove ingredient from the instances
-    this.instances.forEach((instance, i) => {
-      // a recipe instance has ingredients, so remove the given
-      // ingredient from the recipe instance ingredients
-      instance.ingredients.forEach((ingredient, j) => {
-        if (ingredientName === ingredient.name) {
-          instance.ingredients.splice(j, 1);
-        }
-      });
-    });
-
-    this.refreshInstances();
+    // // remove ingredient from the instances
+    // this.instances.forEach((instance, i) => {
+    //   // a recipe instance has ingredients, so remove the given
+    //   // ingredient from the recipe instance ingredients
+    //   instance.ingredients.forEach((ingredient, j) => {
+    //     if (ingredientName === ingredient.name) {
+    //       instance.ingredients.splice(j, 1);
+    //     }
+    //   });
+    // });
   }
 
   refreshInstances() {
-    this.instances.forEach((instance) => {
-      instance.refresh();
-    });
+    // this.instances.forEach((instance) => {
+    //   instance.refresh();
+    // });
+    // this.instances.forEach((instance, i) => {
+    //   // if this recipe instance is "from one ingredient, derive the others"
+    //   if (instance.user.request.haveOneIngredient) {
+    //     instance.recipe.calcFromIngredient({
+    //       name: instance.user.data.ingredientName,
+    //       quantity: instance.user.data.ingredientQuantity,
+    //     });
+    //   }
+    //   // if this recipe instance is "from the recipe total, derive every ingredient"
+    //   else if (instance.user.request.haveRecipeTotal) {
+    //   }
+    // });
   }
 }
 
@@ -111,29 +194,6 @@ class Ingredient {
   getQuantity() {
     return this.quantity;
   }
-
-  setProportion(proportion) {
-    this.proportion = proportion;
-  }
-  setPercentage(proportion) {
-    this.percentage = proportion * 100;
-  }
-}
-
-class RecipeInstance {
-  constructor({ recipe }) {
-    this.recipe = recipe;
-    this.ingredients = [];
-    // this.user
-  }
-  /**
-   * Re-compute the recipe instance based on
-   * the state of the recipe.
-   */
-  refresh() {
-    // if this recipe instance is "from one ingredient, derive the others"
-    // if this recipe instance is "from the recipe total, derive every ingredient"
-  }
 }
 
 // USAGE
@@ -143,18 +203,15 @@ const myRecipe = new Recipe("My Recipe", [
   { name: "salt", quantity: 10 },
 ]);
 
-console.log(myRecipe);
-
-myRecipe.addIngredient({
-  name: "oik",
-  quantity: 20,
-});
-
-myRecipe.removeIngredient("salt");
-
-// myRecipe.calcFromIngredient({
-//   name: "water",
-//   quantity: 90,
+// myRecipe.addIngredient({
+//   name: "oik",
+//   quantity: 20,
 // });
 
-console.log("cuai");
+// myRecipe.removeIngredient("salt");
+// console.log(myRecipe);
+
+myRecipe.calcFromIngredient({
+  name: "water",
+  quantity: 45,
+});
