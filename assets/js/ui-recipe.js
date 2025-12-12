@@ -66,16 +66,42 @@ class RecipeUI {
 
   addEventHandlers() {
     // when user clicks add ingredient
-    document.getElementById(this.buttonAddIngredientId).addEventListener("click", this.handleClickAddIngredient);
+    document.getElementById(this.buttonAddIngredientId).addEventListener("click", this.handleClickAddIngredient.bind(this));
     // when user types in "have ingredient" inputs
-    document.getElementById(this.inputHaveIngredientNameId).addEventListener("keyup", this.handleTypingHaveIngredient);
-    document.getElementById(this.inputHaveIngredientQuantityId).addEventListener("keyup", this.handleTypingHaveIngredient);
+    document.getElementById(this.inputHaveIngredientNameId).addEventListener("keyup", this.handleTypingHaveIngredient.bind(this));
+    document.getElementById(this.inputHaveIngredientQuantityId).addEventListener("keyup", this.handleTypingHaveIngredient.bind(this));
     // when user types in "have total" input
-    document.getElementById(this.inputHaveTotalId).addEventListener("keyup", this.handleTypingHaveTotal);
+    document.getElementById(this.inputHaveTotalId).addEventListener("keyup", this.handleTypingHaveTotal.bind(this));
   }
 
   handleClickAddIngredient(ev) {
+    // get the values of ingredient name and quantity
+    const inputIngredientNameEl = document.getElementById(this.inputAddIngredientNameId)
+    const inputIngredientQuantityEl = document.getElementById(this.inputAddIngredientQuantityId)
     
+    const ingredientName = inputIngredientNameEl.value
+    const ingredientQuantity = inputIngredientQuantityEl.value
+
+    // checks
+    // if () {
+
+    // }
+
+    // empty both inputs
+    inputIngredientNameEl.value = ""
+    inputIngredientQuantityEl.value = ""
+
+    const ingredientInfo = {
+        name: ingredientName,
+        quantity: ingredientQuantity,
+        proportion: null
+    }
+
+    // add to the data structure
+    
+
+    // add to UI
+    this.addRowOutputTableRecipe(ingredientInfo)
   }
 
   handleTypingHaveIngredient(ev) {
