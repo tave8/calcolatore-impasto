@@ -23,34 +23,38 @@
       </div>
     </header>
     <main>
-      <div class="row row-legend">
-        <div class="head">
-          <div class="title"><p>LEGENDA</p></div>
-          <!-- <div class="description"></div> -->
-        </div>
-        <div class="body">
-          <div class="row">
-            <p><i class="fas fa-carrot icon-big"></i> = ingrediente</p>
-            <p><i class="fas fa-balance-scale-right icon-big"></i> = quantità</p>
-            <p><i class="fas fa-percentage icon-big"></i> = proporzione</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- row RICETTA (branch: ui-add-ingredient) -->
+      <!-- row RICETTA -->
       <div class="row row-ricetta">
         <div class="head">
-          <div class="title"><p>Ho la ricetta</p></div>
-          <div class="description">Ho una ricetta e voglio estrarre le proporzioni degli ingredienti</div>
+          <div class="title"><p>Ricetta</p></div>
+          <div class="description">Scegli o aggiungi ricetta</div>
         </div>
+
         <div class="body">
-          <div class="row row-input">
+          <div class="row row-options-recipe">
+            <div class="box-choose">
+              <p>Scegli</p>
+              <input type="text" />
+            </div>
+            <div class="box-add">
+              <p><button>Aggiungi</button></p>
+            </div>
+          </div>
+
+          <div class="row row-input invisible">
             <div class="title"><p>INPUT</p></div>
             <div class="content">
               <div class="ricetta">
                 <div class="nome">
                   <p>Nome della ricetta <input type="text" /></p>
                 </div>
+
+                <div class="aggiungi-campo">
+                  <input type="text" placeholder="Ingrediente" />
+                  <input type="number" placeholder="Quantità" />
+                  <button onclick="aggiungiIngrediente()"><i class="fa-solid fa-plus"></i></button>
+                </div>
+
                 <div class="campi">
                   <table class="table-default" id="table-ricetta">
                     <thead>
@@ -63,9 +67,6 @@
                     <tbody></tbody>
                   </table>
                 </div>
-                <div class="aggiungi-campo">
-                  <button onclick="aggiungiIngrediente()"><i class="fa-solid fa-plus"></i></button>
-                </div>
               </div>
             </div>
           </div>
@@ -74,7 +75,7 @@
             <i class="fas fa-arrow-down"></i>
           </div> -->
 
-          <div class="row row-output">
+          <div class="row row-output invisible">
             <div class="title"><p>OUTPUT</p></div>
             <div class="content">
               <div class="table-container">
@@ -98,14 +99,14 @@
             </div>
           </div>
 
-          <div class="row row-save-as-pdf">
+          <div class="row row-save-as-pdf invisible">
             <button><i class="fa-solid fa-file-pdf"></i></button>
           </div>
         </div>
       </div>
 
       <!-- row HO INGREDIENTE -->
-      <div class="row row-ho-ingrediente">
+      <div class="row row-ho-ingrediente invisible">
         <div class="head">
           <div class="title"><p>Ho la quantità di un ingrediente, voglio le quantità degli altri ingredienti</p></div>
           <div class="description"><p>Conosco la quantità di un ingrediente e voglio calcolare le quantità degli altri ingredienti</p></div>
@@ -168,7 +169,7 @@
       </div>
 
       <!-- row HO TOTALE -->
-      <div class="row row-ho-tot">
+      <div class="row row-ho-tot invisible">
         <div class="head">
           <div class="title"><p>Ho il totale dell'impasto, voglio le quantità di ogni ingrediente</p></div>
           <div class="description"><p>Ho il totale dell'impasto e voglio calcolare la quantità di ogni ingrediente</p></div>
@@ -220,6 +221,20 @@
         </div>
       </div>
 
+      <div class="row row-legend invisible">
+        <div class="head">
+          <div class="title"><p>LEGENDA</p></div>
+          <!-- <div class="description"></div> -->
+        </div>
+        <div class="body">
+          <div class="row">
+            <p><i class="fas fa-carrot icon-big"></i> = ingrediente</p>
+            <p><i class="fas fa-balance-scale-right icon-big"></i> = quantità</p>
+            <p><i class="fas fa-percentage icon-big"></i> = proporzione</p>
+          </div>
+        </div>
+      </div>
+
       <!-- row ESEMPIO -->
       <!-- <div class="row row-esempio">
         <div class="head">
@@ -240,6 +255,7 @@
     <footer></footer>
 
     <script src="./assets/js/calcolatoreImpasto.js"></script>
+    <script src="./assets/js/ui-triggers.js"></script>
     <script src="./assets/js/ui.js"></script>
     <!-- <script src="./assets/js/test.js"></script> -->
 

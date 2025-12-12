@@ -18,6 +18,10 @@ input {
   width: 80px;
 }
 
+.invisible {
+  display: none !important;
+}
+
 table.table-default {
   table-layout: fixed;
   border-collapse: collapse;
@@ -267,8 +271,15 @@ main > .row-ricetta > .body > .row-input > .content > .ricetta > .campi > table 
 }
 
 main > .row-ricetta > .body > .row-input > .content > .ricetta > .aggiungi-campo {
-  text-align: center;
-  /* font-size: rem; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.1rem;
+}
+
+main > .row-ricetta > .body > .row-input > .content > .ricetta > .aggiungi-campo > input {
+  width: max-content;
 }
 
 main > .row-ricetta > .body > .row-input > .content > .ricetta > .aggiungi-campo > button {
@@ -307,6 +318,31 @@ main > .row-ricetta > .body > .row-input {
   flex-direction: column;
 }
 
+main > .row-ricetta > .body > .row-options-recipe {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+main > .row-ricetta > .body > .row-options-recipe {
+  
+}
+
+/* boxes: choose, add */
+main > .row-ricetta > .body > .row-options-recipe > * {
+  padding: 2rem;
+}
+
+main > .row-ricetta > .body > .row-options-recipe > * > p {
+  font-size: 1.5rem;
+}
+
+main > .row-ricetta > .body > .row-options-recipe > *  button {
+  font-size: 1.5rem;
+}
+
+
+
 main > .row-ho-ingrediente > .body > .row-input > .title,
 main > .row-ho-ingrediente > .body > .row-output > .title,
 main > .row-ho-tot > .body > .row-input > .title,
@@ -335,7 +371,6 @@ main > .row-ho-ingrediente > .body > .row-save-as-pdf > button,
 main > .row-ho-tot > .body > .row-save-as-pdf > button {
   font-size: 1.5rem;
 }
-
 
 main > .row-ho-ingrediente > .body > .row-input > .content,
 main > .row-ho-tot > .body > .row-input > .content,
@@ -370,6 +405,14 @@ main > .row-ricetta > .body > .row-output > .content > .table-container > table 
   width: 100%;
   /* min-width: 300px; */
   overflow-wrap: break-word;
+}
+
+/* at first, the user is shown the options to choose a recipe, so
+the other containers are hidden */
+main > .row-ricetta > .body > .row-input,
+main > .row-ricetta > .body > .row-output,
+main > .row-ricetta > .body > .row-save-as-pdf {
+  
 }
 
 main > .row-ho-tot {
