@@ -50,9 +50,9 @@
                 </div>
 
                 <div class="aggiungi-campo">
-                  <input type="text" placeholder="Ingrediente" />
-                  <input type="number" placeholder="Quantità" />
-                  <button onclick="aggiungiIngrediente()"><i class="fa-solid fa-plus"></i></button>
+                  <input type="text" placeholder="Ingrediente" id="input-add-ingredient-name" />
+                  <input type="number" placeholder="Quantità" id="input-add-ingredient-quantity" />
+                  <button id="button-add-ingredient"><i class="fa-solid fa-plus"></i></button>
                 </div>
 
                 <div class="campi">
@@ -116,16 +116,14 @@
             <div class="title"><p>INPUT</p></div>
             <div class="content">
               <div class="input">
-                <p>Ingrediente <input type="text" onkeyup="quandoCambiaIngredienteDaIngrediente('ingrediente')" id="input-da-ingrediente-ingrediente" /></p>
+                <p>Ingrediente <input type="text" id="input-have-ingredient-name" /></p>
               </div>
               <div class="input">
                 <p>
                   Quantità (g)
                   <input
                     type="number"
-                    onkeyup="quandoCambiaIngredienteDaIngrediente('quantita')"
-                    onchange="quandoCambiaIngredienteDaIngrediente('quantita')"
-                    id="input-da-ingrediente-quantita"
+                    id="input-have-ingredient-quantity"
                     value="1"
                     min="1"
                   />
@@ -181,7 +179,7 @@
               <div class="input">
                 <p>
                   Totale ricetta (g)
-                  <input type="number" id="input-da-tot-tot-impasto" onkeyup="quandoCambiaTotImpastoDaTot()" onchange="quandoCambiaTotImpastoDaTot()" />
+                  <input type="number" id="input-have-total"  />
                 </p>
               </div>
             </div>
