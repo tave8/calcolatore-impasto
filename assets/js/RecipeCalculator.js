@@ -19,13 +19,21 @@
  *
  */
 
-
 class Recipe {
-  constructor(name, ingredientsAsList) {
-    this.name = name;
+  constructor() {
+    this.name = null;
     this.ingredients = [];
-    this.requests = [];
-    this.addIngredients(ingredientsAsList);
+    this.useCases = {
+      haveOneIngredient: {
+        isUseCaseActive: false,
+        ingredientName: null,
+        ingredientQuantity: null,
+      },
+      haveRecipeTotal: {
+        isUseCaseActive: false,
+        recipeQuantity: null,
+      },
+    };
   }
 
   calcFromIngredient({ name: ingredientName, quantity: ingredientQuantity }) {
@@ -36,9 +44,10 @@ class Recipe {
       quantity: ingredientQuantity,
     });
 
-    const userInfo = this.getUserInfoWhenCalcFromIngredient({ ingredientName, ingredientQuantity });
-
-    this.requests.push(userInfo);
+    // update the current use case
+    this.useCases.haveOneIngredient.isUseCaseActive = true;
+    this.useCases.haveOneIngredient.ingredientName = ingredientName;
+    this.useCases.haveOneIngredient.ingredientQuantity = ingredientQuantity;
 
     // create the result
     this.ingredients.forEach((ingredient, i) => {
@@ -54,16 +63,16 @@ class Recipe {
     });
 
     return {
-      user: userInfo,
       ingredients: ingredientsList,
     };
   }
 
   calcFromTot(recipeQuantity) {
     const ingredientsList = [];
-    const userInfo = this.getUserInfoWhenCalcFromTot(recipeQuantity);
 
-    this.requests.push(userInfo);
+    // update the current use case
+    this.useCases.haveRecipeTotal.isUseCaseActive = true;
+    this.useCases.haveRecipeTotal.recipeQuantity = recipeQuantity;
 
     this.ingredients.forEach((ingredient, i) => {
       const proportion = ingredient.getProportion();
@@ -77,7 +86,6 @@ class Recipe {
     });
 
     return {
-      user: userInfo,
       ingredients: ingredientsList,
     };
   }
@@ -186,29 +194,8 @@ class Recipe {
     });
   }
 
-  getUserInfoWhenCalcFromIngredient({ ingredientName, ingredientQuantity }) {
-    return {
-      data: {
-        ingredientName: ingredientName,
-        ingredientQuantity: ingredientQuantity,
-      },
-      request: {
-        haveOneIngredient: true,
-      },
-      informalRequest: "I have an ingredient and its quantity. Compute the quantity of each ingredient.",
-    };
-  }
-
-  getUserInfoWhenCalcFromTot(recipeQuantity) {
-    return {
-      data: {
-        recipeQuantity: recipeQuantity,
-      },
-      request: {
-        haveRecipeQuantity: true,
-      },
-      informalRequest: "I have the total of the recipe. Compute the quantity of each ingredient.",
-    };
+  setName(recipeName) {
+    this.name = recipeName;
   }
 }
 
@@ -242,15 +229,14 @@ class Ingredient {
 
 // USAGE
 
-// const myRecipe = new Recipe("My Recipe", [
-//   { name: "water", quantity: 50 },
-//   { name: "salt", quantity: 10 },
-// ]);
+const myRecipe = new Recipe();
 
-// myRecipe.addIngredient({
-//   name: "oik",
-//   quantity: 20,
-// });
+// myRecipe.setName("My recipe")
+
+myRecipe.addIngredient({
+  name: "water",
+  quantity: 100,
+});
 
 // myRecipe.editIngredient("salt", {
 //   quantity: 40,
@@ -260,12 +246,12 @@ class Ingredient {
 // // console.log(myRecipe);
 
 // console.log(
-//   myRecipe.calcFromIngredient({
-//     name: "water",
-//     quantity: 45,
-//   })
+myRecipe.calcFromIngredient({
+  name: "water",
+  quantity: 45,
+});
 // );
 
 // console.log(myRecipe.calcFromTot(150));
 
-// console.log(myRecipe);
+console.log(myRecipe);
