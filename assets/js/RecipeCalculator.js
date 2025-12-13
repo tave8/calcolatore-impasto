@@ -38,6 +38,9 @@ class Recipe {
 
   calcFromIngredient({ name: ingredientName, quantity: ingredientQuantity }) {
     const ingredientsList = [];
+    let totIngredients = 0;
+
+    // console.log(ingredientName, ingredientQuantity)
 
     ingredientQuantity = parseFloat(ingredientQuantity);
 
@@ -45,8 +48,6 @@ class Recipe {
       name: ingredientName,
       quantity: ingredientQuantity,
     });
-
-    // console.log(recipeQuantityTotal)
 
     // update the current use case
     this.useCases.haveOneIngredient.isUseCaseActive = true;
@@ -57,17 +58,26 @@ class Recipe {
     this.ingredients.forEach((ingredient, i) => {
       // moltiplicando la quantità totale con la proporzione del singolo ingrediente,
       // ricavo finalmente la quantità di ogni altro ingrediente, oltre all'ingrediente dato
-      const proportion = ingredient.getProportion();
-      const newQuantity = recipeQuantityTotal * proportion;
+      const ingredientProportion = ingredient.getProportion();
+      const newIngredientQuantity = recipeQuantityTotal * ingredientProportion;
+      const newIngredientQuantityRounded = Ingredient.roundQuantity(newIngredientQuantity);
+
       ingredientsList.push({
-        name: ingredient.name,
-        proportion,
-        quantity: newQuantity,
+        name: ingredient.getName(),
+        proportion: ingredientProportion,
+        quantity: newIngredientQuantity,
+        quantityRounded: newIngredientQuantityRounded,
+        percentageRounded: ingredient.getPercentageRounded(),
       });
+
+      totIngredients += newIngredientQuantity;
     });
+
+    const totIngredientsRounded = Ingredient.roundQuantity(totIngredients);
 
     return {
       ingredients: ingredientsList,
+      totIngredientsRounded,
     };
   }
 
@@ -138,7 +148,7 @@ class Recipe {
   }
 
   resetMultiplier() {
-    this.multiplyIngredients(1)
+    this.multiplyIngredients(1);
   }
 
   multiplyIngredients(multiplier) {
@@ -156,7 +166,7 @@ class Recipe {
     let totIngredients = 0;
 
     this.ingredients.forEach((ingredient) => {
-      const quantityMultiplied = ingredient.getQuantityMultiplied()
+      const quantityMultiplied = ingredient.getQuantityMultiplied();
 
       const ingredientInfo = {
         id: ingredient.getId(),
@@ -182,7 +192,7 @@ class Recipe {
 
     // choosing the first ingredient because the method is on ingredients
     // not on recipe. should fix
-    const totIngredientsRounded = Ingredient.roundQuantity(totIngredients)
+    const totIngredientsRounded = Ingredient.roundQuantity(totIngredients);
 
     return {
       ingredients,
@@ -285,7 +295,6 @@ class Recipe {
   setName(recipeName) {
     this.name = recipeName;
   }
-
 }
 
 class Ingredient {

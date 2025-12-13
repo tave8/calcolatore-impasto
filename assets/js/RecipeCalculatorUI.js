@@ -133,6 +133,8 @@ class RecipeUI {
 
     this.refreshOutputTableRecipe(this.recipe.getIngredients());
 
+    this.refreshAutomaticAllTableButRecipe();
+
     // refocus the input to the ingredient name input
     document.getElementById(this.inputAddIngredientNameId).focus();
   }
@@ -157,19 +159,21 @@ class RecipeUI {
     const inputIngredientQuantityEl = document.getElementById(this.inputHaveIngredientQuantityId);
 
     const ingredientName = inputIngredientNameEl.value;
-    const ingredientQuantity = inputIngredientQuantityEl.value;
+    const ingredientQuantity = parseFloat(inputIngredientQuantityEl.value);
 
     // // checks
     // // if () {
 
     // // }
 
-    const res = this.recipe.calcFromIngredient({
+    const ingredientsData = this.recipe.calcFromIngredient({
       name: ingredientName,
       quantity: ingredientQuantity,
     });
 
-    console.log(res);
+    // console.log(res);
+
+    this.refreshOutputTableHaveIngredient(ingredientsData);
   }
 
   handleTypingHaveTotal(ev) {}
@@ -198,6 +202,78 @@ class RecipeUI {
 
     this.refreshOutputTableRecipe(this.recipe.getIngredients());
   }
+
+  refreshAutomaticAllTableButRecipe() {
+    // try {
+
+    // } catch {
+
+    // }
+
+    const ingredientsDataWhenHaveIngredient = this.recipe.calcFromIngredient({
+      name: document.getElementById(this.inputHaveIngredientNameId).value,
+      quantity: parseFloat(document.getElementById(this.inputHaveIngredientQuantityId).value),
+    });
+
+    // console.log(ingredientsDataWhenHaveIngredient)
+
+    // refresh the "from ingredient" table
+    this.refreshOutputTableHaveIngredient(ingredientsDataWhenHaveIngredient);
+  }
+
+  /**
+   * Refreshes the UI of a given table.
+   * This method is used for standard tables (ingredient, quantity, proportion),
+   * not for tables that implement custom logic (like the recipe table)
+   */
+  // refreshOutputTable(ingredientsData, tableId) {}
+
+  refreshOutputTableHaveIngredient(ingredientsData) {
+    const { ingredients: ingredientsList, totIngredientsRounded } = ingredientsData;
+
+    const table = document.getElementById(this.outputTableHaveIngredientId);
+    const tableBody = table.querySelector("tbody");
+    const tableFoot = table.querySelector("tfoot");
+
+    // empty the table
+    tableBody.innerHTML = "";
+    tableFoot.innerHTML = "";
+
+    // add ingredients
+    ingredientsList.forEach((ingredientInfo) => {
+      const row = document.createElement("tr");
+
+      const cellIngredientName = document.createElement("td");
+      const cellIngredientQuantity = document.createElement("td");
+      const cellIngredientPercentage = document.createElement("td");
+
+      cellIngredientName.innerText = ingredientInfo.name;
+      cellIngredientQuantity.innerText = `${ingredientInfo.quantityRounded}g`;
+      cellIngredientPercentage.innerText = `${ingredientInfo.percentageRounded}%`;
+
+      row.append(cellIngredientName, cellIngredientQuantity, cellIngredientPercentage);
+      tableBody.appendChild(row);
+    });
+
+    // the table footer
+
+    const rowTotal = document.createElement("tr");
+    const cellTotalText = document.createElement("td");
+    const cellTotalNum = document.createElement("td");
+
+    cellTotalText.innerText = "TOTALE:";
+    cellTotalNum.innerText = `${totIngredientsRounded}g`;
+    cellTotalNum.setAttribute("colspan", "2");
+
+    rowTotal.append(cellTotalText, cellTotalNum);
+
+    // add total
+    tableFoot.appendChild(rowTotal);
+  }
+
+  // refreshOutputTableHavetotal(ingredientsList) {
+  //   this.refreshOutputTable(ingredientsList, this.outputTableHaveTotalId);
+  // }
 
   refreshOutputTableRecipe(ingredientsData) {
     const { ingredients: ingredientsList, totIngredientsRounded } = ingredientsData;
@@ -254,25 +330,6 @@ class RecipeUI {
 
     // add total
     tableFoot.appendChild(rowTotal);
-  }
-
-  refreshOutputTableHaveIngredient(ingredientsList) {
-    this.refreshOutputTable(ingredientsList, this.outputTableHaveIngredientId);
-  }
-
-  refreshOutputTableHavetotal(ingredientsList) {
-    this.refreshOutputTable(ingredientsList, this.outputTableHaveTotalId);
-  }
-
-  refreshOutputTable(ingredientsList, tableId) {
-    const table = document.getElementById(tableId);
-    const tableBody = table.querySelector("tbody");
-    // empty the table
-    tableBody.innerHTML = "";
-
-    ingredientsList.forEach((ingredientInfo) => {
-      this.addRowOutputTable(ingredientInfo, tableId);
-    });
   }
 
   addRowOutputTableRecipe(ingredientInfo) {

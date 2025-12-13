@@ -27,7 +27,7 @@
       <div class="row row-ricetta">
         <div class="head">
           <div class="title"><p>Ricetta</p></div>
-          <div class="description">Scegli o aggiungi ricetta</div>
+          <!-- <div class="description">Scegli o aggiungi ricetta</div> -->
         </div>
 
         <div class="body">
@@ -67,6 +67,9 @@
             <div class="content">
               <div class="table-container">
                 <table class="table-default" id="table-ricetta">
+                  <!-- <caption>
+                    La mia ricetta
+                  </caption> -->
                   <thead>
                     <tr>
                       <th><i class="fas fa-carrot icon-big"></i></th>
@@ -85,12 +88,12 @@
           <div class="row row-more-actions">
             <div class="box-select">
               <select id="select-recipe-multiply-operation">
-                <option value="multiply" selected>Moltiplica</option>
-                <option value="divide">Dividi</option>
+                <option value="multiply" selected>Moltiplica per</option>
+                <option value="divide">Dividi per</option>
               </select>
             </div>
             <div class="box-number">
-              <input type="number" id="input-recipe-multiply-operation" value="1" min="1">
+              <input type="number" id="input-recipe-multiply-operation" value="1" min="1" />
             </div>
           </div>
 
@@ -103,20 +106,20 @@
       <!-- row HO INGREDIENTE -->
       <div class="row row-ho-ingrediente invisible">
         <div class="head">
-          <div class="title"><p>Ho la quantità di un ingrediente, voglio le quantità degli altri ingredienti</p></div>
-          <div class="description"><p>Conosco la quantità di un ingrediente e voglio calcolare le quantità degli altri ingredienti</p></div>
+          <div class="title"><p>Ho un ingrediente, calcola altri ingredienti</p></div>
+          <!-- <div class="description"><p>Conosco la quantità di un ingrediente e voglio calcolare le quantità degli altri ingredienti</p></div> -->
         </div>
         <div class="body">
           <div class="row row-input">
             <!-- <div class="title"><p>INPUT</p></div> -->
             <div class="content">
               <div class="input">
-                <p><input type="text" id="input-have-ingredient-name" placeholder="Ingrediente" /></p>
+                <p>
+                  Con <input type="number" id="input-have-ingredient-quantity" min="1" placeholder="Quantità (g)" />
+                </p>
               </div>
               <div class="input">
-                <p>
-                  <input type="number" id="input-have-ingredient-quantity" min="1" placeholder="Quantità (g)" />
-                </p>
+                <p> di <input type="text" id="input-have-ingredient-name" placeholder="Ingrediente" /></p>
               </div>
             </div>
           </div>
@@ -130,6 +133,9 @@
             <div class="content">
               <div class="table-container">
                 <table class="table-default table-con-totali" id="table-da-ingrediente">
+                  <caption>
+                    Mi servono
+                  </caption>
                   <thead>
                     <tr>
                       <th><i class="fas fa-carrot icon-big"></i></th>
@@ -153,8 +159,8 @@
       <!-- row HO TOTALE -->
       <div class="row row-ho-tot invisible">
         <div class="head">
-          <div class="title"><p>Ho il totale dell'impasto, voglio le quantità di ogni ingrediente</p></div>
-          <div class="description"><p>Ho il totale dell'impasto e voglio calcolare la quantità di ogni ingrediente</p></div>
+          <div class="title"><p>Ho il totale impasto, calcola ogni ingrediente</p></div>
+          <!-- <div class="description"><p>Ho il totale dell'impasto e voglio calcolare la quantità di ogni ingrediente</p></div> -->
         </div>
         <div class="body">
           <div class="row row-input">
@@ -162,7 +168,7 @@
             <div class="content">
               <div class="input">
                 <p>
-                  <input type="number" id="input-have-total" placeholder="Totale ricetta (g)" />
+                  Con <input type="number" id="input-have-total" placeholder="Totale ricetta (g)" /> di impasto
                 </p>
               </div>
             </div>
@@ -177,6 +183,9 @@
             <div class="content">
               <div class="table-container">
                 <table class="table-default table-con-totali" id="table-da-tot-impasto">
+                  <caption>
+                    Mi servono
+                  </caption>
                   <thead>
                     <tr>
                       <th><i class="fas fa-carrot icon-big"></i></th>
