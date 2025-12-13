@@ -24,6 +24,8 @@
 
 class RecipeUI {
   constructor({
+    recipe,
+
     outputTableRecipeId,
     outputTableHaveIngredientId,
     outputTableHaveTotalId,
@@ -37,6 +39,8 @@ class RecipeUI {
 
     inputHaveTotalId,
   }) {
+    this.recipe = recipe
+
     this.outputTableRecipeId = outputTableRecipeId;
     this.outputTableHaveIngredientId = outputTableHaveIngredientId;
     this.outputTableHaveTotalId = outputTableHaveTotalId;
@@ -98,10 +102,11 @@ class RecipeUI {
     }
 
     // add to the data structure
-    
+    this.recipe.addIngredient(ingredientInfo)
 
+    this.refreshOutputTableRecipe()
     // add to UI
-    this.addRowOutputTableRecipe(ingredientInfo)
+    // this.addRowOutputTableRecipe(ingredientInfo)
   }
 
   handleTypingHaveIngredient(ev) {
@@ -112,8 +117,8 @@ class RecipeUI {
 
   }
 
-  refreshOutputTableRecipe(ingredientsList) {
-    this.refreshOutputTable(ingredientsList, this.outputTableRecipeId);
+  refreshOutputTableRecipe() {
+    this.refreshOutputTable(this.recipe.getIngredients(), this.outputTableRecipeId);
   }
 
   refreshOutputTableHaveIngredient(ingredientsList) {
@@ -166,6 +171,8 @@ class RecipeUI {
 }
 
 const recipeUI = new RecipeUI({
+  recipe: new Recipe(),
+
   outputTableRecipeId: "table-ricetta",
   outputTableHaveIngredientId: "table-da-ingrediente",
   outputTableHaveTotalId: "table-da-tot-impasto",

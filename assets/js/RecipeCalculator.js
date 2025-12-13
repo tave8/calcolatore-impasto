@@ -127,6 +127,29 @@ class Recipe {
     return this.ingredients.find((ingredient) => ingredientName === ingredient.name);
   }
 
+  /**
+   * Get a list of ingredients
+   */
+  getIngredients() {
+    const ret = [];
+    this.ingredients.forEach((ingredient) => {
+      const ingredientInfo = {
+        name: ingredient.getName(),
+
+        quantity: ingredient.getQuantity(),
+        quantityRounded: ingredient.getQuantityRounded(),
+
+        proportion: ingredient.getProportion(),
+        percentage: ingredient.getPercentage(),
+
+        proportionRounded: ingredient.getProportionRounded(),
+        percentageRounded: ingredient.getPercentageRounded(),
+      };
+      ret.push(ingredientInfo);
+    });
+    return ret;
+  }
+
   getTotIngredients() {
     return this.ingredients.reduce((acc, ingredient) => acc + ingredient.quantity, 0);
   }
@@ -144,7 +167,7 @@ class Recipe {
     // add ingredient to recipe
     const ingredient = new Ingredient({
       name: ingredientInfo.name,
-      quantity: ingredientInfo.quantity,
+      quantity: parseFloat(ingredientInfo.quantity),
       recipe: this,
     });
     this.ingredients.push(ingredient);
@@ -218,12 +241,47 @@ class Ingredient {
     return this.getQuantity() / this.recipe.getTotIngredients();
   }
 
+  getProportionRounded() {
+    return this.roundProportion(this.getProportion());
+  }
+
+  getPercentage() {
+    return this.getProportion() * 100;
+  }
+
+  getPercentageRounded() {
+    return this.roundPercentage(this.getPercentage());
+  }
+
   getQuantity() {
     return this.quantity;
   }
 
+  getQuantityRounded() {
+    return this.roundNumber(this.getQuantity(), 2);
+  }
+
   setQuantity(quantity) {
     this.quantity = quantity;
+  }
+
+  /**
+   * Round x by n digits
+   */
+  roundNumber(num, nDigits) {
+    return parseFloat(num.toFixed(nDigits));
+  }
+
+  roundProportion(x) {
+    return this.roundNumber(x, 4);
+  }
+
+  roundPercentage(x) {
+    return this.roundNumber(x, 2);
+  }
+
+  roundQuantity(x) {
+    return this.roundNumber(x, 2);
   }
 }
 
