@@ -75,7 +75,6 @@ table.table-default tfoot {
 }
 
 table.table-default tfoot td {
-  
 }
 
 .icon-big {
@@ -251,12 +250,25 @@ main > .row-esempio > .body > .esempio > p {
 
 /* ROW RICETTA */
 
-main > .row-ricetta {
-}
-
 main > .row-ricetta > .body {
   display: flex;
   flex-direction: column;
+}
+
+main > .row-ricetta > .body > .row-more-actions {
+  display: flex;
+  justify-content: center;
+}
+
+main > .row-ricetta > .body > .row-more-actions > * {
+}
+
+main > .row-ricetta > .body > .row-more-actions select {
+  height: 30px;
+}
+
+main > .row-ricetta > .body > .row-more-actions input {
+  width: 50px;
 }
 
 main > .row-ricetta > .body > .row-input > .content > .ricetta {
@@ -338,7 +350,6 @@ main > .row-ricetta > .body > .row-options-recipe {
 }
 
 main > .row-ricetta > .body > .row-options-recipe {
-  
 }
 
 /* boxes: choose, add */
@@ -350,11 +361,9 @@ main > .row-ricetta > .body > .row-options-recipe > * > p {
   font-size: 1.5rem;
 }
 
-main > .row-ricetta > .body > .row-options-recipe > *  button {
+main > .row-ricetta > .body > .row-options-recipe > * button {
   font-size: 1.5rem;
 }
-
-
 
 main > .row-ho-ingrediente > .body > .row-input > .title,
 main > .row-ho-ingrediente > .body > .row-output > .title,
@@ -428,7 +437,6 @@ the other containers are hidden */
 main > .row-ricetta > .body > .row-input,
 main > .row-ricetta > .body > .row-output,
 main > .row-ricetta > .body > .row-save-as-pdf {
-  
 }
 
 main > .row-ho-tot {
