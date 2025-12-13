@@ -103,6 +103,7 @@ class RecipeUI {
     // get the values of ingredient name and quantity
     const inputIngredientNameEl = document.getElementById(this.inputAddIngredientNameId);
     const inputIngredientQuantityEl = document.getElementById(this.inputAddIngredientQuantityId);
+    const inputRecipeMultiplyTimesId = document.getElementById(this.inputRecipeMultiplyTimesId);
 
     const ingredientName = inputIngredientNameEl.value;
     const ingredientQuantity = inputIngredientQuantityEl.value;
@@ -121,10 +122,14 @@ class RecipeUI {
       quantity: ingredientQuantity,
     };
 
-    // add the value of the 
+    // every time the user adds an ingredient, reset the multiplier
+    this.recipe.resetMultiplier();
 
     // add to the data structure
     this.recipe.addIngredient(ingredientInfo);
+
+    // reset multiplier in UI
+    inputRecipeMultiplyTimesId.value = 1;
 
     this.refreshOutputTableRecipe(this.recipe.getIngredients());
 
@@ -189,7 +194,7 @@ class RecipeUI {
       finalMultiplier = 1 / initialMultiplier;
     }
 
-    this.recipe.multiplyIngredients(finalMultiplier)
+    this.recipe.multiplyIngredients(finalMultiplier);
 
     this.refreshOutputTableRecipe(this.recipe.getIngredients());
   }

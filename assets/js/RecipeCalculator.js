@@ -137,6 +137,10 @@ class Recipe {
     return this.ingredients.find((ingredient) => ingredientId === ingredient.id);
   }
 
+  resetMultiplier() {
+    this.multiplyIngredients(1)
+  }
+
   multiplyIngredients(multiplier) {
     this.ingredients.forEach((ingredient) => {
       ingredient.setQuantityMultiplied(multiplier);
