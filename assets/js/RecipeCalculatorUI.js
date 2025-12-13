@@ -28,7 +28,7 @@ class RecipeUI {
 
     outputTableRecipeId,
     outputTableHaveIngredientId,
-    outputTableHaveTotalId,
+    outputTableHaveRecipeTotalId,
 
     inputAddIngredientNameId,
     inputAddIngredientQuantityId,
@@ -39,13 +39,13 @@ class RecipeUI {
     inputHaveIngredientNameId,
     inputHaveIngredientQuantityId,
 
-    inputHaveTotalId,
+    inputHaveRecipeTotalId,
   }) {
     this.recipe = recipe;
 
     this.outputTableRecipeId = outputTableRecipeId;
     this.outputTableHaveIngredientId = outputTableHaveIngredientId;
-    this.outputTableHaveTotalId = outputTableHaveTotalId;
+    this.outputTableHaveRecipeTotalId = outputTableHaveRecipeTotalId;
 
     this.inputAddIngredientNameId = inputAddIngredientNameId;
     this.inputAddIngredientQuantityId = inputAddIngredientQuantityId;
@@ -56,7 +56,7 @@ class RecipeUI {
     this.inputHaveIngredientNameId = inputHaveIngredientNameId;
     this.inputHaveIngredientQuantityId = inputHaveIngredientQuantityId;
 
-    this.inputHaveTotalId = inputHaveTotalId;
+    this.inputHaveRecipeTotalId = inputHaveRecipeTotalId;
 
     // add the event handlers
     const pageLoaded = document.readyState === "complete";
@@ -96,7 +96,7 @@ class RecipeUI {
     document.getElementById(this.inputHaveIngredientQuantityId).addEventListener("keyup", this.handleTypingHaveIngredient.bind(this));
 
     // when user types in "have total" input
-    document.getElementById(this.inputHaveTotalId).addEventListener("keyup", this.handleTypingHaveTotal.bind(this));
+    document.getElementById(this.inputHaveRecipeTotalId).addEventListener("keyup", this.handleTypingHaveRecipeTotal.bind(this));
   }
 
   handleClickAddIngredient(ev) {
@@ -151,12 +151,10 @@ class RecipeUI {
     // refresh recipe table
     this.refreshOutputTableRecipe(this.recipe.getIngredients());
 
-    this.refreshAutomaticAllTableButRecipe()
+    this.refreshAutomaticAllTableButRecipe();
   }
 
   handleTypingHaveIngredient(ev) {
-    // CONTINUE HERE.
-    //     // get the values of ingredient name and quantity
     const inputIngredientNameEl = document.getElementById(this.inputHaveIngredientNameId);
     const inputIngredientQuantityEl = document.getElementById(this.inputHaveIngredientQuantityId);
 
@@ -178,7 +176,25 @@ class RecipeUI {
     this.refreshOutputTableHaveIngredient(ingredientsData);
   }
 
-  handleTypingHaveTotal(ev) {}
+  handleTypingHaveRecipeTotal(ev) {
+    const inputRecipeTotalEl = document.getElementById(this.inputHaveRecipeTotalId);
+
+    const recipeQuantity = parseFloat(inputRecipeTotalEl.value);
+
+    // console.log(recipeQuantity)
+
+    // // checks
+    // // if () {
+
+    // // }
+
+    const ingredientsData = this.recipe.calcFromTot(recipeQuantity);
+    console.log(ingredientsData)
+
+    // console.log(res);
+
+    this.refreshOutputTableHaveRecipeTotal(ingredientsData);
+  }
 
   handleMultiplyRecipe(ev) {
     // get the fields
@@ -212,15 +228,24 @@ class RecipeUI {
 
     // }
 
-    const ingredientsDataWhenHaveIngredient = this.recipe.calcFromIngredient({
-      name: document.getElementById(this.inputHaveIngredientNameId).value,
-      quantity: parseFloat(document.getElementById(this.inputHaveIngredientQuantityId).value),
-    });
+    // REFRESH TABLE: HAVE INGREDIENT
 
-    // console.log(ingredientsDataWhenHaveIngredient)
+    const ingredientNameKnown = document.getElementById(this.inputHaveIngredientNameId).value
+    const ingredientQuantityKnown = parseFloat(document.getElementById(this.inputHaveIngredientQuantityId).value)
+
+    const ingredientsDataWhenHaveIngredient = this.recipe.calcFromIngredient({
+      name: ingredientNameKnown,
+      quantity: ingredientQuantityKnown,
+    });
 
     // refresh the "from ingredient" table
     this.refreshOutputTableHaveIngredient(ingredientsDataWhenHaveIngredient);
+
+    // REFRESH TABLE: HAVE RECIPE TOTAL
+    const recipeQuantityKnown = parseFloat(document.getElementById(this.inputHaveRecipeTotalId).value)
+    const ingredientsDataWhenHaveRecipeTotal = this.recipe.calcFromTot(recipeQuantityKnown)
+
+    this.refreshOutputTableHaveRecipeTotal(ingredientsDataWhenHaveRecipeTotal)
   }
 
   /**
@@ -234,6 +259,49 @@ class RecipeUI {
     const { ingredients: ingredientsList, totIngredientsRounded } = ingredientsData;
 
     const table = document.getElementById(this.outputTableHaveIngredientId);
+    const tableBody = table.querySelector("tbody");
+    const tableFoot = table.querySelector("tfoot");
+
+    // empty the table
+    tableBody.innerHTML = "";
+    tableFoot.innerHTML = "";
+
+    // add ingredients
+    ingredientsList.forEach((ingredientInfo) => {
+      const row = document.createElement("tr");
+
+      const cellIngredientName = document.createElement("td");
+      const cellIngredientQuantity = document.createElement("td");
+      const cellIngredientPercentage = document.createElement("td");
+
+      cellIngredientName.innerText = ingredientInfo.name;
+      cellIngredientQuantity.innerText = `${ingredientInfo.quantityRounded}g`;
+      cellIngredientPercentage.innerText = `${ingredientInfo.percentageRounded}%`;
+
+      row.append(cellIngredientName, cellIngredientQuantity, cellIngredientPercentage);
+      tableBody.appendChild(row);
+    });
+
+    // the table footer
+
+    const rowTotal = document.createElement("tr");
+    const cellTotalText = document.createElement("td");
+    const cellTotalNum = document.createElement("td");
+
+    cellTotalText.innerText = "TOTALE:";
+    cellTotalNum.innerText = `${totIngredientsRounded}g`;
+    cellTotalNum.setAttribute("colspan", "2");
+
+    rowTotal.append(cellTotalText, cellTotalNum);
+
+    // add total
+    tableFoot.appendChild(rowTotal);
+  }
+
+    refreshOutputTableHaveRecipeTotal(ingredientsData) {
+    const { ingredients: ingredientsList, totIngredientsRounded } = ingredientsData;
+
+    const table = document.getElementById(this.outputTableHaveRecipeTotalId);
     const tableBody = table.querySelector("tbody");
     const tableFoot = table.querySelector("tfoot");
 
@@ -334,17 +402,17 @@ class RecipeUI {
     tableFoot.appendChild(rowTotal);
   }
 
-  addRowOutputTableRecipe(ingredientInfo) {
-    this.addRowOutputTable(ingredientInfo, this.outputTableRecipeId);
-  }
+  // addRowOutputTableRecipe(ingredientInfo) {
+  //   this.addRowOutputTable(ingredientInfo, this.outputTableRecipeId);
+  // }
 
-  addRowOutputTableHaveIngredient(ingredientInfo) {
-    this.addRowOutputTable(ingredientInfo, this.outputTableHaveIngredientId);
-  }
+  // addRowOutputTableHaveIngredient(ingredientInfo) {
+  //   this.addRowOutputTable(ingredientInfo, this.outputTableHaveIngredientId);
+  // }
 
-  addRowOutputTableHaveTotal(ingredientInfo) {
-    this.addRowOutputTable(ingredientInfo, this.outputTableHaveTotalId);
-  }
+  // addRowOutputTableHaveTotal(ingredientInfo) {
+  //   this.addRowOutputTable(ingredientInfo, this.outputTableHaveTotalId);
+  // }
 
   addRowOutputTable(ingredientInfo, tableId) {
     const table = document.getElementById(tableId);
@@ -369,7 +437,7 @@ const recipeUI = new RecipeUI({
 
   outputTableRecipeId: "table-ricetta",
   outputTableHaveIngredientId: "table-da-ingrediente",
-  outputTableHaveTotalId: "table-da-tot-impasto",
+  outputTableHaveRecipeTotalId: "table-da-tot-impasto",
 
   inputAddIngredientNameId: "input-add-ingredient-name",
   inputAddIngredientQuantityId: "input-add-ingredient-quantity",
@@ -380,7 +448,7 @@ const recipeUI = new RecipeUI({
   inputHaveIngredientNameId: "input-have-ingredient-name",
   inputHaveIngredientQuantityId: "input-have-ingredient-quantity",
 
-  inputHaveTotalId: "input-have-total",
+  inputHaveRecipeTotalId: "input-have-recipe-total",
 });
 
 console.log(recipeUI);

@@ -83,6 +83,7 @@ class Recipe {
 
   calcFromTot(recipeQuantity) {
     const ingredientsList = [];
+    let totIngredients = 0;
 
     recipeQuantity = parseFloat(recipeQuantity);
 
@@ -91,18 +92,26 @@ class Recipe {
     this.useCases.haveRecipeTotal.recipeQuantity = recipeQuantity;
 
     this.ingredients.forEach((ingredient, i) => {
-      const proportion = ingredient.getProportion();
-      const newIngredientQuantity = recipeQuantity * proportion;
+      const ingredientProportion = ingredient.getProportion();
+      const newIngredientQuantity = recipeQuantity * ingredientProportion;
+      const newIngredientQuantityRounded = Ingredient.roundQuantity(newIngredientQuantity);
 
       ingredientsList.push({
-        name: ingredient.name,
-        proportion,
+        name: ingredient.getName(),
+        proportion: ingredientProportion,
         quantity: newIngredientQuantity,
+        quantityRounded: newIngredientQuantityRounded,
+        percentageRounded: ingredient.getPercentageRounded(),
       });
+
+      totIngredients += newIngredientQuantity;
     });
+
+    const totIngredientsRounded = Ingredient.roundQuantity(totIngredients);
 
     return {
       ingredients: ingredientsList,
+      totIngredientsRounded
     };
   }
 
