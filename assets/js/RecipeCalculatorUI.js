@@ -69,8 +69,17 @@ class RecipeUI {
   }
 
   addEventHandlers() {
-    // when user clicks add ingredient
+    // prevents wrong "this" binding when dealing with event handlers
+    const self = this
+    // when user clicks or types Enter, to add an ingredient
     document.getElementById(this.buttonAddIngredientId).addEventListener("click", this.handleClickAddIngredient.bind(this));
+    document.getElementById(this.inputAddIngredientQuantityId).addEventListener("keyup", (ev) => {
+      const keyTyped = ev.key
+      const isEnter = keyTyped === "Enter"
+      if(isEnter) {
+        self.handleClickAddIngredient.bind(self)(ev)
+      }
+    });
     // when user types in "have ingredient" inputs
     document.getElementById(this.inputHaveIngredientNameId).addEventListener("keyup", this.handleTypingHaveIngredient.bind(this));
     document.getElementById(this.inputHaveIngredientQuantityId).addEventListener("keyup", this.handleTypingHaveIngredient.bind(this));
@@ -104,6 +113,9 @@ class RecipeUI {
     this.recipe.addIngredient(ingredientInfo);
 
     this.refreshOutputTableRecipe(this.recipe.getIngredients());
+
+    // refocus the input to the ingredient name input
+    document.getElementById(this.inputAddIngredientNameId).focus()
   }
 
   handleClickRemoveIngredient(ev) {
