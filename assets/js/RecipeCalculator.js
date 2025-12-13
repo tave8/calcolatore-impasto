@@ -39,7 +39,7 @@ class Recipe {
   calcFromIngredient({ name: ingredientName, quantity: ingredientQuantity }) {
     const ingredientsList = [];
 
-    ingredientQuantity = parseFloat(ingredientQuantity)
+    ingredientQuantity = parseFloat(ingredientQuantity);
 
     const recipeQuantityTotal = this.getRecipeQuantityFromIngredientInfo({
       name: ingredientName,
@@ -74,7 +74,7 @@ class Recipe {
   calcFromTot(recipeQuantity) {
     const ingredientsList = [];
 
-    recipeQuantity = parseFloat(recipeQuantity)
+    recipeQuantity = parseFloat(recipeQuantity);
 
     // update the current use case
     this.useCases.haveRecipeTotal.isUseCaseActive = true;
@@ -141,14 +141,16 @@ class Recipe {
    * Get a list of ingredients
    */
   getIngredients() {
-    const ret = [];
+    const ingredients = [];
+    let totIngredients = 0;
     this.ingredients.forEach((ingredient) => {
+      const quantity = ingredient.getQuantity()
       const ingredientInfo = {
         id: ingredient.getId(),
 
         name: ingredient.getName(),
 
-        quantity: ingredient.getQuantity(),
+        quantity: quantity,
         quantityRounded: ingredient.getQuantityRounded(),
 
         proportion: ingredient.getProportion(),
@@ -157,9 +159,13 @@ class Recipe {
         proportionRounded: ingredient.getProportionRounded(),
         percentageRounded: ingredient.getPercentageRounded(),
       };
-      ret.push(ingredientInfo);
+      totIngredients += quantity
+      ingredients.push(ingredientInfo);
     });
-    return ret;
+    return {
+      ingredients,
+      totIngredients,
+    };
   }
 
   // getIngredientsInOrderAlphabetIngredient() {

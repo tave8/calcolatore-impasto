@@ -97,7 +97,7 @@ class RecipeUI {
 
     const ingredientInfo = {
       name: ingredientName,
-      quantity: ingredientQuantity
+      quantity: ingredientQuantity,
     };
 
     // add to the data structure
@@ -107,20 +107,20 @@ class RecipeUI {
   }
 
   handleClickRemoveIngredient(ev) {
-    const button = ev.currentTarget
+    const button = ev.currentTarget;
     // go back to the table row, so you can remove it
-    const row = button.closest("tr") 
-    const ingredientId = button.dataset.ingredientId
+    const row = button.closest("tr");
+    const ingredientId = button.dataset.ingredientId;
     // remove the ingredient from the data
-    this.recipe.removeIngredientById(ingredientId)
+    this.recipe.removeIngredientById(ingredientId);
     // remove ingredient from DOM
     // row.remove()
     // refresh recipe table
-    this.refreshOutputTableRecipe(this.recipe.getIngredients())
+    this.refreshOutputTableRecipe(this.recipe.getIngredients());
   }
 
   handleTypingHaveIngredient(ev) {
-    // CONTINUE HERE. 
+    // CONTINUE HERE.
     //     // get the values of ingredient name and quantity
     const inputIngredientNameEl = document.getElementById(this.inputHaveIngredientNameId);
     const inputIngredientQuantityEl = document.getElementById(this.inputHaveIngredientQuantityId);
@@ -135,21 +135,26 @@ class RecipeUI {
 
     const res = this.recipe.calcFromIngredient({
       name: ingredientName,
-      quantity: ingredientQuantity
-    })
+      quantity: ingredientQuantity,
+    });
 
-    console.log(res)
-
+    console.log(res);
   }
 
   handleTypingHaveTotal(ev) {}
 
-  refreshOutputTableRecipe(ingredientsList) {
+  refreshOutputTableRecipe(ingredientsData) {
+    const { ingredients: ingredientsList, totIngredients } = ingredientsData;
+
     const table = document.getElementById(this.outputTableRecipeId);
     const tableBody = table.querySelector("tbody");
+    const tableFoot = table.querySelector("tfoot");
+
     // empty the table
     tableBody.innerHTML = "";
+    tableFoot.innerHTML = "";
 
+    // add ingredients
     ingredientsList.forEach((ingredientInfo) => {
       const row = document.createElement("tr");
 
@@ -165,19 +170,34 @@ class RecipeUI {
       cellIngredientPercentage.innerText = `${ingredientInfo.percentageRounded}%`;
 
       // create the remove button and the trash icon in it
-      const removeButton = document.createElement("button")
-      const removeIcon = document.createElement("i")
-      removeButton.setAttribute("data-ingredient-id", ingredientInfo.id)
-      removeIcon.className = "fa-solid fa-trash"
+      const removeButton = document.createElement("button");
+      const removeIcon = document.createElement("i");
+      removeButton.setAttribute("data-ingredient-id", ingredientInfo.id);
+      removeIcon.className = "fa-solid fa-trash";
 
-      removeButton.addEventListener("click", this.handleClickRemoveIngredient.bind(this))
+      removeButton.addEventListener("click", this.handleClickRemoveIngredient.bind(this));
 
-      removeButton.appendChild(removeIcon)
-      cellIngredientActions.appendChild(removeButton)
+      removeButton.appendChild(removeIcon);
+      cellIngredientActions.appendChild(removeButton);
 
       row.append(cellIngredientName, cellIngredientQuantity, cellIngredientPercentage, cellIngredientActions);
       tableBody.appendChild(row);
     });
+
+    // the table footer
+
+    const rowTotal = document.createElement("tr");
+    const cellTotalText = document.createElement("td");
+    const cellTotalNum = document.createElement("td");
+
+    cellTotalText.innerText = "TOTALE:";
+    cellTotalNum.innerText = `${totIngredients}g`;
+    cellTotalNum.setAttribute("colspan", "3");
+
+    rowTotal.append(cellTotalText, cellTotalNum);
+
+    // add total
+    tableFoot.appendChild(rowTotal);
   }
 
   refreshOutputTableHaveIngredient(ingredientsList) {

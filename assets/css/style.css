@@ -65,6 +65,19 @@ table.table-default tbody tr td:nth-last-child(1) {
   text-align: right;
 }
 
+/* the cells of the last row */
+table.table-default tbody tr:nth-last-child(1) td {
+  border-bottom: 1px solid lightgray;
+}
+
+table.table-default tfoot {
+  font-weight: bold;
+}
+
+table.table-default tfoot td {
+  
+}
+
 .icon-big {
   font-size: 1.5rem;
 }
