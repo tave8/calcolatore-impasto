@@ -127,6 +127,10 @@ class Recipe {
     return this.ingredients.find((ingredient) => ingredientName === ingredient.name);
   }
 
+  getIngredientById(ingredientId) {
+    return this.ingredients.find((ingredient) => ingredientId === ingredient.id);
+  }
+
   /**
    * Get a list of ingredients
    */
@@ -134,6 +138,8 @@ class Recipe {
     const ret = [];
     this.ingredients.forEach((ingredient) => {
       const ingredientInfo = {
+        id: ingredient.getId(),
+
         name: ingredient.getName(),
 
         quantity: ingredient.getQuantity(),
@@ -170,6 +176,7 @@ class Recipe {
       quantity: parseFloat(ingredientInfo.quantity),
       recipe: this,
     });
+
     this.ingredients.push(ingredient);
 
     return ingredient;
@@ -177,6 +184,12 @@ class Recipe {
 
   existsIngredientByName(ingredientName) {
     const item = this.getIngredientByName(ingredientName);
+    const exists = item !== undefined && item.constructor.name === "Ingredient";
+    return exists;
+  }
+
+  existsIngredientById(ingredientId) {
+    const item = this.getIngredientById(ingredientId);
     const exists = item !== undefined && item.constructor.name === "Ingredient";
     return exists;
   }
@@ -204,7 +217,7 @@ class Recipe {
     // console.log(ingredient)
   }
 
-  removeIngredient(ingredientName) {
+  removeIngredientByName(ingredientName) {
     if (!this.existsIngredientByName(ingredientName)) {
       throw Error(`No ingredient '${ingredientName}' was found.`);
     }
@@ -212,6 +225,18 @@ class Recipe {
     // remove ingredient from the ingredients
     this.ingredients.forEach((ingredient, i) => {
       if (ingredientName === ingredient.name) {
+        this.ingredients.splice(i, 1);
+      }
+    });
+  }
+
+  removeIngredientById(ingredientId) {
+    if (!this.existsIngredientById(ingredientId)) {
+      throw Error(`No ingredient with id '${ingredientId}' was found.`);
+    }
+    // remove ingredient from the ingredients
+    this.ingredients.forEach((ingredient, i) => {
+      if (ingredientId === ingredient.id) {
         this.ingredients.splice(i, 1);
       }
     });
@@ -227,6 +252,11 @@ class Ingredient {
     this.name = name;
     this.quantity = quantity;
     this.recipe = recipe;
+    this.id = this.genId();
+  }
+
+  getId() {
+    return this.id;
   }
 
   getName() {
@@ -282,6 +312,11 @@ class Ingredient {
 
   roundQuantity(x) {
     return this.roundNumber(x, 2);
+  }
+
+  genId() {
+    const randNum = Math.floor(Math.random() * 100000000);
+    return `${randNum}`;
   }
 }
 

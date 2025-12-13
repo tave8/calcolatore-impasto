@@ -107,11 +107,20 @@ class RecipeUI {
   }
 
   handleClickRemoveIngredient(ev) {
-    console.log(ev)
+    const button = ev.currentTarget
+    // go back to the table row, so you can remove it
+    const row = button.closest("tr") 
+    const ingredientId = button.dataset.ingredientId
+    // remove the ingredient from the data
+    this.recipe.removeIngredientById(ingredientId)
+    // remove ingredient from DOM
+    // row.remove()
+    // refresh recipe table
+    this.refreshOutputTableRecipe()
   }
 
   handleTypingHaveIngredient(ev) {
-    // console.log(ev);
+    
   }
 
   handleTypingHaveTotal(ev) {}
@@ -130,6 +139,8 @@ class RecipeUI {
       const cellIngredientPercentage = document.createElement("td");
       const cellIngredientActions = document.createElement("td");
 
+      // row.setAttribute("id", `row-ingredient-${ingredientInfo.id}`)
+
       cellIngredientName.innerText = ingredientInfo.name;
       cellIngredientQuantity.innerText = ingredientInfo.quantityRounded;
       cellIngredientPercentage.innerText = ingredientInfo.percentageRounded;
@@ -137,6 +148,7 @@ class RecipeUI {
       // create the remove button and the trash icon in it
       const removeButton = document.createElement("button")
       const removeIcon = document.createElement("i")
+      removeButton.setAttribute("data-ingredient-id", ingredientInfo.id)
       removeIcon.className = "fa-solid fa-trash"
 
       removeButton.addEventListener("click", this.handleClickRemoveIngredient.bind(this))
