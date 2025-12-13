@@ -103,7 +103,7 @@ class RecipeUI {
     // add to the data structure
     this.recipe.addIngredient(ingredientInfo);
 
-    this.refreshOutputTableRecipe();
+    this.refreshOutputTableRecipe(this.recipe.getIngredients());
   }
 
   handleClickRemoveIngredient(ev) {
@@ -116,7 +116,7 @@ class RecipeUI {
     // remove ingredient from DOM
     // row.remove()
     // refresh recipe table
-    this.refreshOutputTableRecipe()
+    this.refreshOutputTableRecipe(this.recipe.getIngredients())
   }
 
   handleTypingHaveIngredient(ev) {
@@ -125,13 +125,13 @@ class RecipeUI {
 
   handleTypingHaveTotal(ev) {}
 
-  refreshOutputTableRecipe() {
+  refreshOutputTableRecipe(ingredientsList) {
     const table = document.getElementById(this.outputTableRecipeId);
     const tableBody = table.querySelector("tbody");
     // empty the table
     tableBody.innerHTML = "";
 
-    this.recipe.getIngredients().forEach((ingredientInfo) => {
+    ingredientsList.forEach((ingredientInfo) => {
       const row = document.createElement("tr");
 
       const cellIngredientName = document.createElement("td");
@@ -142,8 +142,8 @@ class RecipeUI {
       // row.setAttribute("id", `row-ingredient-${ingredientInfo.id}`)
 
       cellIngredientName.innerText = ingredientInfo.name;
-      cellIngredientQuantity.innerText = ingredientInfo.quantityRounded;
-      cellIngredientPercentage.innerText = ingredientInfo.percentageRounded;
+      cellIngredientQuantity.innerText = `${ingredientInfo.quantityRounded}g`;
+      cellIngredientPercentage.innerText = `${ingredientInfo.percentageRounded}%`;
 
       // create the remove button and the trash icon in it
       const removeButton = document.createElement("button")

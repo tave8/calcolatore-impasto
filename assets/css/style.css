@@ -15,7 +15,7 @@ p {
 input {
   height: 1.5rem;
   /* min-width: 5rem; */
-  width: 80px;
+  /* width: 80px; */
 }
 
 .invisible {
@@ -307,7 +307,7 @@ main > .row-ricetta > .body {
 main > .row-ho-ingrediente > .body > *,
 main > .row-ho-tot > .body > *,
 main > .row-ricetta > .body > * {
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 
 main > .row-ho-ingrediente > .body > .row-input,
@@ -376,7 +376,10 @@ main > .row-ho-ingrediente > .body > .row-input > .content,
 main > .row-ho-tot > .body > .row-input > .content,
 main > .row-ricetta > .body > .row-input > .content {
   flex: 1;
-  padding: 0.2rem;
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 main > .row-ho-ingrediente > .body > .row-output,

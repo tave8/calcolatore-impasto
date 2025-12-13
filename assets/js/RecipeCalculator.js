@@ -156,6 +156,13 @@ class Recipe {
     return ret;
   }
 
+
+  // getIngredientsInOrderAlphabetIngredient() {
+  //   const ingredientsList = this.getIngredients()
+
+  // }
+
+
   getTotIngredients() {
     return this.ingredients.reduce((acc, ingredient) => acc + ingredient.quantity, 0);
   }
