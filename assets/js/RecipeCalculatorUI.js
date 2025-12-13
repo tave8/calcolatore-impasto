@@ -39,7 +39,7 @@ class RecipeUI {
 
     inputHaveTotalId,
   }) {
-    this.recipe = recipe
+    this.recipe = recipe;
 
     this.outputTableRecipeId = outputTableRecipeId;
     this.outputTableHaveIngredientId = outputTableHaveIngredientId;
@@ -80,11 +80,11 @@ class RecipeUI {
 
   handleClickAddIngredient(ev) {
     // get the values of ingredient name and quantity
-    const inputIngredientNameEl = document.getElementById(this.inputAddIngredientNameId)
-    const inputIngredientQuantityEl = document.getElementById(this.inputAddIngredientQuantityId)
-    
-    const ingredientName = inputIngredientNameEl.value
-    const ingredientQuantity = inputIngredientQuantityEl.value
+    const inputIngredientNameEl = document.getElementById(this.inputAddIngredientNameId);
+    const inputIngredientQuantityEl = document.getElementById(this.inputAddIngredientQuantityId);
+
+    const ingredientName = inputIngredientNameEl.value;
+    const ingredientQuantity = inputIngredientQuantityEl.value;
 
     // checks
     // if () {
@@ -92,33 +92,61 @@ class RecipeUI {
     // }
 
     // empty both inputs
-    inputIngredientNameEl.value = ""
-    inputIngredientQuantityEl.value = ""
+    inputIngredientNameEl.value = "";
+    inputIngredientQuantityEl.value = "";
 
     const ingredientInfo = {
-        name: ingredientName,
-        quantity: ingredientQuantity,
-        proportion: null
-    }
+      name: ingredientName,
+      quantity: ingredientQuantity
+    };
 
     // add to the data structure
-    this.recipe.addIngredient(ingredientInfo)
+    this.recipe.addIngredient(ingredientInfo);
 
-    this.refreshOutputTableRecipe()
-    // add to UI
-    // this.addRowOutputTableRecipe(ingredientInfo)
+    this.refreshOutputTableRecipe();
+  }
+
+  handleClickRemoveIngredient(ev) {
+    console.log(ev)
   }
 
   handleTypingHaveIngredient(ev) {
     // console.log(ev);
   }
 
-  handleTypingHaveTotal(ev) {
-
-  }
+  handleTypingHaveTotal(ev) {}
 
   refreshOutputTableRecipe() {
-    this.refreshOutputTable(this.recipe.getIngredients(), this.outputTableRecipeId);
+    const table = document.getElementById(this.outputTableRecipeId);
+    const tableBody = table.querySelector("tbody");
+    // empty the table
+    tableBody.innerHTML = "";
+
+    this.recipe.getIngredients().forEach((ingredientInfo) => {
+      const row = document.createElement("tr");
+
+      const cellIngredientName = document.createElement("td");
+      const cellIngredientQuantity = document.createElement("td");
+      const cellIngredientPercentage = document.createElement("td");
+      const cellIngredientActions = document.createElement("td");
+
+      cellIngredientName.innerText = ingredientInfo.name;
+      cellIngredientQuantity.innerText = ingredientInfo.quantityRounded;
+      cellIngredientPercentage.innerText = ingredientInfo.percentageRounded;
+
+      // create the remove button and the trash icon in it
+      const removeButton = document.createElement("button")
+      const removeIcon = document.createElement("i")
+      removeIcon.className = "fa-solid fa-trash"
+
+      removeButton.addEventListener("click", this.handleClickRemoveIngredient.bind(this))
+
+      removeButton.appendChild(removeIcon)
+      cellIngredientActions.appendChild(removeButton)
+
+      row.append(cellIngredientName, cellIngredientQuantity, cellIngredientPercentage, cellIngredientActions);
+      tableBody.appendChild(row);
+    });
   }
 
   refreshOutputTableHaveIngredient(ingredientsList) {
@@ -159,13 +187,13 @@ class RecipeUI {
 
     const cellIngredientName = document.createElement("td");
     const cellIngredientQuantity = document.createElement("td");
-    const cellIngredientProportion = document.createElement("td");
+    const cellIngredientPercentage = document.createElement("td");
 
     cellIngredientName.innerText = ingredientInfo.name;
-    cellIngredientQuantity.innerText = ingredientInfo.quantity;
-    cellIngredientProportion.innerText = ingredientInfo.proportion;
+    cellIngredientQuantity.innerText = ingredientInfo.quantityRounded;
+    cellIngredientPercentage.innerText = ingredientInfo.percentageRounded;
 
-    row.append(cellIngredientName, cellIngredientQuantity, cellIngredientProportion);
+    row.append(cellIngredientName, cellIngredientQuantity, cellIngredientPercentage);
     tableBody.appendChild(row);
   }
 }

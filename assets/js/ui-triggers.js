@@ -66,6 +66,6 @@ function getLegendUI() {
 
 function whenPageLoads() {
     window.addEventListener("load", () => {
-    getBtnAddRecipeUI().addEventListener("click", handleAddRecipe)
+    // getBtnAddRecipeUI().addEventListener("click", handleAddRecipe)
     })
 }

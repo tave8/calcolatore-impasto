@@ -31,7 +31,8 @@
         </div>
 
         <div class="body">
-          <div class="row row-options-recipe">
+
+          <!-- <div class="row row-options-recipe">
             <div class="box-choose">
               <p>Scegli</p>
               <input type="text" />
@@ -39,33 +40,20 @@
             <div class="box-add">
               <p><button>Aggiungi</button></p>
             </div>
-          </div>
+          </div> -->
 
           <div class="row row-input invisible">
-            <div class="title"><p>INPUT</p></div>
+            <!-- <div class="title"><p>INPUT</p></div> -->
             <div class="content">
               <div class="ricetta">
-                <div class="nome">
+                <!-- <div class="nome">
                   <p>Nome della ricetta <input type="text" /></p>
-                </div>
+                </div> -->
 
                 <div class="aggiungi-campo">
                   <input type="text" placeholder="Ingrediente" id="input-add-ingredient-name" />
                   <input type="number" placeholder="Quantità" id="input-add-ingredient-quantity" />
                   <button id="button-add-ingredient"><i class="fa-solid fa-plus"></i></button>
-                </div>
-
-                <div class="campi">
-                  <table class="table-default" id="table-ricetta">
-                    <thead>
-                      <tr>
-                        <th><i class="fas fa-carrot icon-big"></i></th>
-                        <th><i class="fas fa-balance-scale-right icon-big"></i></th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody></tbody>
-                  </table>
                 </div>
               </div>
             </div>
@@ -76,24 +64,19 @@
           </div> -->
 
           <div class="row row-output invisible">
-            <div class="title"><p>OUTPUT</p></div>
+            <!-- <div class="title"><p>OUTPUT</p></div> -->
             <div class="content">
               <div class="table-container">
-                <table class="table-default table-con-totali" id="table-proporzioni">
+                <table class="table-default" id="table-ricetta">
                   <thead>
                     <tr>
                       <th><i class="fas fa-carrot icon-big"></i></th>
                       <th><i class="fas fa-balance-scale-right icon-big"></i></th>
                       <th><i class="fas fa-percentage icon-big"></i></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody></tbody>
-                  <!-- <tfoot>
-                    <tr>
-                      <td>Totale:</td>
-                      <td colspan="2">3453</td>
-                    </tr>
-                  </tfoot> -->
                 </table>
               </div>
             </div>
@@ -121,12 +104,7 @@
               <div class="input">
                 <p>
                   Quantità (g)
-                  <input
-                    type="number"
-                    id="input-have-ingredient-quantity"
-                    value="1"
-                    min="1"
-                  />
+                  <input type="number" id="input-have-ingredient-quantity" value="1" min="1" />
                 </p>
               </div>
             </div>
@@ -179,7 +157,7 @@
               <div class="input">
                 <p>
                   Totale ricetta (g)
-                  <input type="number" id="input-have-total"  />
+                  <input type="number" id="input-have-total" />
                 </p>
               </div>
             </div>
@@ -228,7 +206,7 @@
           <div class="row">
             <p><i class="fas fa-carrot icon-big"></i> = ingrediente</p>
             <p><i class="fas fa-balance-scale-right icon-big"></i> = quantità</p>
-            <p><i class="fas fa-percentage icon-big"></i> = proporzione</p>
+            <p><i class="fas fa-percentage icon-big"></i> = percentuale</p>
           </div>
         </div>
       </div>
