@@ -39,10 +39,14 @@ class Recipe {
   calcFromIngredient({ name: ingredientName, quantity: ingredientQuantity }) {
     const ingredientsList = [];
 
+    ingredientQuantity = parseFloat(ingredientQuantity)
+
     const recipeQuantityTotal = this.getRecipeQuantityFromIngredientInfo({
       name: ingredientName,
       quantity: ingredientQuantity,
     });
+
+    // console.log(recipeQuantityTotal)
 
     // update the current use case
     this.useCases.haveOneIngredient.isUseCaseActive = true;
@@ -69,6 +73,8 @@ class Recipe {
 
   calcFromTot(recipeQuantity) {
     const ingredientsList = [];
+
+    recipeQuantity = parseFloat(recipeQuantity)
 
     // update the current use case
     this.useCases.haveRecipeTotal.isUseCaseActive = true;
@@ -156,12 +162,10 @@ class Recipe {
     return ret;
   }
 
-
   // getIngredientsInOrderAlphabetIngredient() {
   //   const ingredientsList = this.getIngredients()
 
   // }
-
 
   getTotIngredients() {
     return this.ingredients.reduce((acc, ingredient) => acc + ingredient.quantity, 0);
@@ -329,14 +333,14 @@ class Ingredient {
 
 // USAGE
 
-const myRecipe = new Recipe();
+// const myRecipe = new Recipe();
 
 // myRecipe.setName("My recipe")
 
-myRecipe.addIngredient({
-  name: "water",
-  quantity: 100,
-});
+// myRecipe.addIngredient({
+//   name: "water",
+//   quantity: 100,
+// });
 
 // myRecipe.editIngredient("salt", {
 //   quantity: 40,
@@ -346,12 +350,12 @@ myRecipe.addIngredient({
 // // console.log(myRecipe);
 
 // console.log(
-myRecipe.calcFromIngredient({
-  name: "water",
-  quantity: 45,
-});
+// myRecipe.calcFromIngredient({
+//   name: "water",
+//   quantity: 45,
+// });
 // );
 
 // console.log(myRecipe.calcFromTot(150));
 
-console.log(myRecipe);
+// console.log(myRecipe);

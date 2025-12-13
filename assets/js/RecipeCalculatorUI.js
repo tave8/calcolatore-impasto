@@ -122,16 +122,24 @@ class RecipeUI {
   handleTypingHaveIngredient(ev) {
     // CONTINUE HERE. 
     //     // get the values of ingredient name and quantity
-    // const inputIngredientNameEl = document.getElementById(this.inputAddIngredientNameId);
-    // const inputIngredientQuantityEl = document.getElementById(this.inputAddIngredientQuantityId);
+    const inputIngredientNameEl = document.getElementById(this.inputHaveIngredientNameId);
+    const inputIngredientQuantityEl = document.getElementById(this.inputHaveIngredientQuantityId);
 
-    // const ingredientName = inputIngredientNameEl.value;
-    // const ingredientQuantity = inputIngredientQuantityEl.value;
+    const ingredientName = inputIngredientNameEl.value;
+    const ingredientQuantity = inputIngredientQuantityEl.value;
 
     // // checks
     // // if () {
 
     // // }
+
+    const res = this.recipe.calcFromIngredient({
+      name: ingredientName,
+      quantity: ingredientQuantity
+    })
+
+    console.log(res)
+
   }
 
   handleTypingHaveTotal(ev) {}
