@@ -20,7 +20,7 @@ function showAllRecipeUI() {
     getRecipeOutputUI().classList.remove("invisible")
     getRecipeSaveAsPdfUI().classList.remove("invisible")
 }
-
+ 
 function showAllCalculationsUI() {
     getHaveIngredientUI().classList.remove("invisible")
     getHaveTotUI().classList.remove("invisible")

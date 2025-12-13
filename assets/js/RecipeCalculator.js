@@ -301,6 +301,32 @@ class Recipe {
     });
   }
 
+  /**
+   * When sending data to a server
+   */
+  getJSONStr() {
+    const ingredientsList = []
+    const recipeData = {
+      name: this.getName(),
+      ingredients: ingredientsList
+    }
+
+    this.ingredients.forEach(ingredient => {
+      const ingredientInfo = {
+        name: ingredient.getName(),
+        proportion: ingredient.getProportion(),
+        quantity: ingredient.getQuantity()
+      }
+      ingredientsList.push(ingredientInfo)
+    })
+
+    return JSON.stringify(recipeData)
+  }
+
+  getName() {
+    return this.name
+  }
+
   setName(recipeName) {
     this.name = recipeName;
   }
