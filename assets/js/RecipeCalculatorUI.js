@@ -150,6 +150,8 @@ class RecipeUI {
     // row.remove()
     // refresh recipe table
     this.refreshOutputTableRecipe(this.recipe.getIngredients());
+
+    this.refreshAutomaticAllTableButRecipe()
   }
 
   handleTypingHaveIngredient(ev) {
