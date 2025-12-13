@@ -137,21 +137,33 @@ class Recipe {
     return this.ingredients.find((ingredient) => ingredientId === ingredient.id);
   }
 
+  multiplyIngredients(multiplier) {
+    this.ingredients.forEach((ingredient) => {
+      ingredient.setQuantityMultiplied(multiplier);
+      ingredient.setQuantityMultipliedRounded(multiplier);
+    });
+  }
+
   /**
    * Get a list of ingredients
    */
   getIngredients() {
     const ingredients = [];
     let totIngredients = 0;
+
     this.ingredients.forEach((ingredient) => {
-      const quantity = ingredient.getQuantity()
+      const quantityMultiplied = ingredient.getQuantityMultiplied()
+
       const ingredientInfo = {
         id: ingredient.getId(),
 
         name: ingredient.getName(),
 
-        quantity: quantity,
+        quantity: ingredient.getQuantity(),
         quantityRounded: ingredient.getQuantityRounded(),
+
+        quantityMultiplied: quantityMultiplied,
+        quantityMultipliedRounded: ingredient.getQuantityMultipliedRounded(),
 
         proportion: ingredient.getProportion(),
         percentage: ingredient.getPercentage(),
@@ -159,12 +171,19 @@ class Recipe {
         proportionRounded: ingredient.getProportionRounded(),
         percentageRounded: ingredient.getPercentageRounded(),
       };
-      totIngredients += quantity
+
+      totIngredients += quantityMultiplied;
       ingredients.push(ingredientInfo);
     });
+
+    // choosing the first ingredient because the method is on ingredients
+    // not on recipe. should fix
+    const totIngredientsRounded = Ingredient.roundQuantity(totIngredients)
+
     return {
       ingredients,
       totIngredients,
+      totIngredientsRounded,
     };
   }
 
@@ -262,12 +281,15 @@ class Recipe {
   setName(recipeName) {
     this.name = recipeName;
   }
+
 }
 
 class Ingredient {
   constructor({ name, recipe, quantity }) {
     this.name = name;
     this.quantity = quantity;
+    this.quantityMultiplied = quantity;
+    this.quantityMultipliedRounded = Ingredient.roundQuantity(quantity);
     this.recipe = recipe;
     this.id = this.genId();
   }
@@ -289,7 +311,7 @@ class Ingredient {
   }
 
   getProportionRounded() {
-    return this.roundProportion(this.getProportion());
+    return Ingredient.roundProportion(this.getProportion());
   }
 
   getPercentage() {
@@ -297,15 +319,31 @@ class Ingredient {
   }
 
   getPercentageRounded() {
-    return this.roundPercentage(this.getPercentage());
+    return Ingredient.roundPercentage(this.getPercentage());
   }
 
   getQuantity() {
     return this.quantity;
   }
 
+  getQuantityMultiplied() {
+    return this.quantityMultiplied;
+  }
+
+  setQuantityMultiplied(multiplier) {
+    this.quantityMultiplied = this.getQuantity() * multiplier;
+  }
+
+  setQuantityMultipliedRounded(multiplier) {
+    this.quantityRoundedMultiplied = Ingredient.roundQuantity(this.getQuantity() * multiplier);
+  }
+
   getQuantityRounded() {
-    return this.roundNumber(this.getQuantity(), 2);
+    return Ingredient.roundNumber(this.getQuantity(), 2);
+  }
+
+  getQuantityMultipliedRounded() {
+    return Ingredient.roundNumber(this.getQuantityMultiplied(), 2);
   }
 
   setQuantity(quantity) {
@@ -315,19 +353,23 @@ class Ingredient {
   /**
    * Round x by n digits
    */
-  roundNumber(num, nDigits) {
+  // roundNumber(num, nDigits) {
+  //   return parseFloat(num.toFixed(nDigits));
+  // }
+
+  static roundNumber(num, nDigits) {
     return parseFloat(num.toFixed(nDigits));
   }
 
-  roundProportion(x) {
+  static roundProportion(x) {
     return this.roundNumber(x, 4);
   }
 
-  roundPercentage(x) {
+  static roundPercentage(x) {
     return this.roundNumber(x, 2);
   }
 
-  roundQuantity(x) {
+  static roundQuantity(x) {
     return this.roundNumber(x, 2);
   }
 

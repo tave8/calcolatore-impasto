@@ -33,6 +33,8 @@ class RecipeUI {
     inputAddIngredientNameId,
     inputAddIngredientQuantityId,
     buttonAddIngredientId,
+    selectRecipeMultiplyOperationId,
+    inputRecipeMultiplyTimesId,
 
     inputHaveIngredientNameId,
     inputHaveIngredientQuantityId,
@@ -48,6 +50,8 @@ class RecipeUI {
     this.inputAddIngredientNameId = inputAddIngredientNameId;
     this.inputAddIngredientQuantityId = inputAddIngredientQuantityId;
     this.buttonAddIngredientId = buttonAddIngredientId;
+    this.selectRecipeMultiplyOperationId = selectRecipeMultiplyOperationId;
+    this.inputRecipeMultiplyTimesId = inputRecipeMultiplyTimesId;
 
     this.inputHaveIngredientNameId = inputHaveIngredientNameId;
     this.inputHaveIngredientQuantityId = inputHaveIngredientQuantityId;
@@ -70,19 +74,27 @@ class RecipeUI {
 
   addEventHandlers() {
     // prevents wrong "this" binding when dealing with event handlers
-    const self = this
+    const self = this;
+
     // when user clicks or types Enter, to add an ingredient
     document.getElementById(this.buttonAddIngredientId).addEventListener("click", this.handleClickAddIngredient.bind(this));
     document.getElementById(this.inputAddIngredientQuantityId).addEventListener("keyup", (ev) => {
-      const keyTyped = ev.key
-      const isEnter = keyTyped === "Enter"
-      if(isEnter) {
-        self.handleClickAddIngredient.bind(self)(ev)
+      const keyTyped = ev.key;
+      const isEnter = keyTyped === "Enter";
+      if (isEnter) {
+        self.handleClickAddIngredient.bind(self)(ev);
       }
     });
+
+    // when user changes recipe multiply operation, or types in multiply by input field
+    document.getElementById(this.selectRecipeMultiplyOperationId).addEventListener("change", this.handleMultiplyRecipe.bind(this));
+    document.getElementById(this.inputRecipeMultiplyTimesId).addEventListener("keyup", this.handleMultiplyRecipe.bind(this));
+    document.getElementById(this.inputRecipeMultiplyTimesId).addEventListener("change", this.handleMultiplyRecipe.bind(this));
+
     // when user types in "have ingredient" inputs
     document.getElementById(this.inputHaveIngredientNameId).addEventListener("keyup", this.handleTypingHaveIngredient.bind(this));
     document.getElementById(this.inputHaveIngredientQuantityId).addEventListener("keyup", this.handleTypingHaveIngredient.bind(this));
+
     // when user types in "have total" input
     document.getElementById(this.inputHaveTotalId).addEventListener("keyup", this.handleTypingHaveTotal.bind(this));
   }
@@ -109,13 +121,15 @@ class RecipeUI {
       quantity: ingredientQuantity,
     };
 
+    // add the value of the 
+
     // add to the data structure
     this.recipe.addIngredient(ingredientInfo);
 
     this.refreshOutputTableRecipe(this.recipe.getIngredients());
 
     // refocus the input to the ingredient name input
-    document.getElementById(this.inputAddIngredientNameId).focus()
+    document.getElementById(this.inputAddIngredientNameId).focus();
   }
 
   handleClickRemoveIngredient(ev) {
@@ -155,8 +169,33 @@ class RecipeUI {
 
   handleTypingHaveTotal(ev) {}
 
+  handleMultiplyRecipe(ev) {
+    // get the fields
+    const selectRecipeMultiplyOperationEl = document.getElementById(this.selectRecipeMultiplyOperationId);
+    const inputRecipeMultiplyTimesEl = document.getElementById(this.inputRecipeMultiplyTimesId);
+
+    const recipeOperation = selectRecipeMultiplyOperationEl.value;
+    let initialMultiplier = inputRecipeMultiplyTimesEl.value;
+
+    // checks
+    // check that multiplier is a valid number
+
+    initialMultiplier = parseFloat(initialMultiplier);
+    // assume that the multiplier is the final number to multiply with
+    let finalMultiplier = initialMultiplier;
+
+    // if the operation is divide, then the multiplier will go at the denominator
+    if (recipeOperation === "divide") {
+      finalMultiplier = 1 / initialMultiplier;
+    }
+
+    this.recipe.multiplyIngredients(finalMultiplier)
+
+    this.refreshOutputTableRecipe(this.recipe.getIngredients());
+  }
+
   refreshOutputTableRecipe(ingredientsData) {
-    const { ingredients: ingredientsList, totIngredients } = ingredientsData;
+    const { ingredients: ingredientsList, totIngredientsRounded } = ingredientsData;
 
     const table = document.getElementById(this.outputTableRecipeId);
     const tableBody = table.querySelector("tbody");
@@ -178,7 +217,7 @@ class RecipeUI {
       // row.setAttribute("id", `row-ingredient-${ingredientInfo.id}`)
 
       cellIngredientName.innerText = ingredientInfo.name;
-      cellIngredientQuantity.innerText = `${ingredientInfo.quantityRounded}g`;
+      cellIngredientQuantity.innerText = `${ingredientInfo.quantityMultipliedRounded}g`;
       cellIngredientPercentage.innerText = `${ingredientInfo.percentageRounded}%`;
 
       // create the remove button and the trash icon in it
@@ -203,7 +242,7 @@ class RecipeUI {
     const cellTotalNum = document.createElement("td");
 
     cellTotalText.innerText = "TOTALE:";
-    cellTotalNum.innerText = `${totIngredients}g`;
+    cellTotalNum.innerText = `${totIngredientsRounded}g`;
     cellTotalNum.setAttribute("colspan", "3");
 
     rowTotal.append(cellTotalText, cellTotalNum);
@@ -271,6 +310,8 @@ const recipeUI = new RecipeUI({
   inputAddIngredientNameId: "input-add-ingredient-name",
   inputAddIngredientQuantityId: "input-add-ingredient-quantity",
   buttonAddIngredientId: "button-add-ingredient",
+  selectRecipeMultiplyOperationId: "select-recipe-multiply-operation",
+  inputRecipeMultiplyTimesId: "input-recipe-multiply-operation",
 
   inputHaveIngredientNameId: "input-have-ingredient-name",
   inputHaveIngredientQuantityId: "input-have-ingredient-quantity",
